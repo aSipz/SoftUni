@@ -1,43 +1,52 @@
 function safePass(input) {
-    let a = Number(input[0]);
-    let b = Number(input[1]);
+    let aNum = Number(input[0]);
+    let bNum = Number(input[1]);
     let maxNumPass = Number(input[2]);
-    let toPrint = '';
-    let passCount = 0;
+    let counter = 0;
     let isDone = false;
+    let toPrint = '';
     for (let i = 35; i <= 55; i++) {
+        let aSymbol = '';
+        let bSymbol = '';
+        let xSymbol = '';
+        let ySymbol = '';
         let pass = '';
-        let A = '';
-        let B = '';
         for (let j = 64; j <= 96; j++) {
-            B = String.fromCharCode(j);
-            for (k = 1; k <= a; k++) {
-                for (l = 1; l <= b; l++ ) {
-                    A = String.fromCharCode(i);
-                    B = String.fromCharCode(j);
-                    pass = A + B + k + l + B + A;
+            for (let k = 1; k <= aNum; k++) {
+                for (let l = 1; l <= bNum; l++) {
+                    aSymbol = String.fromCharCode(i);
+                    bSymbol = String.fromCharCode(j);
+                    xSymbol = k;
+                    ySymbol = l;
+                    pass = aSymbol + bSymbol + xSymbol + ySymbol + bSymbol + aSymbol;
                     toPrint += pass + '|';
-                    passCount++;
+                    counter++;
                     i++;
                     j++;
-                    if (passCount == maxNumPass) {
+                    if (i > 55) {
+                        i = 35;
+                    }
+                    if (j > 96) {
+                        j = 64;
+                    }
+                    if (counter >= maxNumPass || (k == aNum && l == bNum)) {
                         isDone = true;
                         break;
                     }
                 }
                 if (isDone) {
-                    break;
+                    break
                 }
             }
             if (isDone) {
-                break;
+                break
             }
             if (j >= 96) {
                 j = 63;
             }
         }
         if (isDone) {
-            break;
+            break
         }
         if (i >= 55) {
             i = 34;
@@ -45,4 +54,4 @@ function safePass(input) {
     }
     console.log(toPrint);
 }
-safePass([2,3,10]);
+safePass([20,50,10]);
