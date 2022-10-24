@@ -4,7 +4,7 @@ function bomb(initialSequence, input) {
     for (let i = 0; i < initialSequence.length; i++) {
         if (initialSequence[i] == bombNumber) {
             initialSequence.splice(i - power, power * 2 + 1);
-            i = -1;
+            i = i - power - 1;
         }
     }
     let sum = 0;
@@ -13,6 +13,6 @@ function bomb(initialSequence, input) {
     }
     console.log(sum);
 }
-bomb([1, 2, 2, 4, 2, 2, 2, 4, 9],
+bomb([1, 2, 2, 4, 2, 2, 2, 4, 9,3,5,6],
     [4, 2]         
     );
