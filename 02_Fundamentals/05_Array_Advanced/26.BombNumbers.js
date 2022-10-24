@@ -3,7 +3,7 @@ function bomb(initialSequence, input) {
     let power = input;
     for (let i = 0; i < initialSequence.length; i++) {
         if (initialSequence[i] == bombNumber) {
-            initialSequence.splice(i - power, power * 2 + 1);
+            initialSequence.splice(Math.max(i - power, 0), power * 2 + 1);
             i = i - power - 1;
         }
     }
@@ -13,6 +13,5 @@ function bomb(initialSequence, input) {
     }
     console.log(sum);
 }
-bomb([1, 2, 2, 4, 2, 2, 2, 4, 9,3,5,6],
-    [4, 2]         
-    );
+bomb([1, 2, 2, 4, 2, 2, 2, 9],
+    [4, 4]);
