@@ -11,7 +11,7 @@ function cats(input) {
     }
     
     for (let i = 0; i < input.length; i++) {
-        let tempCat = new Cat(input[i].split(' ')[0], input[i].split(' ')[1])
+        let tempCat = new Cat(input[i].split(' ')[0], input[i].split(' ')[1]);
         tempCat.meow();
     }
 }
