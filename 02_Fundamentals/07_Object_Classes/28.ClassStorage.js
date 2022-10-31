@@ -6,25 +6,23 @@ function storage() {
             this.totalCost = 0;
         }
         addProduct(product) {
-            storage.name = product.name;
-            storage.price = Number(product.price);
-            storage.quantity = Number(product.quantity);
-            capacity -= Number(product.quantity);
-            totalCost += Number(product.price) * Number(product.quantity);
+            this.storage.push(product);
+            this.totalCost += product.price * product.quantity;
+            this.capacity -= product.quantity;
         }
         getProducts() {
-            return JSON.stringify(storage[0])
+            let output = ''
+            this.storage.forEach(a => output += JSON.stringify(a) + ' ');
+            output = output.split(' ');
+            output.pop();
+            return output.join('\n')
         }
     }
-    let productOne = { name: 'Cucamber', price: 1.50, quantity: 15 };
-    let productTwo = { name: 'Tomato', price: 0.90, quantity: 25 };
-    let productThree = { name: 'Bread', price: 1.10, quantity: 8 };
-    let storage = new Storage(50);
+    let productOne = { name: 'Tomato', price: 0.90, quantity: 19 };
+    let productTwo = { name: 'Potato', price: 1.10, quantity: 10 };
+    let storage = new Storage(30);
     storage.addProduct(productOne);
     storage.addProduct(productTwo);
-    storage.addProduct(productThree);
-    console.log(storage.getProducts());
-    console.log(storage.capacity);
     console.log(storage.totalCost);
 
 }
