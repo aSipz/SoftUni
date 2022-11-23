@@ -1,0 +1,20 @@
+table, td, tr, th {
+    border: 1px;
+    border-color: #000000;
+    border-style: solid;
+}
+
+.bold {
+    font-weight: bold;
+    text-align: center;
+}
+
+.result {
+    width: 400px;
+    text-align: right;
+    padding-right: 5px;
+}
+
+td, tr, th {
+    padding-left: 5px;
+}
