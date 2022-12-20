@@ -8,10 +8,12 @@ function solution(instr) {
         let totalVotes = this.upvotes + this.downvotes;
         let upvoteReport = this.upvotes;
         let downvoteReport = this.downvotes;
-        // let upvoteReport = totalVotes > 50 ? Math.ceil(this.upvotes * 1.25) : this.upvotes;
-        // let downvoteReport = totalVotes > 50 ? Math.ceil(this.downvotes * 1.25) : this.downvotes;
+        if (totalVotes > 50) {
+            this.upvotes > this.downvotes ? upvoteReport = Math.ceil(this.upvotes * 1.25) : downvoteReport = Math.ceil(this.downvotes * 1.25);
+            this.upvotes > this.downvotes ? downvoteReport = upvoteReport - balance: upvoteReport = downvoteReport - balance;
+        }
         let rating = '';
-        if (this.upvotes / totalVotes > 66) {
+        if (this.upvotes / totalVotes > 0.66) {
             rating = 'hot';
         } else if (this.upvotes >= this.downvotes && totalVotes > 100) {
             rating = 'controversial'
