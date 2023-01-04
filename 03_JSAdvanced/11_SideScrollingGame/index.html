@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,20 +14,28 @@
     <div class="game-section">
 
         <!-- Game start screen -->
-        <div class="game-start">Press to Play!</div>
-
-        <!-- score -->
-        <div class="game-score"><span class="points">0</span></div>
+        <div class="game-start">
+                <ul>
+                    <li>Choose difficulty</li>
+                    <li class="difficulty">Easy</li>
+                    <li class="difficulty">Medium</li>
+                    <li class="difficulty">Hard</li>
+                </ul>
+            <div class="start">Start game</div>
+        </div>
 
         <!-- game area -->
         <div class="game-area"></div>
+
+        <!-- score -->
+        <div class="game-score hide"><span class="points">0</span></div>
 
         <!-- game over -->
         <div class="game-over hide">Game over</div>
     </div>
     <!-- game screen ends -->
 
-<script src="main.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 body {
     font-size: 32px;
     font-family: 'consolas';
+    cursor: default;
 }
 
 .game-area {
@@ -17,20 +18,70 @@ body {
 .game-start {
     position: absolute;
     z-index: 1;
-    width: 30%;
+    width: 40%;
     background: rgb(235,253,153);
     top: 100px;
-    left: 35%;
+    left: 30%;
     padding: 30px;
     text-align: center;
     border-radius: 30px;
+}
+
+.game-start ul {
+    padding: 0;
+}
+
+.game-start ul li{
+    list-style: none;
+    text-align: center;
+    font-size: 22px;
+}
+
+.difficulty{
+    background: rgb(0,204,153);
+    color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 5px solid rgb(0,204,153);
+}
+
+.difficulty:hover {
+    background: rgba(61, 160, 244, 1);
+    border-color:  rgba(61, 160, 244, 1);
+    cursor: pointer;
+}
+
+.chosen{
+    background: white;
+    color: black;
+    border: 5px solid  rgb(0,204,153);
+}
+
+.start {
+    background: rgba(61, 160, 244, 1);
+    cursor: pointer;
+    border-radius: 10px;
+    color: white;
+    border: 5px solid rgba(61, 160, 244, 1);
+}
+
+.start:hover {
+    background: white;
+    color: black;
+    border: 5px solid rgba(61, 160, 244, 1);
+}
+
+.error {
+    font-size: 20px;
+    color: red;
+    margin-top: 5px;
 }
 
 .game-score {
     background: black;
     color: white;
     text-align: center;
-
 }
 
 .game-over {
@@ -38,11 +89,41 @@ body {
     z-index: 101;
     width: 50%;
     background: red;
+    color: white;
     top: 100px;
     left: 25%;
     padding: 30px;
     text-align: center;
     border-radius: 30px;
+}
+
+.result {
+    font-size: 22px;
+    border: 5px solid white;
+    border-radius: 10px;
+    padding: 2px;
+    margin-top: 10px;
+    color: white;
+    font-weight: bold;
+    position: relative;
+    width: 50%;
+    left: 23.5%;
+}
+
+.reload {
+    background: white;
+    color: red;
+    border-radius: 10px;
+    position: relative;
+    width: 50%;
+    left: 23.5%;
+    margin-top: 50px;
+    padding: 7px;
+}
+
+.reload:hover {
+    cursor: pointer;
+    font-weight: 900;
 }
 
 .wizard {
