@@ -33,6 +33,18 @@ body {
 
 }
 
+.game-over {
+    position: absolute;
+    z-index: 101;
+    width: 50%;
+    background: red;
+    top: 100px;
+    left: 25%;
+    padding: 30px;
+    text-align: center;
+    border-radius: 30px;
+}
+
 .wizard {
     z-index: 100;
     position: absolute;
@@ -40,6 +52,36 @@ body {
     height: 100px;
     background-image: url(./images/wizard.png);
     background-size: cover;
+}
+
+.wizard-fire {
+    background-image: url(./images/wizard-fire.png);
+    background-size: cover;
+}
+
+.fire-ball {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-image: url(./images/fire-ball.png);
+    background-size: cover;
+}
+
+.cloud {
+    background-image: url(./images/cloud.png);
+    background-size: cover;
+    width: 100px;
+    height: 100px;
+    z-index: 0;
+    position: absolute;
+}
+
+.bug {
+    position: absolute;
+    background-image: url(./images/bug.png);
+    background-size: cover;
+    width: 60px;
+    height: 60px;
 }
 
 .hide {
