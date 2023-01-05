@@ -150,14 +150,14 @@ function gameAction(timestamp) {
         }
         fireBalls.forEach(ball => {
             if (isCollision(ball, bug)) {
-                game.score += game.bugKillBonus;
+                scene.score += game.bugKillBonus;
                 bug.parentElement.removeChild(bug);
                 ball.parentElement.removeChild(ball)
             }
         });
     });
     // add clouds
-    if (timestamp - scene.lastCloudSpawn > game.cloudSpawnInterval + 20000 * Math.random()) {
+    if (timestamp - scene.lastCloudSpawn > game.cloudSpawnInterval + 15000 * Math.random()) {
         let cloud = document.createElement('div');
         cloud.classList.add('cloud');
         cloud.x = gameArea.offsetWidth - 200;
@@ -214,27 +214,32 @@ function gameOverAction() {
     gameOver.classList.remove('hide');
     let result = document.createElement('div');
     result.classList.add('result');
-    result.innerText = 'Result:\n' + `${scene.score} points`;
+    let p1 = document.createElement('p');
+    p1.textContent = 'Result:';
+    let p2 = document.createElement('p');
+    p2.textContent = `${scene.score} points`;
+    result.appendChild(p1);
+    result.appendChild(p2);
     gameOver.appendChild(result);
     gameArea.style.cursor = 'default';
     gameScore.classList.add('hide');
 
     // best results
-    let resultString = localStorage.getItem('results');
-    if (!resultString) {
-        resultString = '';
+    let resultArray = [];
+    if (!localStorage.getItem('scores')) {
+        resultArray = [0, 0, 0];
+        localStorage.setItem('scores', JSON.stringify(resultArray));
     }
-    resultString += ' ' + scene.score;
-    resultString.trim();
-    localStorage.setItem('results', resultString);
-    let first = resultString
-        .split(' ')
-        .map(Number)
+    resultArray = JSON.parse(localStorage.getItem('scores'));
+    resultArray.push(scene.score);
+    localStorage.setItem('scores', JSON.stringify(resultArray));
+    let first = resultArray
         .sort((a, b) => b - a)
         .slice(0, 3);
-
     let bestResultDiv = document.createElement('div');
-    bestResultDiv.innerText = first.join('\n');
+    first.forEach((res, index) => {
+        bestResultDiv.appendChild(createParagraph(res, index));
+    });
     gameOver.appendChild(bestResultDiv);
 
     //start again
@@ -245,6 +250,17 @@ function gameOverAction() {
         location.reload();
     })
     gameOver.appendChild(startAgain);
+
+    function createParagraph(result, index) {
+        let p = document.createElement('p');
+        if (result == scene.score) {
+            p.classList.add('best-result');
+            let currRes = gameOver.querySelector('.result').children[1];
+            currRes.classList.add('best-result');
+        }
+        p.textContent = `${index + 1}. ${result}`;
+        return p;
+    }
 }
 
 function isCollision(firstElement, secondElement) {

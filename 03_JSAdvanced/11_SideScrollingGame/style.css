@@ -2,6 +2,8 @@ body {
     font-size: 32px;
     font-family: 'consolas';
     cursor: default;
+    margin: 0;
+    padding: 0;
 }
 
 .game-area {
@@ -82,6 +84,7 @@ body {
     background: black;
     color: white;
     text-align: center;
+    height: 7vh;
 }
 
 .game-over {
@@ -167,4 +170,9 @@ body {
 
 .hide {
     display: none;
+}
+
+.best-result {
+    color: greenyellow;
+    font-weight: bolder;
 }
