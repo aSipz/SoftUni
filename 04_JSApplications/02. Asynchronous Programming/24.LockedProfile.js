@@ -2,7 +2,9 @@ async function lockedProfile() {
     const main = document.getElementById('main');
     const userList = [];
     const data = await loadData();
-    
+    if (!data) {
+        return;
+    }
     Object.values(data).forEach(person => {
         userList.push(createProfile(person));
     });
@@ -12,19 +14,19 @@ async function lockedProfile() {
         const result = e('div', { className: 'profile' },
             e('img', { className: 'userIcon', src: './iconProfile2.png' }),
             e('label', {}, 'Lock'),
-            e('input', { type: 'radio', name: `${obj.username}Locked`, value: 'lock', checked: true }),
+            e('input', { type: 'radio', name: `user1Locked`, value: 'lock', checked: true }),
             e('label', {}, 'Unlock'),
-            e('input', { type: 'radio', name: `${obj.username}Locked`, value: 'unlock' }),
+            e('input', { type: 'radio', name: `user1Locked`, value: 'unlock' }),
             e('br', {}),
             e('hr', {}),
             e('label', {}, 'Username'),
-            e('input', { type: 'text', name: `${obj.username}`, value: `${obj.username}`, disabled: true, readOnly: true }),
+            e('input', { type: 'text', name: `user1Username`, value: `${obj.username}`, disabled: true, readOnly: true }),
             e('div', { id: `${obj.username}HiddenFields` },
                 e('hr', {}),
                 e('label', {}, 'Email:'),
-                e('input', { type: 'email', name: `${obj.username}Email`, value: `${obj.email}`, disabled: true, readOnly: true }),
+                e('input', { type: 'email', name: `user1Email`, value: `${obj.email}`, disabled: true, readOnly: true }),
                 e('label', {}, 'Age:'),
-                e('input', { type: 'email', name: `${obj.username}Age`, value: `${obj.age}`, disabled: true, readOnly: true })),
+                e('input', { type: 'email', name: `user1Age`, value: `${obj.age}`, disabled: true, readOnly: true })),
             e('button', { onClick: toggleInfo }, 'Show more'));
         result.querySelector(`#${obj.username}HiddenFields`).style.display = 'none';
         return result;
