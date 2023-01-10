@@ -11,20 +11,21 @@ function solve() {
             debugger
             const data = await result.json();
             return data;
-        } catch(err) {
-            console.log(err);
+        } catch (err) {
+            arriveBtn.disabled = true;
+            departBtn.disabled = true;
+            infoField.textContent = 'Error';
         }
     }
 
-
-    function depart() {
-        result = getStop();
+    async function depart() {
+        result = await getStop();
         arriveBtn.disabled = false;
         departBtn.disabled = true;
         infoField.textContent = `Next stop ${result.name}`
     }
 
-    function arrive() {
+    async function arrive() {
         arriveBtn.disabled = true;
         departBtn.disabled = false;
         infoField.textContent = `Arriving at ${result.name}`
