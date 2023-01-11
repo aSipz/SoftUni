@@ -1,7 +1,7 @@
 window.addEventListener('load', async () => {
     const navUser = document.getElementById('user');
     const navGuest = document.getElementById('guest');
-    if (sessionStorage.getItem('token')) {
+    if (sessionStorage.getItem('accessToken')) {
         navUser.style.display = 'inline-block';
     } else {
         navGuest.style.display = 'inline-block';
