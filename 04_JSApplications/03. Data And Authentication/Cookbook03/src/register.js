@@ -21,7 +21,7 @@ function register() {
                 throw new Error(data.message);
             }
             sessionStorage.setItem('accessToken', data.accessToken);
-            window.location.pathname = '04_JSApplications/03.%20Data%20And%20Authentication/Cookbook03/index.html';
+            window.location.pathname = 'index.html';
         } catch (err) {
             console.error(err.message);
         }
