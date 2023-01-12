@@ -33,16 +33,15 @@ async function deleteEntry(row) {
 }
 
 function editEntry(row) {
-    debugger
     h3.textContent = 'Edit FORM';
     formBtn.textContent = 'Save';
-    authorField.value = row.children[0].textContent;
-    titleField.value = row.children[1].textContent;
+    titleField.value = row.children[0].textContent;
+    authorField.value = row.children[1].textContent;
     formBtn.id = row.id;
 }
 
-async function edit(author, title, id){
-    const response = await fetch('http://localhost:3030/jsonstore/collections/books' + id, {
+async function edit(author, title, id) {
+    const response = await fetch('http://localhost:3030/jsonstore/collections/books/' + id, {
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ author, title })
@@ -51,6 +50,9 @@ async function edit(author, title, id){
     const row = document.getElementById(id);
     row.children[0].textContent = title;
     row.children[1].textContent = author;
+    formBtn.id = '';
+    formBtn.textContent = 'Submit';
+    h3.textContent = 'FORM';
 }
 
 async function getFormData(e) {
@@ -97,16 +99,11 @@ function createTableRow(data) {
     }
     const tr = document.createElement('tr');
     tr.id = id
-    const td = document.createElement('td');
-    for (const key in obj) {
-        if (key.startsWith('_')) {
-            continue;
-        }
-        const td = document.createElement('td');
-        td.textContent = obj[key];
-        tr.appendChild(td);
-    }
-    td.innerHTML = '<button>Edit</button><button>Delete</button>';
-    tr.appendChild(td);
+    tr.innerHTML = `<td>${obj.title}</td>
+    <td>${obj.author}</td>
+    <td>
+        <button>Edit</button>
+        <button>Delete</button>
+    </td>`
     return tr;
 }
