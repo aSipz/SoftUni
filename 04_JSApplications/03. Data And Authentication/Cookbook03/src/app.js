@@ -3,12 +3,27 @@ window.addEventListener('load', async () => {
     const navGuest = document.getElementById('guest');
     if (sessionStorage.getItem('accessToken')) {
         navUser.style.display = 'inline-block';
+        document.getElementById('logoutBtn').addEventListener('click', logout);
     } else {
         navGuest.style.display = 'inline-block';
     }
 
     await loadData()
 });
+
+async function logout() {
+    const token = sessionStorage.getItem('accessToken');
+    const response = await fetch('http://localhost:3030/users/logout', {
+        method: 'get',
+        headers: { 'X-Authorization': token }
+    });
+    if (response.status == 204) {
+        sessionStorage.removeItem('accessToken');
+        window.location.pathname = 'index.html';
+    }else {
+        console.error(await response.json());
+    }
+}
 
 async function loadData() {
     try {
