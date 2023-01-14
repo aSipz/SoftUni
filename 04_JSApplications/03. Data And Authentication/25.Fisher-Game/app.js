@@ -4,7 +4,6 @@ const asideHome = sectionHome.querySelector('aside');
 const userDiv = document.getElementById('user');
 const guestDiv = document.getElementById('guest');
 const btnLogOut = document.getElementById('logout');
-// const main = document.querySelector('main');
 
 const spanEmail = document.querySelector('.email > span');
 const addForm = document.getElementById('addForm');
@@ -19,9 +18,6 @@ btnLogOut.addEventListener('click', logout);
 sectionHome.addEventListener('click', editCatches);
 addForm.addEventListener('submit', addCatch);
 
-const p = document.createElement('p');
-p.textContent = 'Click to load catches';
-// main.prepend(p);
 fieldsetHome.style.display = 'none';
 
 if (!sessionStorage.getItem('accessToken')) {
@@ -48,7 +44,7 @@ async function updateCatch(e) {
 async function addCatch(e) {
     e.preventDefault();
     const formData = new FormData(addForm);
-    const { angler, weight, species, location, bait, captureTime } = Object.fromEntries(formData.entries());
+    const { angler, weight, species, location, bait, captureTime } = Object.fromEntries(formData);
     const obj = { angler, weight, species, location, bait, captureTime };
     const newCache = await processCatch(obj, 'post');
     const id = sessionStorage.getItem('id');

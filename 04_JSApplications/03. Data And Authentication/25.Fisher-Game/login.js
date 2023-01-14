@@ -17,7 +17,7 @@ formLogin.addEventListener('submit', login);
 async function login(e) {
     e.preventDefault();
     const formData = new FormData(formLogin);
-    const { email, password } = Object.fromEntries(formData.entries());
+    const { email, password } = Object.fromEntries(formData);
     if (!email || !password) {
         return;
     }

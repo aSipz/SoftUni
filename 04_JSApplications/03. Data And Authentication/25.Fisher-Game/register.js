@@ -11,20 +11,18 @@ navBtnsList.forEach(btn => {
         btn.classList.remove('active');
     }
 });
-debugger
 
 formRegister.addEventListener('submit', register);
 
 async function register(e) {
     e.preventDefault();
     const formData = new FormData(formRegister);
-    const { email, password, rePass } = Object.fromEntries(formData.entries());
+    const { email, password, rePass } = Object.fromEntries(formData);
     if (!email || !password || password != rePass) {
         alert('Invalid username/password');
         formRegister.reset();
         return;
     }
-    debugger
     formRegister.reset();
     try {
         const response = await fetch('http://localhost:3030/users/register', {
