@@ -11,16 +11,17 @@ function attachEvents() {
 
     async function loadComments() {
         const postId = selectField.value;
-
+        const index = selectField.options.selectedIndex;
+        const title = selectField.options[index].textContent;
+        const body = selectField.options[index].dataset.body;
+        postTitleField.textContent = title;
+        postBodyField.textContent = body;
         try {
-            const [responsePost, responseComments] = await Promise.all(
-                [fetch('http://localhost:3030/jsonstore/blog/posts/' + postId), fetch('http://localhost:3030/jsonstore/blog/comments')]);
-            if (!responsePost.ok || !responseComments.ok) {
+            const responseComments = await fetch('http://localhost:3030/jsonstore/blog/comments');
+            if (!responseComments.ok) {
                 throw new Error;
             }
-            const [dataPost, dataComments] = await Promise.all([responsePost.json(), responseComments.json()]);
-            postTitleField.textContent = dataPost.title.toUpperCase();
-            postBodyField.textContent = dataPost.body;
+            const dataComments = await responseComments.json();
             ulComments.innerHTML = '';
             for (const key in dataComments) {
                 if (dataComments[key].postId == postId) {
@@ -33,7 +34,6 @@ function attachEvents() {
         } catch (error) {
             console.log(error);
         }
-
     }
 
     async function loadPost() {
@@ -47,7 +47,8 @@ function attachEvents() {
             for (const key in data) {
                 const option = document.createElement('option');
                 option.value = key;
-                option.textContent = data[key].title.toUpperCase();
+                option.textContent = data[key].title;
+                option.dataset.body = data[key].body;
                 selectField.appendChild(option);
             }
 
