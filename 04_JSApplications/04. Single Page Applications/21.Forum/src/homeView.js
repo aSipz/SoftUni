@@ -4,7 +4,7 @@ import { addPost, createDate} from './elementCreation.js';
 const topicTitle = document.querySelector('.topic-title');
 const homeBtn = document.querySelector('nav a');
 const homeSection = document.getElementById('home-view');
-const detailsSection = document.getElementById('details-view');
+const divTheme = document.querySelector('.theme-content');
 
 document.getElementById('create-content').addEventListener('submit', createPost);
 homeBtn.addEventListener('click', homeView);
@@ -22,7 +22,7 @@ export function homeView() {
     [...document.querySelectorAll('section')].forEach(e => e.style.display = 'none');
     homeSection.style.display = 'block';
     if(document.querySelector('.comment')) {
-        detailsSection.removeChild(document.querySelector('.comment'));
+        divTheme.removeChild(document.querySelector('.comment'));
     }
 }
 
@@ -36,10 +36,12 @@ async function createPost(e) {
     if (!topicName || !username || !postText) {
         return;
     }
+    const title = topicName;
+    const content = postText;
     e.target.reset();
     const date = new Date();
     const createdOn = createDate(date);
-    const obj = { topicName, username, postText, createdOn };
+    const obj = { title, username, content, createdOn,topicName, postText };
     const data = await sendData(obj);
     topicTitle.prepend(addPost(data));
 }

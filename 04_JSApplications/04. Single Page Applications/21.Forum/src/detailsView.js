@@ -2,6 +2,7 @@ import { addComment, addPostDetails, createDate } from "./elementCreation.js";
 
 const detailsSection = document.getElementById('details-view');
 const formComment = document.querySelector('.answer form');
+const divTheme = document.querySelector('.theme-content');
 
 formComment.addEventListener('submit', createComment);
 
@@ -10,11 +11,11 @@ export async function detailsView(id) {
     [...document.querySelectorAll('section')].forEach(e => e.style.display = 'none');
     detailsSection.style.display = 'block';
     const [postData, commentsData] = await Promise.all([loadPost(id), loadComments(id)]);
-    const div = addPostDetails(postData);
+    const frag = addPostDetails(postData);
     const fragment = document.createDocumentFragment();
     fragment.replaceChildren(...commentsData.map(el => addComment(el)));
-    div.appendChild(fragment);
-    detailsSection.prepend(div);
+    frag.appendChild(fragment);
+    divTheme.prepend(frag);
 }
 
 async function createComment(e) {

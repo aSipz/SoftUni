@@ -16,6 +16,7 @@ export function addPost(data) {
 }
 
 export function addPostDetails(data) {
+    const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
     div.classList.add('comment');
     div.id = data._id;
@@ -24,11 +25,16 @@ export function addPostDetails(data) {
     <p><span>${data.username}</span> posted on <time>${data.createdOn}</time></p>
 <p class="post-content">${data.postText}</p>
 </div>`
-    return div;
+    const div2 = document.createElement('div');
+    div2.classList.add('theme-title');
+    div2.innerHTML = `<div class="theme-name-wrapper"><div class="theme-name"><h2>${data.topicName}</h2></div></div>`
+    fragment.appendChild(div2);
+    fragment.appendChild(div);
+    return fragment;
 }
 
 export function createDate(date) {
-   return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
 }
 
 export function addComment(data) {
@@ -40,5 +46,5 @@ export function addComment(data) {
 <div class="post-content"><p>${data.postText}</p></div>
 </div>
 </div>`
-return div;
+    return div;
 }
