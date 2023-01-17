@@ -1,0 +1,56 @@
+import { addComment, addPostDetails, createDate } from "./elementCreation.js";
+
+const detailsSection = document.getElementById('details-view');
+const formComment = document.querySelector('.answer form');
+
+formComment.addEventListener('submit', createComment);
+
+export async function detailsView(id) {
+
+    [...document.querySelectorAll('section')].forEach(e => e.style.display = 'none');
+    detailsSection.style.display = 'block';
+    const [postData, commentsData] = await Promise.all([loadPost(id), loadComments(id)]);
+    const div = addPostDetails(postData);
+    const fragment = document.createDocumentFragment();
+    fragment.replaceChildren(...commentsData.map(el => addComment(el)));
+    div.appendChild(fragment);
+    detailsSection.prepend(div);
+}
+
+async function createComment(e) {
+    e.preventDefault();
+    const formData = new FormData(formComment);
+    const { username, postText } = Object.fromEntries(formData);
+    if (!username || !postText) {
+        return;
+    }
+    formComment.reset();
+    const date = new Date();
+    const createdOn = createDate(date);
+    const postId = document.querySelector('.comment').id;
+    const obj = { postId, postText, createdOn, username };
+    document.querySelector('.header').after(addComment(obj));
+    await sendComments(obj);
+}
+
+async function loadPost(id) {
+    const response = await fetch('http://localhost:3030/jsonstore/collections/myboard/posts/' + id);
+    const data = await response.json();
+    return data;
+}
+
+async function loadComments(postId) {
+    const response = await fetch('http://localhost:3030/jsonstore/collections/myboard/comments');
+    const data = await response.json();
+    const comments = Object.values(data).filter(s => s.postId== postId);
+    return comments;
+}
+
+async function sendComments(obj) {
+    const response = await fetch('http://localhost:3030/jsonstore/collections/myboard/comments', {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(obj)
+    });
+    const data = await response.json();
+}

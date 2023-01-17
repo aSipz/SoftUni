@@ -1,8 +1,30 @@
-import { addPost } from './elementCreation.js';
+import { detailsView } from './detailsView.js';
+import { addPost, createDate} from './elementCreation.js';
 
 const topicTitle = document.querySelector('.topic-title');
+const homeBtn = document.querySelector('nav a');
+const homeSection = document.getElementById('home-view');
+const detailsSection = document.getElementById('details-view');
 
 document.getElementById('create-content').addEventListener('submit', createPost);
+homeBtn.addEventListener('click', homeView);
+homeSection.addEventListener('click', viewComments);
+
+function viewComments(e) {
+    if (e.target.tagName != 'H2') {
+        return
+    }
+    const id = e.target.parentElement.id;
+    detailsView(id);
+}
+
+export function homeView() {
+    [...document.querySelectorAll('section')].forEach(e => e.style.display = 'none');
+    homeSection.style.display = 'block';
+    if(document.querySelector('.comment')) {
+        detailsSection.removeChild(document.querySelector('.comment'));
+    }
+}
 
 async function createPost(e) {
     e.preventDefault();
@@ -16,7 +38,7 @@ async function createPost(e) {
     }
     e.target.reset();
     const date = new Date();
-    const createdOn = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+    const createdOn = createDate(date);
     const obj = { topicName, username, postText, createdOn };
     const data = await sendData(obj);
     topicTitle.prepend(addPost(data));
