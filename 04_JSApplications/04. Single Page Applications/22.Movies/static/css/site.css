@@ -1,4 +1,4 @@
-section {
+body > section {
     display: none;
 }
 .card {
@@ -8,8 +8,8 @@ section {
 
 .card-img-top {
     width: 100%;
-    height: 15vw;
-    object-fit: cover;
+    /* height: 15vw;
+    object-fit: cover; */
 }
 
 .btn-group {
