@@ -9,12 +9,12 @@ const movieList = document.getElementById('movies-list');
 
 const actions = {
     'Delete': deleteMovie,
-    'Edit' : editMovieView,
+    'Edit': editMovieView,
     'Like': likeMovie
 }
 
 export async function showMovieDetails(e) {
-    if(e.target.textContent != 'Details') {
+    if (e.target.textContent != 'Details') {
         return;
     }
     if (!sessionStorage.getItem('token')) {
@@ -24,7 +24,7 @@ export async function showMovieDetails(e) {
     detailsSection.style.display = 'block';
     const movieId = e.target.parentElement.parentElement.parentElement.dataset.id;
     const userId = sessionStorage.getItem('id');
-    const [data, likes, liked] = await Promise.all([getMovie(movieId), getMovieLikes(movieId), getUserLikes(movieId)]) ;
+    const [data, likes, liked] = await Promise.all([getMovie(movieId), getMovieLikes(movieId), getUserLikes(movieId)]);
     detailsSection.appendChild(createMovieDetails(data, userId, likes, liked));
 }
 
@@ -44,16 +44,10 @@ async function deleteMovie(id) {
 
 async function likeMovie() {
     const likesField = detailsSection.querySelector('a');
-    // if (likesField.textContent == "Delete") {
-    //     return;
-    // }
+    const span = detailsSection.querySelector('span');
+    likesField.parentElement.removeChild(likesField);
     const movieId = detailsSection.children[0].dataset.id;
-    
-    const movieLikes = await getMovieLikes(movieId);
-    const span = document.createElement('span');
-    span.className = 'enrolled-span';
-    span.textContent = `Liked ${movieLikes + 1}`;
-   
-    likesField.parentElement.replaceChild(span, likesField)
-    const result = await addLike(movieId);
+    await addLike(movieId);
+    const num = Number(span.textContent.split(' ')[1]) + 1;
+    span.textContent = `Liked ${num}`;
 }

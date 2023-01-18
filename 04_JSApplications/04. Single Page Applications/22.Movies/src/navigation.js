@@ -1,5 +1,5 @@
 import { createLoginForm, createRegisterForm } from './createElements.js';
-import {onLogout} from './auth.js';
+import { onLogout } from './auth.js';
 
 const navBar = document.querySelector('nav');
 const userNavList = document.querySelectorAll('.user');
@@ -8,7 +8,7 @@ const welcomeMsg = document.getElementById('welcome-msg')
 const sections = document.querySelectorAll('div > section');
 const homePage = document.getElementById('home-page');
 const loginPage = document.getElementById('form-login');
-const loginForm= document.getElementById('login-form');
+const loginForm = document.getElementById('login-form');
 const registerPage = document.getElementById('form-sign-up');
 const registerForm = document.getElementById('register-form');
 const detailsSection = document.getElementById('movie-example')
@@ -24,7 +24,9 @@ const navOptions = {
 
 async function logout() {
     await onLogout();
-    homeView();
+    [...userNavList].forEach(e => e.style.display = 'none');
+    [...guestNavList].forEach(e => e.style.display = 'block');
+    loginView();
 }
 
 export function homeView() {

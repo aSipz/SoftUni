@@ -1,9 +1,9 @@
 import { createEditForm, createMoviePreview } from "./createElements.js";
-import { editMovie, getMovie } from "./data.js";
-import { homeView } from "./navigation.js";
+import { editMovie, getMovie} from "./data.js";
 
 const sections = document.querySelectorAll('div > section');
 const editSection = document.getElementById('edit-movie');
+const detailsSection = document.getElementById('movie-example');
 
 export async function editMovieView(id) {
     [...sections].forEach(s => s.style.display = 'none');
@@ -26,5 +26,10 @@ export async function onEdit(e) {
     const data = await editMovie(obj, id);
     const current = [...list.children].find(e => e.dataset.id == id);
     list.replaceChild(createMoviePreview(data), current);
-    homeView();
+    detailsSection.querySelector('h1').textContent = `Movie title: ${title}`;
+    detailsSection.querySelector('img').src = img;
+    detailsSection.querySelector('p').textContent = description;
+    [...document.querySelectorAll('form')].forEach(e => e.textContent = '');
+    [...sections].forEach(s => s.style.display = 'none');
+    detailsSection.style.display = 'block';
 }

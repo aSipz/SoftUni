@@ -39,7 +39,8 @@ export function createRegisterForm() {
 }
 
 export function createMovieDetails(obj, userID, likes, liked) {
-    let like = '<a class="btn btn-primary" href="#">Like</a>'
+    let like = `<a class="btn btn-primary" href="#">Like</a>
+    <span class="enrolled-span">Liked ${likes}</span>`;
     let owner = '';
     if (obj._ownerId == userID) {
         owner = `<a class="btn btn-danger" href="#">Delete</a>
@@ -72,10 +73,12 @@ export function createMovieDetails(obj, userID, likes, liked) {
 
 export function createMoviePreview(obj) {
     const fragment = document.createDocumentFragment();
-    const div = document.createElement('li');
-    div.dataset.id = obj._id;
-    div.className = 'card mb-4';
-    div.innerHTML = `<img class="card-img-top" src="${obj.img}"
+    const li = document.createElement('li');
+    li.dataset.id = obj._id;
+    li.className = 'card mb-4';
+    li.textContent = obj.title;
+    
+    li.innerHTML = `<img class="card-img-top" src="${obj.img}"
     alt="Card image cap" width="400">
 <div class="card-body">
     <h4 class="card-title">${obj.title}</h4>
@@ -85,7 +88,7 @@ export function createMoviePreview(obj) {
         <button type="button" class="btn btn-info">Details</button>
     </a>
 </div>`;
-    fragment.appendChild(div);
+    fragment.appendChild(li);
     return fragment;
 }
 
