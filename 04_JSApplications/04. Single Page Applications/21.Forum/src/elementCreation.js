@@ -3,7 +3,7 @@ export function addPost(data) {
     div.classList.add('topic-container');
     div.innerHTML = `<div class="topic-name-wrapper">
 <div class="topic-name">
-<a href="#" class="normal" id="${data._id}"><h2>${data.topicName}</h2></a>
+<a href="#" class="normal" id="${data._id}"><h2>${data.title}</h2></a>
 <div class="columns">
 <div>
 <p>Date: <time>${data.createdOn}</time></p>
@@ -23,7 +23,7 @@ export function addPostDetails(data) {
     div.innerHTML = `<div class="header">
     <img src="./static/profile.png" alt="avatar">
     <p><span>${data.username}</span> posted on <time>${data.createdOn}</time></p>
-<p class="post-content">${data.postText}</p>
+<p class="post-content">${data.content}</p>
 </div>`
     const div2 = document.createElement('div');
     div2.classList.add('theme-title');

@@ -42,7 +42,7 @@ async function createPost(e) {
     e.target.reset();
     const date = new Date();
     const createdOn = createDate(date);
-    const obj = { title, username, content, createdOn,topicName, postText };
+    const obj = { title, username, content, createdOn };
     const data = await sendData(obj);
     topicTitle.prepend(addPost(data));
 }
