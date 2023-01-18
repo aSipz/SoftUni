@@ -44,8 +44,7 @@ export function createMovieDetails(obj, userID, likes, liked) {
     if (obj._ownerId == userID) {
         owner = `<a class="btn btn-danger" href="#">Delete</a>
         <a class="btn btn-warning" href="#">Edit</a>`;
-        like = `<a class="btn btn-primary" href="#">Like</a>
-        <span>Liked ${likes}</span>`
+        like = `<span>Liked ${likes}</span>`
     }
     if (liked.length == 1) {
         like = `<span class="enrolled-span">Liked ${likes}</span>`
@@ -73,7 +72,7 @@ export function createMovieDetails(obj, userID, likes, liked) {
 
 export function createMoviePreview(obj) {
     const fragment = document.createDocumentFragment();
-    const div = document.createElement('div');
+    const div = document.createElement('li');
     div.dataset.id = obj._id;
     div.className = 'card mb-4';
     div.innerHTML = `<img class="card-img-top" src="${obj.img}"
@@ -122,19 +121,19 @@ export function createEditForm(obj) {
     const div1 = document.createElement('div');
     div1.classList.add('form-group');
     div1.innerHTML = `<label for="title">Movie Title</label>
-    <input id="title" type="text" class="form-control" placeholder="${obj.title}" value="" name="title" />`;
+    <input id="title" type="text" class="form-control" placeholder="Movie Title" value="${obj.title}" name="title" />`;
     const div2 = document.createElement('div');
     div2.classList.add('form-group');
     div2.innerHTML = `<label for="description">Movie Description</label>
-    <textarea class="form-control" placeholder="${obj.description}" name="description"></textarea>`;
+    <textarea class="form-control" placeholder="Movie Description..." name="description">${obj.description}</textarea>`;
     const div3 = document.createElement('div');
     div3.classList.add('form-group');
     div3.innerHTML = `<label for="imageUrl">Image url</label>
-    <input id="imageUrl" type="text" class="form-control" placeholder="${obj.img}" value="" name="img" />`;
+    <input id="imageUrl" type="text" class="form-control" placeholder="Image Url" value="${obj.img}" name="img" />`;
     const btn = document.createElement('button');
     btn.className = 'btn btn-primary';
     btn.textContent = 'Submit';
     btn.type = 'submit';
-    fragment.replaceChildren(h1, div1, div2, div3, btn);
+    fragment.replaceChildren(h1, div3, div1, div2, btn);
     return fragment;
 }

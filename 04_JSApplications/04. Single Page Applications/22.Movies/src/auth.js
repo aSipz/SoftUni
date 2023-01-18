@@ -18,10 +18,10 @@ export async function onRegister(e) {
         if (!response.ok) {
             throw new Error(data.message);
         }
-        homeView();
         sessionStorage.setItem('token', data.accessToken);
         sessionStorage.setItem('email', data.email);
         sessionStorage.setItem('id', data._id);
+        homeView();
     } catch (error) {
         console.log(error.message);
     }
@@ -44,10 +44,10 @@ export async function onLogin(e) {
         if (!response.ok) {
             throw new Error(data.message);
         }
-        homeView();
         sessionStorage.setItem('token', data.accessToken);
         sessionStorage.setItem('email', data.email);
         sessionStorage.setItem('id', data._id);
+        homeView();
     } catch (error) {
         console.log(error.message);
         alert("Email or password don't match\nTry again");

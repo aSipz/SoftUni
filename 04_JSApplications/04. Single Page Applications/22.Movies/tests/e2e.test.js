@@ -240,6 +240,7 @@ describe('E2E tests', function () {
         `#movie > div div ul li:has-text("${data.title}") >> text=Details`
       );
       await page.waitForTimeout(interval);
+      
       expect(await page.isVisible(`h1:has-text("Movie title: ${data.title}")`))
         .to.be.true;
       expect(await page.isVisible(`p:has-text("${data.description}")`)).to.be
