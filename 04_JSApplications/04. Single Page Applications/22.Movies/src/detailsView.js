@@ -44,9 +44,9 @@ async function deleteMovie(id) {
 
 async function likeMovie() {
     const likesField = detailsSection.querySelector('a');
-    if (likesField.textContent == "Delete") {
-        return;
-    }
+    // if (likesField.textContent == "Delete") {
+    //     return;
+    // }
     const movieId = detailsSection.children[0].dataset.id;
     
     const movieLikes = await getMovieLikes(movieId);
