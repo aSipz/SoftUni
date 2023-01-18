@@ -13,8 +13,8 @@ export async function detailsView(id) {
     const [postData, commentsData] = await Promise.all([loadPost(id), loadComments(id)]);
     const frag = addPostDetails(postData);
     const fragment = document.createDocumentFragment();
-    fragment.replaceChildren(...commentsData.map(el => addComment(el)));
-    frag.appendChild(fragment);
+    fragment.replaceChildren(...commentsData.reverse().map(el => addComment(el)));
+    frag.children[1].appendChild(fragment);
     divTheme.prepend(frag);
 }
 

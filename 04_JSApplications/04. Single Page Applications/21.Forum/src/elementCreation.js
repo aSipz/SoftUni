@@ -27,7 +27,7 @@ export function addPostDetails(data) {
 </div>`
     const div2 = document.createElement('div');
     div2.classList.add('theme-title');
-    div2.innerHTML = `<div class="theme-name-wrapper"><div class="theme-name"><h2>${data.topicName}</h2></div></div>`
+    div2.innerHTML = `<div class="theme-name-wrapper"><div class="theme-name"><h2>${data.title}</h2></div></div>`
     fragment.appendChild(div2);
     fragment.appendChild(div);
     return fragment;

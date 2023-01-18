@@ -21,7 +21,8 @@ function viewComments(e) {
 export function homeView() {
     [...document.querySelectorAll('section')].forEach(e => e.style.display = 'none');
     homeSection.style.display = 'block';
-    if(document.querySelector('.comment')) {
+    if(document.querySelector('.theme-title')) {
+        divTheme.removeChild(document.querySelector('.theme-title'));
         divTheme.removeChild(document.querySelector('.comment'));
     }
 }
