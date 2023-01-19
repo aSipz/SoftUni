@@ -15,6 +15,10 @@ export async function detailsView(id) {
     const fragment = document.createDocumentFragment();
     fragment.replaceChildren(...commentsData.reverse().map(el => addComment(el)));
     frag.children[1].appendChild(fragment);
+    //additional
+    divTheme.removeChild(divTheme.children[0]);
+    divTheme.removeChild(divTheme.children[0]);
+
     divTheme.prepend(frag);
 }
 
@@ -43,7 +47,7 @@ async function loadPost(id) {
 async function loadComments(postId) {
     const response = await fetch('http://localhost:3030/jsonstore/collections/myboard/comments');
     const data = await response.json();
-    const comments = Object.values(data).filter(s => s.postId== postId);
+    const comments = Object.values(data).filter(s => s.postId == postId);
     return comments;
 }
 

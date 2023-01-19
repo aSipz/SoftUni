@@ -1,5 +1,5 @@
 import { detailsView } from './detailsView.js';
-import { addPost, createDate} from './elementCreation.js';
+import { addPost, addPostDetails, createDate } from './elementCreation.js';
 
 const topicTitle = document.querySelector('.topic-title');
 const homeBtn = document.querySelector('nav a');
@@ -15,13 +15,21 @@ function viewComments(e) {
         return
     }
     const id = e.target.parentElement.id;
+    // additional
+    const title = e.target.textContent;
+    const username = e.target.parentElement.parentElement.children[1].children[0].children[1].children[0].children[0].textContent;
+    const data = { title, id, username };
+    const temp = addPostDetails(data);
+    divTheme.prepend(temp);
+    debugger;
+
     detailsView(id);
 }
 
 export function homeView() {
     [...document.querySelectorAll('section')].forEach(e => e.style.display = 'none');
     homeSection.style.display = 'block';
-    if(document.querySelector('.theme-title')) {
+    if (document.querySelector('.theme-title')) {
         divTheme.removeChild(document.querySelector('.theme-title'));
         divTheme.removeChild(document.querySelector('.comment'));
     }
