@@ -29,7 +29,7 @@ export function homeView() {
 
 async function createPost(e) {
     e.preventDefault();
-    if (e.target.textContent == 'Cancel') {
+    if (e.submitter.textContent == 'Cancel') {
         e.target.reset();
     }
     const formData = new FormData(e.target);
