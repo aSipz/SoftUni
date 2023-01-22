@@ -1,7 +1,15 @@
+import { checkUserNav } from './auth.js';
+
 const views = {
     'logout': onLogout,
     'login': onLogin,
     'register': onRegister
+}
+
+const ctx = {
+    goto,
+    checkUserNav,
+    render
 }
 
 function onNavigate(event) {
@@ -18,12 +26,13 @@ function onNavigate(event) {
 function goto(viewName, ...params) {
     const view = views[viewName];
     if (typeof view == 'function') {
-        document.querySelector('main').replaceChildren();
-        view({
-            goto 
-        }, ...params);
+        view({ ctx }, ...params);
         return true;
     }
 
     return false;
+}
+
+function render(section) {
+    document.querySelector('main').replaceChildren(section);
 }
