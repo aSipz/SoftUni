@@ -1,6 +1,7 @@
 import { html, render } from './node_modules/lit-html/lit-html.js';
+import { repeat } from './node_modules/lit-html/directives/repeat.js';
 import { post, get, del, put } from './api.js';
-import { createEditView, createHomeView } from './createElements.js';
+import { createAddForm, createEditForm, createTableRow } from './createElements.js';
 
 const body = document.querySelector('body');
 const tbody = document.querySelector('tbody');
@@ -8,22 +9,18 @@ const tbody = document.querySelector('tbody');
 document.getElementById('loadBooks').addEventListener('click', loadBooks);
 tbody.addEventListener('click', tableHandler);
 
-let dataArray = [];
-
 const operations = {
     Edit: onEdit,
     Delete: onDelete
 }
 
-const homeView = createHomeView.bind(null, tableHandler, submitHandler);
-const editView = createEditView.bind(null, tableHandler, submitHandler);
+render(createAddForm(submitHandler), body);
 
+const data = await get('/jsonstore/collections/books');
+const dataArray = Object.entries(data);
 
-async function loadBooks() {
-    const data = await get('/jsonstore/collections/books');
-    dataArray = Object.entries(data);
-
-    render(homeView(dataArray), root);
+function loadBooks() {
+    render(repeat(dataArray, i => i[0], i => createTableRow(i)), tbody);
 }
 
 function tableHandler(e) {
@@ -39,7 +36,6 @@ async function submitHandler(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const { title, author, bookId } = Object.fromEntries(formData);
-    debugger
     if (!title || !author) {
         return;
     }
@@ -47,26 +43,25 @@ async function submitHandler(e) {
     if (e.target.id == 'add-form') {
         const data = await post('/jsonstore/collections/books', { title, author });
         dataArray.push([data._id, { title: data.title, author: data.author }]);
-
-        render(homeView(dataArray), root);
+        render(repeat(dataArray, i => i[0], i => createTableRow(i)), tbody);
 
     }
     if (e.target.id == 'edit-form') {
         const data = await put('/jsonstore/collections/books/' + bookId, { title, author });
-        const index = dataArray.findIndex(e => e[0] == bookId);
-        const book = dataArray[index][1];
-        book.title = title;
-        book.author = author;
+        const book = dataArray.find(e => e[0] == bookId);
+        book[1].title = title;
+        book[1].author = author;
 
-        render(homeView(dataArray), root);
+        render(repeat(dataArray, i => i[0], i => createTableRow(i)), tbody);
+        render(createAddForm(submitHandler), body);
     }
-
 }
 
-async function onEdit(id) {
+function onEdit(id) {
     const index = dataArray.findIndex(e => e[0] == id);
     const book = dataArray[index];
-    render(editView(dataArray, book), root);
+
+    render(createEditForm(submitHandler, book), body);
 }
 
 async function onDelete(id) {
@@ -74,5 +69,5 @@ async function onDelete(id) {
     const index = dataArray.findIndex(e => e[0] == id);
     dataArray.splice(index, 1);
 
-    render(homeView(dataArray), root);
+    render(repeat(dataArray, i => i[0], i => createTableRow(i)), tbody);
 }
