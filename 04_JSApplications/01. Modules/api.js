@@ -8,7 +8,7 @@ async function request(method, url, data) {
         headers: {}
     }
 
-    if (data) {
+    if (data !== undefined) {
         options.headers['Content-Type'] = 'application/json';
         options.body = JSON.stringify(data);
     }
@@ -19,16 +19,17 @@ async function request(method, url, data) {
     try {
         const response = await fetch(host + url, options);
 
-        if (response.ok != true) {
-            const error = await response.json();
-            throw new Error(error.message);
-        }
-
         if (response.status == 204) {
             return response;
         }
 
-        return response.json();
+        const data = await response.json();
+
+        if (response.ok != true) {
+            throw new Error(data.message);
+        }
+
+        return data;
     } catch (err) {
         alert(err.message);
         throw err;
