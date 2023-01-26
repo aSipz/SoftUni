@@ -1,20 +1,22 @@
-import { html, render } from './node_modules/lit-html/lit-html.js';
+import { render } from './node_modules/lit-html/lit-html.js';
 import { repeat } from './node_modules/lit-html/directives/repeat.js';
 import { post, get, del, put } from './api.js';
 import { createAddForm, createEditForm, createTableRow } from './createElements.js';
 
-const body = document.querySelector('body');
+const form = document.querySelector('form');
 const tbody = document.querySelector('tbody');
 
 document.getElementById('loadBooks').addEventListener('click', loadBooks);
 tbody.addEventListener('click', tableHandler);
+form.addEventListener('submit', submitHandler);
 
 const operations = {
     Edit: onEdit,
     Delete: onDelete
 }
 
-render(createAddForm(submitHandler), body);
+render(createAddForm(), form);
+form.id = 'add-form';
 
 const data = await get('/jsonstore/collections/books');
 const dataArray = Object.entries(data);
@@ -32,7 +34,7 @@ function tableHandler(e) {
     operations[btn](id);
 }
 
-async function submitHandler(e) {
+function submitHandler(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const { title, author, bookId } = Object.fromEntries(formData);
@@ -41,19 +43,10 @@ async function submitHandler(e) {
     }
     e.target.reset();
     if (e.target.id == 'add-form') {
-        const data = await post('/jsonstore/collections/books', { title, author });
-        dataArray.push([data._id, { title: data.title, author: data.author }]);
-        render(repeat(dataArray, i => i[0], i => createTableRow(i)), tbody);
-
+        createEntry(title, author);
     }
     if (e.target.id == 'edit-form') {
-        const data = await put('/jsonstore/collections/books/' + bookId, { title, author });
-        const book = dataArray.find(e => e[0] == bookId);
-        book[1].title = title;
-        book[1].author = author;
-
-        render(repeat(dataArray, i => i[0], i => createTableRow(i)), tbody);
-        render(createAddForm(submitHandler), body);
+        editEntry(title, author, bookId);
     }
 }
 
@@ -61,7 +54,8 @@ function onEdit(id) {
     const index = dataArray.findIndex(e => e[0] == id);
     const book = dataArray[index];
 
-    render(createEditForm(submitHandler, book), body);
+    render(createEditForm(book), form);
+    form.id = 'edit-form';
 }
 
 async function onDelete(id) {
@@ -70,4 +64,21 @@ async function onDelete(id) {
     dataArray.splice(index, 1);
 
     render(repeat(dataArray, i => i[0], i => createTableRow(i)), tbody);
+}
+
+async function createEntry(title, author) {
+    const data = await post('/jsonstore/collections/books', { title, author });
+    dataArray.push([data._id, { title: data.title, author: data.author }]);
+    render(repeat(dataArray, i => i[0], i => createTableRow(i)), tbody);
+}
+
+async function editEntry(title, author, bookId) {
+    const data = await put('/jsonstore/collections/books/' + bookId, { title, author });
+    const book = dataArray.find(e => e[0] == bookId);
+    book[1].title = title;
+    book[1].author = author;
+
+    render(repeat(dataArray, i => i[0], i => createTableRow(i)), tbody);
+    render(createAddForm(), form);
+    form.id = 'add-form';
 }
