@@ -14,7 +14,7 @@ async function request(method, url, data) {
     }
 
     if (token) {
-        headers['X-Authorization'] = token;
+        options.headers['X-Authorization'] = token;
     }
     try {
         const response = await fetch(host + url, options);

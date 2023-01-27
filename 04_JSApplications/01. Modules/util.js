@@ -13,7 +13,7 @@ export function clearUserData() {
 }
 
 export function createSubmitHandler(formId, callback) {
-    document.getElementById(formId).addEventListener('click', onSubmit);
+    document.getElementById(formId).addEventListener('submit', onSubmit);
 
     function onSubmit(event) {
         event.preventDefault();
