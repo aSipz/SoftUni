@@ -12,10 +12,8 @@ export function clearUserData() {
     sessionStorage.removeItem('email');
 }
 
-export function createSubmitHandler(formId, callback) {
-    document.getElementById(formId).addEventListener('submit', onSubmit);
-
-    function onSubmit(event) {
+export function createSubmitHandler(callback) {
+    return function(event) {
         event.preventDefault();
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData);
@@ -23,3 +21,15 @@ export function createSubmitHandler(formId, callback) {
         callback(data, event);
     }
 }
+
+// export function createSubmitHandler(formId, callback) {
+//     document.getElementById(formId).addEventListener('submit', onSubmit);
+
+//     function onSubmit(event) {
+//         event.preventDefault();
+//         const formData = new FormData(event.target);
+//         const data = Object.fromEntries(formData);
+
+//         callback(data, event);
+//     }
+// }
