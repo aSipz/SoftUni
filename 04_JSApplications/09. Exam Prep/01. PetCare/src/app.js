@@ -4,6 +4,7 @@ import { clearUserData, getUserData } from './util.js';
 import { showCreate } from './views/createView.js';
 import { showDashboard } from './views/dashboardView.js';
 import { showDetails } from './views/detailsView.js';
+import { showEdit } from './views/editView.js';
 import { showHome } from './views/homeView.js';
 import { showLogin } from './views/loginView.js';
 import { showRegister } from './views/registerView.js';
@@ -19,6 +20,7 @@ page('/register', showRegister);
 page('/dashboard', showDashboard);
 page('/create', showCreate);
 page('/details/:id', showDetails);
+page('/edit/:id', showEdit);
 
 page.start();
 
