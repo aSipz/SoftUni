@@ -1,9 +1,13 @@
 import { logout } from './data/data.js';
-import { html, render, nothing, repeat, page } from './lib.js'
+import { html, render, page } from './lib.js'
 import { clearUserData, getUserData } from './util.js';
+import { showCreate } from './views/createView.js';
 import { showDetails } from './views/detailsView.js';
+import { showEdit } from './views/editView.js';
 import { showHome } from './views/homeView.js';
 import { showLogin } from './views/loginView.js';
+import { showModal } from './views/modal.js';
+import { showMyTeams } from './views/myTeamsView.js';
 import { showRegister } from './views/registerView.js';
 import { showTeams } from './views/teamsView.js';
 
@@ -16,6 +20,9 @@ page('/login', showLogin);
 page('/register', showRegister);
 page('/teams', showTeams);
 page('/details/:teamId', showDetails);
+page('/edit/:teamId', showEdit);
+page('/create', showCreate);
+page('/my-teams', showMyTeams);
 page.start();
 
 function session(ctx, next) {
@@ -32,6 +39,8 @@ function decorateContext(ctx, next) {
     ctx.render = function (content) {
         render(content, document.querySelector('main'));
     };
+
+    ctx.modal = showModal;
 
     next();
 }

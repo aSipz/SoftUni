@@ -1,5 +1,5 @@
-import { getTeam, leaveTeam, requestMembership } from '../data/data.js';
-import { html, nothing, repeat, page } from '../lib.js';
+import { getTeam, leaveTeam } from '../data/data.js';
+import { html, nothing, repeat } from '../lib.js';
 
 let ctx = null;
 
@@ -53,7 +53,7 @@ function createTeamDetailsTemplate(team, activeMembers, pendingMembers, user) {
                     ${repeat(activeMembers, i => i._id, i => createUserLi(i, user, team))}
                 </ul>
             </div>
-            ${team._ownerId == user.userId
+            ${user && team._ownerId == user.userId
             ? html`<div class="pad-large">
                 <h3>Membership Requests</h3>
                 <ul class="tm-members">
@@ -68,7 +68,7 @@ function createTeamDetailsTemplate(team, activeMembers, pendingMembers, user) {
 function createUserLi(current, user, team, activeMembers) {
     return html`
     <li>${current.user.username}
-        ${team._ownerId == user.userId && current.user._id != user.userId 
+        ${user && team._ownerId == user.userId && current.user._id != user.userId 
             ? html`
             <a href="javascript:void(0)" 
             data-id="${current._id}" 
@@ -81,21 +81,28 @@ function createUserLi(current, user, team, activeMembers) {
 function createPendingLi(current, team) {
     return html`
     <li>${current.user.username}
-        <a href="javascript:void(0)" data-id="${current._id}" data-team_id="${team._id}" class="tm-control action">Approve</a>
+        <a href="javascript:void(0)" data-id="${current._id}" data-team_id="${team._id}" class="tm-control action" @click=${approve}>Approve</a>
         <a href="javascript:void(0)" data-id="${current._id}" data-team_id="${team._id}" class="tm-control action" @click=${cancel}>Decline</a>
     </li>`;
 }
 
-async function join(e) {
+async function approve(e) {
+    const msg = 'Confirm membership approval';
+    const membershipId = e.target.dataset.id;
     const teamId = e.target.dataset.team_id;
-    await requestMembership(teamId);
-    ctx.page.redirect('/details/' + teamId);
+    ctx.modal(msg, 'approve', {teamId, membershipId}, ctx);
+}
+
+async function join(e) {
+    const msg = 'Confirm your join request';
+    const teamId = e.target.dataset.team_id;
+    ctx.modal(msg, 'join', {teamId}, ctx);
 }
 
 async function cancel(e) {
+    const msg = 'Are you sure?';
     const membershipId = e.target.dataset.id;
     const teamId = e.target.dataset.team_id;
-    await leaveTeam(membershipId);
-    ctx.page.redirect('/details/' + teamId);
+    ctx.modal(msg, 'cancel', {teamId, membershipId}, ctx);
 }
 

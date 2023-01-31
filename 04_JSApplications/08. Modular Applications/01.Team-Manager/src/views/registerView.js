@@ -33,7 +33,7 @@ function createRegisterTemplate(onSubmit, error) {
 }
 
 async function onSubmit({ email, username, password, repass }, event) {
-    const emailPattern = /^\w+@\w+(?:\.\w+)+$/;
+    const emailPattern = /^(?:\w+\.*)+@\w+(?:\.\w+)+$/;
     let error = [];
     if (!emailPattern.test(email)) {
         error.push('E-mail should be valid.');
@@ -56,7 +56,7 @@ async function onSubmit({ email, username, password, repass }, event) {
     const data = await register(email, username, password);
     setUserData(data);
 
-    ctx.page.redirect('/');
+    ctx.page.redirect('/my-teams');
 }
 
 
