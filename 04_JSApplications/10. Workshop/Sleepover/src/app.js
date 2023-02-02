@@ -3,9 +3,9 @@ import { render, html } from './lib/lit-html.js';
 import {repeat} from './lib/directives/repeat.js';
 import {until} from './lib/directives/until.js';
 
-import { addRender } from './middlewares.js/render.js';
-import { addSession } from './middlewares.js/session.js';
-import { addUserNav } from './middlewares.js/userNav.js';
+import { addRender } from './middlewares/render.js';
+import { addSession } from './middlewares/session.js';
+import { addUserNav } from './middlewares/userNav.js';
 
 import { showCreate } from './views/createView.js';
 import { showCatalog } from './views/catalogView.js';

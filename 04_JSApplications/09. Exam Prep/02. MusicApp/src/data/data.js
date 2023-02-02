@@ -20,7 +20,7 @@ export async function register(email, password) {
 }
 
 export async function logout() {
-    return await get(endpoint.logout);
+    return get(endpoint.logout);
 }
 
 export function getAllAlbums() {
