@@ -8,7 +8,7 @@ export function navTemplate(hasUser) {
     
         ${hasUser
             ? html`
-        <a href="/create">Host</a>
+        <a href="/host">Host</a>
         <a href="javascript:void(0)">Logout</a>`
             : html`
         <a href="/login">Login</a>

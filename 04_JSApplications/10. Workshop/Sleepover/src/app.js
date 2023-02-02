@@ -12,6 +12,7 @@ import { showCatalog } from './views/catalogView.js';
 import { showLogin } from './views/loginView.js';
 import { showRegister } from './views/registerView.js';
 import { navTemplate } from './views/nav.js';
+import { showHome } from './views/homeView.js';
 
 import { getUserData } from './util.js';
 
@@ -23,11 +24,11 @@ page(addRender(main, nav));
 page(addSession(getUserData));
 page(addUserNav(navTemplate));
 
-page('/', '/rooms');
+page('/', showHome);
 page('/rooms', showCatalog);
 page('/login', showLogin);
 page('/register', showRegister);
 page('/rooms/:id', ({params: {id}})=> console.log('details', id));
-page('/create', showCreate);
+page('/host', showCreate);
 
 page.start();

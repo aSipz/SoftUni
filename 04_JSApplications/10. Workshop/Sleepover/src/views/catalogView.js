@@ -14,7 +14,7 @@ export async function showCatalog(ctx) {
 
     function catalogTemplate(list) {
         return html`
-        <h1>Available Rooms</h1>
+        <h2>Available Rooms</h2>
         ${list}`
     }
 
