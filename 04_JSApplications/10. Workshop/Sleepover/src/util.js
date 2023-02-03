@@ -21,11 +21,25 @@ export function addOwner(record, ownerId) {
     return data;
 }
 
+export function filterRelation(field, collection, objectId) {
+    return {
+        [field]: createPointer(collection, objectId)
+    };
+}
+
+export function encodeObject(obj) {
+    return encodeURIComponent(JSON.stringify(obj));
+}
+
+export function encodeDate(date) {
+    return{__type: 'Date', iso: date.toISOString()};
+}   
+
 export function createSubmitHandler(callback) {
     return function (event) {
         event.preventDefault();
         const formData = new FormData(event.target);
-        const data = Object.fromEntries([...formData].map(([k,v]) => [k, v.trim()]));
+        const data = Object.fromEntries([...formData].map(([k, v]) => [k, v.trim()]));
 
         callback(data, event);
     }
