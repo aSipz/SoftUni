@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Pop-up Widget - Component</title>
+  <script src="app.js" type="module"></script>
 </head>
 
 <body>
@@ -41,14 +42,16 @@
     </style>
     <span class="wrapper">
       <span class="icon" tabindex="0">
-        <img src="POPUP ALT IMAGE URL">
+        <img src="/02. popup-widget/img/default.png">
       </span>
 
       <span class="info">
-        POPUP TEXT
+       <slot></slot>
       </span>
     </span>
   </template>
+
+  <my-popup img="img/info.png">Tralala</my-popup>
 
 </body>
 
