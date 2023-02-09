@@ -1,11 +1,13 @@
 @import 'https://use.fontawesome.com/releases/v5.6.3/css/all.css';
 
 body {
-    width: 800px;
+   font-size: 0px;
+   margin: 0px;
 }
 
 .viewport {
-    height: 400px;
+    height: 50vh;
+    width: 100vw;
     position: relative;
 }
 
@@ -28,7 +30,7 @@ img {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 30%;
+    width: 20%;
 }
 
 i {
@@ -36,4 +38,5 @@ i {
     position: absolute;
     bottom: 5px;
     right: 5px;
+    font-size: 14px;
 }
