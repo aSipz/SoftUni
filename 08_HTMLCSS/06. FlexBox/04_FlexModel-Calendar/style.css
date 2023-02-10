@@ -1,0 +1,53 @@
+body {
+    padding: 30px;
+}
+
+span {
+    border: 1px solid black;
+    height: 80px;
+    padding-top: 15px;
+}
+
+div {
+    max-width: 65vw;
+    text-align: center;
+    display: flex;
+}
+
+.week {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    flex-basis: 70%;
+}
+
+.week span:nth-child(1),
+.week span:nth-child(7) {
+    flex-basis: 100%;
+}
+
+.week span:nth-child(2),
+.week span:nth-child(3),
+.week span:nth-child(4),
+.week span:nth-child(5),
+.week span:nth-child(6) {
+    flex-basis: 20%;
+}
+
+.week span:nth-child(8),
+.week span:nth-child(9) {
+    flex-basis: 50%;
+}
+
+
+.notes {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-basis: 305;
+}
+
+.notes span {
+    flex-grow: 1;
+    flex-basis: 50%;
+}

@@ -1,0 +1,30 @@
+html {
+    font-family: Helvetica, sans-serif;
+}
+
+body {
+    padding: 30px 50px;
+}
+
+a {
+    color: rgb(0, 153, 0);
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+header {
+    display: flex;
+    border-bottom: 2px solid rgb(0,0,0);
+}
+
+h1 {
+    margin-right: auto;
+}
+
+ul {
+    display: flex;
+}
+
+main {
+    margin-top: 30px;
+}
