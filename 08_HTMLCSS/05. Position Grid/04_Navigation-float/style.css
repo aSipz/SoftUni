@@ -34,6 +34,7 @@ blockquote {
     margin-left: 20px;
     border-left: 2px solid lightgrey;
     padding: 20px;
+    font-family: Georgia, serif;
 }
 
 cite {

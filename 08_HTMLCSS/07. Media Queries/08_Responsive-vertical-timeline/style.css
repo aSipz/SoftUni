@@ -1,0 +1,42 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.timeline {
+    border: 0.3rem solid rgb(153, 153, 153);
+    width: 90%;
+    height: 90%;
+}
+
+.timeline::before {
+    content: 'A Little History of the World Wide Web';
+    border: 2px solid rgb(153, 153, 153);
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 20px);
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    height: 24px;
+    vertical-align: middle;
+    padding: 0 10px;
+}
+
+.timeline::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    background-color: rgb(153, 153, 153);
+    top: calc(5% + 44px + 0.15rem);
+    bottom: 5%;
+    left: 50%;
+    margin-left: -3px;
+}
+
+article h3 {
+    font-style: italic;
+}

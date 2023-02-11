@@ -1,5 +1,8 @@
-body {
+html {
     font-family: Helvetica, sans-serif;
+}
+
+body {
     font-size: 20px;
     padding: 20px;
 }
