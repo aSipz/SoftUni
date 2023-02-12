@@ -1,4 +1,5 @@
 import * as quizService from '../data/quiz.js';
+import * as questionService from '../data/question.js';
 import { repeat } from '../lib/directives/repeat.js';
 import { html, nothing } from '../lib/lit-html.js';
 import { createSubmitHandler } from '../util.js';
@@ -8,10 +9,11 @@ export function showEdit(ctx) {
     const quizId = ctx.params.id;
     const quiz = ctx.data;
     const questions = ctx.questions.results;
+    const questionsCount = questions.length;
 
     ctx.render(editTemplate(quiz, questions));
 
-    function editTemplate(quiz, questions, add) {
+    function editTemplate(quiz, questions, add, answers, submitted) {
         return html`
         <section id="editor">
         
@@ -47,95 +49,7 @@ export function showEdit(ctx) {
                     ? repeat(questions, q => q.objectId, questionCard)
                 : nothing}
 
-                ${add? addQuestion(): nothing}
-        
-        
-                <article class="editor-question">
-                    <div class="layout">
-                        <div class="question-control">
-                            <button disabled class="input submit action"><i class="fas fa-check-double"></i>
-                                Save</button>
-                            <button disabled class="input submit action"><i class="fas fa-times"></i>
-                                Cancel</button>
-                        </div>
-                        <h3>Question 1</h3>
-                    </div>
-                    <form>
-                        <textarea disabled class="input editor-input editor-text" name="text"
-                            placeholder="Enter question"></textarea>
-                        <div class="editor-input">
-        
-                            <label class="radio">
-                                <input disabled class="input" type="radio" name="question-1" value="0" />
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-        
-                            <input disabled class="input" type="text" name="answer-0" />
-                            <button disabled class="input submit action"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                        <div class="editor-input">
-        
-                            <label class="radio">
-                                <input disabled class="input" type="radio" name="question-1" value="1" />
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-        
-                            <input disabled class="input" type="text" name="answer-1" />
-                            <button disabled class="input submit action"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                        <div class="editor-input">
-        
-                            <label class="radio">
-                                <input disabled class="input" type="radio" name="question-1" value="2" />
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-        
-                            <input disabled class="input" type="text" name="answer-2" />
-                            <button disabled class="input submit action"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                        <div class="editor-input">
-                            <button disabled class="input submit action">
-                                <i class="fas fa-plus-circle"></i>
-                                Add answer
-                            </button>
-                        </div>
-                    </form>
-                    <div class="loading-overlay working"></div>
-                </article>
-        
-                <article class="editor-question">
-                    <div class="layout">
-                        <div class="question-control">
-                            <button class="input submit action"><i class="fas fa-edit"></i> Edit</button>
-                            <button class="input submit action"><i class="fas fa-trash-alt"></i> Delete</button>
-                        </div>
-                        <h3>Question 2</h3>
-                    </div>
-                    <form>
-                        <p class="editor-input">This is the second question.</p>
-                        <div class="editor-input">
-                            <label class="radio">
-                                <input class="input" type="radio" name="question-2" value="0" disabled />
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-                            <span>Answer 0</span>
-                        </div>
-                        <div class="editor-input">
-                            <label class="radio">
-                                <input class="input" type="radio" name="question-2" value="1" disabled />
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-                            <span>Answer 1</span>
-                        </div>
-                        <div class="editor-input">
-                            <label class="radio">
-                                <input class="input" type="radio" name="question-2" value="2" disabled />
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-                            <span>Answer 2</span>
-                        </div>
-                    </form>
-                </article>
+                ${add? addQuestion(answers, submitted): nothing}
         
                 <article class="editor-question">
                     <div class="editor-input">
@@ -153,7 +67,7 @@ export function showEdit(ctx) {
     }
 
     async function submitQuiz({ title, topic }) {
-
+    
         if (!title) {
             return alert('Title is required');
         }
@@ -166,12 +80,41 @@ export function showEdit(ctx) {
 
         ctx.page.redirect('/edit/' + quizId);
     }
+    
+    async function submitQuestion(text, correctIndex, answers) {
+    
+
+        if (!text) {
+            return alert('Question text is required');
+        }
+
+        if (!correctIndex) {
+            return alert('Correct answer is required');
+        }
+
+        if (answers.includes('')) {
+            return alert('All answers are required');
+        }
+
+        correctIndex = Number(correctIndex[1]);
+
+       
+
+        await questionService.create({text, answers, correctIndex}, quizId);
+       
+        ctx.page.redirect('/edit/' + quizId);
+    }
 
     function onAdd() {
         ctx.render(editTemplate(quiz, questions, true));
     }
 
+    function onCancel() {
+        ctx.render(editTemplate(quiz, questions));
+    }
+
     function questionCard(question) {
+        debugger
         return html`
         <article class="editor-question">
             <div class="layout">
@@ -179,87 +122,105 @@ export function showEdit(ctx) {
                     <button class="input submit action"><i class="fas fa-edit"></i> Edit</button>
                     <button class="input submit action"><i class="fas fa-trash-alt"></i> Delete</button>
                 </div>
-                <h3>Question 2</h3>
+                <h3>Question ${questions.indexOf(question) + 1}</h3>
             </div>
             <form>
-                <p class="editor-input">This is the second question.</p>
-                <div class="editor-input">
-                    <label class="radio">
-                        <input class="input" type="radio" name="question-2" value="0" disabled />
-                        <i class="fas fa-check-circle"></i>
-                    </label>
-                    <span>Answer 0</span>
-                </div>
-                <div class="editor-input">
-                    <label class="radio">
-                        <input class="input" type="radio" name="question-2" value="1" disabled />
-                        <i class="fas fa-check-circle"></i>
-                    </label>
-                    <span>Answer 1</span>
-                </div>
-                <div class="editor-input">
-                    <label class="radio">
-                        <input class="input" type="radio" name="question-2" value="2" disabled />
-                        <i class="fas fa-check-circle"></i>
-                    </label>
-                    <span>Answer 2</span>
-                </div>
+                <p class="editor-input">${question.text}</p>
+
+                ${question.answers.map((answer, index) => answerCard(answer, index))}
+                
             </form>
-        </article>`
+        </article>`;
+
+        function answerCard(answer, index) {
+            return html`
+            <div class="editor-input">
+                    <label class="radio">
+                        <input class="input" type="radio" name="question-2" .value="${index}" disabled />
+                        <i class="fas fa-check-circle"></i>
+                    </label>
+                    <span>${answer}</span>
+                </div>`;
+        }
     }
 
-    function addQuestion() {
+    function addQuestion(array, submitted) {
+        
+        let question;
+        let answersArray;
+        if (array) {
+            question = array.shift();
+            answersArray = array;
+        } else {
+            question = '';
+            answersArray = ['','',''];
+        }
+       
         return html`
         <article class="editor-question">
                     <div class="layout">
                         <div class="question-control">
-                            <button class="input submit action"><i class="fas fa-check-double"></i>
+                            <button class="input submit action" type="submit" form="question-form"}><i class="fas fa-check-double"></i>
                                 Save</button>
-                            <button class="input submit action"><i class="fas fa-times"></i> Cancel</button>
+                            <button class="input submit action" @click=${onCancel}><i class="fas fa-times"></i> Cancel</button>
                         </div>
                         <h3>Question ${questions.length + 1}</h3>
                     </div>
-                    <form>
-                        <textarea class="input editor-input editor-text" name="text" placeholder="Enter question"></textarea>
+                    <form id="question-form" @submit=${createSubmitHandler(onFormClick)}>
+                        <textarea class="input editor-input editor-text" name="text" placeholder="Enter question" .value=${question}></textarea>
+                        
+                        ${answersArray.map((answer, index) => createChoiceCard(answer, index))}
+
                         <div class="editor-input">
-        
-                            <label class="radio">
-                                <input class="input" type="radio" name="question-1" value="0" />
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-        
-                            <input class="input" type="text" name="answer-0" />
-                            <button class="input submit action"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                        <div class="editor-input">
-        
-                            <label class="radio">
-                                <input class="input" type="radio" name="question-1" value="1" />
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-        
-                            <input class="input" type="text" name="answer-1" />
-                            <button class="input submit action"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                        <div class="editor-input">
-        
-                            <label class="radio">
-                                <input class="input" type="radio" name="question-1" value="2" />
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-        
-                            <input class="input" type="text" name="answer-2" />
-                            <button class="input submit action"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                        <div class="editor-input">
-                            <button class="input submit action">
+                            <button class="input submit action"}>
                                 <i class="fas fa-plus-circle"></i>
                                 Add answer
                             </button>
                         </div>
+
                     </form>
-                </article>`
+                    ${submitted ? html`<div class="loading-overlay working"></div>` : nothing}
+        </article>`;
+
+        function onFormClick(data, event) {
+            let array = Object.entries(data);
+            const currentBtn = document.activeElement;
+            if(currentBtn.textContent.trim() == 'Add answer') {
+                array = array.filter(([k, v]) => k == 'text' || k.includes('answer')).map(el => el[1]);
+                array.push('');
+                ctx.render(editTemplate(quiz, questions, true, array));
+            } else if (currentBtn.textContent.trim() == 'Save') {
+                
+                const text = data.text;
+                const correctIndex = array.find(([k,v]) => k.includes('question'));
+                const answers = array.filter(([k,v]) => k.includes('answer')).map(el => el[1]);
+                array = array.filter(([k, v]) => k == 'text' || k.includes('answer')).map(el => el[1]);
+                ctx.render(editTemplate(quiz, questions, true, array, true));
+                submitQuestion(text, correctIndex, answers, array);
+            } else {
+                const index = currentBtn.previousElementSibling.name.split('-')[1];
+                array = array.filter(([k, v]) => k == 'text' || k.includes('answer')).map(el => el[1]);
+                array.splice(Number(index) + 1, 1);
+                ctx.render(editTemplate(quiz, questions, true, array));
+            }
+
+
+        }
+
+        function createChoiceCard(answer, index) {
+            
+         return html`
+            <div class="editor-input">
+        
+                <label class="radio">
+                <input class="input" type="radio" name="question-${questions.length + 1}" value="${index}" />
+                <i class="fas fa-check-circle"></i>
+                </label>
+        
+                <input class="input" type="text" name="answer-${index}" .value="${answer}" />
+                <button class="input submit action" ><i class="fas fa-trash-alt"></i></button>
+        </div>`;
+        }
     }
 
 }
-
