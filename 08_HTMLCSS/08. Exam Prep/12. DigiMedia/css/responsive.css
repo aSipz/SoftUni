@@ -1,1 +1,52 @@
-/* TODO: Add responsive styles here... */
+@media screen and (max-width: 600px) {
+
+    #home .container-fluid img,
+    #home .navbar-collapse {
+        display: none;
+    }
+
+    .container-fluid {
+        text-align: center;
+    }
+
+    .container-fluid * {
+        display: block;
+    }
+
+    .col-sm-6 {
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .row {
+        display: block;
+    }
+
+    .navbar {
+        justify-content: center;
+    }
+
+    .hero h1 {
+        margin-top: 20px;
+    }
+
+    .hero-btns {
+        margin-bottom: 50px;
+    }
+
+    .about {
+        text-align: center;
+    }
+
+    #contact-us {
+        text-align: center;
+    }
+
+    #contact-us > div > div:nth-child(3) > div:nth-child(2){
+        display: none;
+    }
+
+    .contact-nav li {
+        display: block;
+    }
+}

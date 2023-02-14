@@ -1,0 +1,23 @@
+body {
+    font-family: Helvetica, sans-serif;
+    color: #2d3543;
+}
+
+section {
+    max-width: 1400px;
+    background-color: #f5f8f9;
+    border-radius: 16px;
+    max-height: 540px;
+    margin: 50px auto;
+    font-size: 0px;
+}
+
+.info {
+    display: inline-block;
+    width: 50%;
+}
+
+.img-container {
+    display: inline-block;
+    width: 50%;
+}
