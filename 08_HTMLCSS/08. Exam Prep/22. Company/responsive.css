@@ -1,0 +1,59 @@
+@media screen and (max-width: 600px) {
+
+    .wrap * {
+        /* float: none; */
+    }
+
+    .wrap {
+        text-align: center;
+    }
+
+    .wrapper {
+        width: 100%;
+        padding: 30px 20px;
+    }
+
+    .hero-head {
+        background-image: none;
+        background-color: #000000;
+        min-height: auto;
+    }
+
+    .main-nav {
+        display: none;
+    }
+
+    .hero-head .goal {
+        max-width: none;
+        width: 100%;
+        margin: 0 auto;
+        float: none;
+        font-size: 16px;
+    }
+
+    .hero-head h1 {
+        font-size: 34px;
+        float: none;
+    }
+
+    .content-wrap {
+        flex-direction: column;
+    }
+
+    .col {
+        padding: 0 15px;
+    }
+
+    .button.js-modal-open {
+        width: 90%;
+    }
+
+    .main-foot .wrapper {
+        flex-direction: column;
+    }
+
+    .main-foot .bottom .copyright {
+        float: none;
+    }
+
+}
