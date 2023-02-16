@@ -17,11 +17,17 @@ export function showCreate(ctx) {
                 <form @submit=${createSubmitHandler(submitQuiz)}>
                     <label class="editor-label layout">
                         <span class="label-col">Title:</span>
-                        <input class="input i-med" type="text" name="title"></label>
+                        <input class="input i-med" type="text" name="title">
+                    </label>
+                    <label class="editor-label layout">
+                        <span class="label-col">Description:</span>
+                        <textarea class="input i-med" name="description" cols="30" rows="10"></textarea>
+                    </label>
                     <label class="editor-label layout">
                         <span class="label-col">Topic:</span>
                         <select class="input i-med" name="topic">
                             <option value="all">All Categories</option>
+                            <option value="general">General</option>
                             <option value="languages">Languages</option>
                             <option value="hardware">Hardware</option>
                             <option value="software">Tools and Software</option>
@@ -35,10 +41,14 @@ export function showCreate(ctx) {
 
     }
 
-    async function submitQuiz({ title, topic }) {
+    async function submitQuiz({ title, topic, description }) {
     
         if (!title) {
             return alert('Title is required');
+        }
+
+        if (!description) {
+            return alert('Description is required');
         }
 
         if (topic == 'all') {
@@ -46,7 +56,7 @@ export function showCreate(ctx) {
         }
 
         const userId = ctx.user.objectId;
-        const result = await quizService.create({ title, topic }, userId);
+        const result = await quizService.create({ title, topic, description }, userId);
         debugger
 
         ctx.page.redirect('/edit/' + result.objectId);

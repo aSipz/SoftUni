@@ -30,3 +30,4 @@ export async function update(id, roomData, userId) {
 export async function remove(id) {
     return del(endpoints.roomById + id);
 }
+

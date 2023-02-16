@@ -3,8 +3,12 @@ import { del, get, post, put } from './api.js';
 
 const endpoints = {
     'questionByQuizId': (quizId) => '/classes/question?where=' + encodeObject(filterRelation('quiz', 'quiz', quizId)) + '&include=owner',
-    'questions': '/classes/question',
-    'reservations': '/classes/Reservation'
+    'reservations': '/classes/Reservation',
+    'count' : '/classes/question?count=1'
+}
+
+export async function getAllCount() {
+    return get(endpoints.count);
 }
 
 export async function getByQuizId(quizId) {
@@ -20,9 +24,13 @@ export async function remove(id) {
     return del(endpoints.questions + '/' + id);
 }
 
+export async function getById(id) {
+    return get(endpoints.questions + '/' + id);
+}
+
 export async function update(id, questionData, quiz) {
     questionData.quiz = createPointer('quiz', quiz);
-    return del(endpoints.questions + '/' + id, questionData);
+    return put(endpoints.questions + '/' + id, questionData);
 }
 
 // export async function create(roomData, userId) {

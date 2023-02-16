@@ -1,8 +1,11 @@
 
-import { html } from '../lib/lit-html.js';
+import { html, nothing } from '../lib/lit-html.js';
 
 
 export async function showHome(ctx) {
+
+    const quiz = ctx.quiz;
+    
     ctx.render(homeTemplate());
 
 
@@ -14,8 +17,11 @@ export async function showHome(ctx) {
                 <div class="splash right-col"><i class="fas fa-clipboard-list"></i></div>
                 <div class="glass welcome">
                     <h1>Welcome to Quiz Fever!</h1>
-                    <p>Home to 157 quizes in 12 topics. <a href="/browse">Browse all quizes</a>.</p>
-                    <a class="action cta" href="/login">Sign in to create a quiz</a>
+                    <p>Home to ${ctx.quizCount} quizzes in 4 topics. <a href="/browse">Browse all quizes</a>.</p>
+                    ${ctx.user
+                    ? nothing
+                    : html`<a class="action cta" href="/login">Sign in to create a quiz</a>`}
+                    
                 </div>
             </div>
         
@@ -24,21 +30,21 @@ export async function showHome(ctx) {
         
                 <article class="preview layout">
                     <div class="right-col">
-                        <a class="action cta" href="#">View Quiz</a>
+                        <a class="action cta" href="/view/${quiz.objectId}">View Quiz</a>
                     </div>
                     <div class="left-col">
-                        <h3>Extensible Markup Language</h3>
-                        <span class="quiz-topic">Topic: Languages</span>
+                        <h3>${quiz.title}</h3>
+                        <span class="quiz-topic">Topic: ${quiz.topic}</span>
                         <div class="quiz-meta">
-                            <span>15 questions</span>
+                            <span>${quiz.questionCount} questions</span>
                             <span>|</span>
-                            <span>Taken 54 times</span>
+                            <span>Taken ${quiz.taken} times</span>
                         </div>
                     </div>
                 </article>
         
                 <div>
-                    <a class="action cta" href="/browse">Browse all quizes</a>
+                    <a class="action cta" href="/browse">Browse all quizzes</a>
                 </div>
             </div>
         

@@ -9,7 +9,6 @@ export function showEdit(ctx) {
     const quizId = ctx.params.id;
     const quiz = ctx.data;
     const questions = ctx.questions.results;
-    const questionsCount = questions.length;
 
     ctx.render(editTemplate(quiz, questions));
 
@@ -25,7 +24,12 @@ export function showEdit(ctx) {
                 <form @submit=${createSubmitHandler(submitQuiz)}>
                     <label class="editor-label layout">
                         <span class="label-col">Title:</span>
-                        <input class="input i-med" type="text" name="title" .value=${quiz.title}></label>
+                        <input class="input i-med" type="text" name="title" .value=${quiz.title}>
+                    </label>
+                    <label class="editor-label layout">
+                        <span class="label-col">Description:</span>
+                        <textarea class="input i-med" name="description" cols="30" rows="10" .value=${quiz.description}></textarea>
+                    </label>
                     <label class="editor-label layout">
                         <span class="label-col">Topic:</span>
                         <select class="input i-med" name="topic" .value=${quiz.topic}>
@@ -66,24 +70,27 @@ export function showEdit(ctx) {
 
     }
 
-    async function submitQuiz({ title, topic }) {
+    async function submitQuiz({ title, topic, description }) {
     
         if (!title) {
             return alert('Title is required');
+        }
+
+        if (!description) {
+            return alert('Description is required');
         }
 
         if (topic == 'all') {
             return alert('Topic is required');
         }
 
-        await quizService.update(quizId, { title, topic }, userId);
+        await quizService.update(quizId, { title, topic, description }, userId);
 
         ctx.page.redirect('/edit/' + quizId);
     }
     
-    async function submitQuestion(text, correctIndex, answers) {
+    async function submitQuestion(text, correctIndex, answers, array, questionId) {
     
-
         if (!text) {
             return alert('Question text is required');
         }
@@ -98,9 +105,22 @@ export function showEdit(ctx) {
 
         correctIndex = Number(correctIndex[1]);
 
-       
+        if (questionId) {
+            questions.find(e => e.objectId == questionId).submitted = true;
 
-        await questionService.create({text, answers, correctIndex}, quizId);
+            ctx.render(editTemplate(quiz, questions));
+
+            await questionService.update(questionId, {text, answers, correctIndex}, quizId);
+
+        } else {
+            ctx.render(editTemplate(quiz, questions, true, array, true));
+
+            await Promise.all([
+                quizService.update(quizId, { title:quiz.title, topic:quiz.topic, questionCount:questions.length + 1 }, userId),
+                questionService.create({text, answers, correctIndex}, quizId)
+            ]);
+
+        }
        
         ctx.page.redirect('/edit/' + quizId);
     }
@@ -113,12 +133,43 @@ export function showEdit(ctx) {
         ctx.render(editTemplate(quiz, questions));
     }
 
+    async function editQuestion(e) {
+        const questionId = e.currentTarget.id;
+        
+        const btnText = document.activeElement.textContent.trim();
+
+        if (btnText == 'Delete') {
+            await Promise.all([
+                questionService.remove(questionId),
+                quizService.update(quizId, { title:quiz.title, topic:quiz.topic, questionCount:questions.length - 1 }, userId),
+            ]);
+            
+            ctx.page.redirect('/edit/' + quizId);
+        }
+
+        if (btnText == 'Edit') {
+            const question = await questionService.getById(questionId);
+            
+            questions.find(e => e.objectId == question.objectId).edit = true;
+           
+            ctx.render(editTemplate(quiz, questions));
+        }
+        
+        
+    }
+
     function questionCard(question) {
-        debugger
+
+        if(question.edit) {
+            const array = question.answers;
+            array.unshift(question.text);
+            return addQuestion(array, question.submitted, question.objectId);
+        } 
+
         return html`
         <article class="editor-question">
             <div class="layout">
-                <div class="question-control">
+                <div class="question-control" id=${question.objectId} @click=${editQuestion}>
                     <button class="input submit action"><i class="fas fa-edit"></i> Edit</button>
                     <button class="input submit action"><i class="fas fa-trash-alt"></i> Delete</button>
                 </div>
@@ -144,7 +195,7 @@ export function showEdit(ctx) {
         }
     }
 
-    function addQuestion(array, submitted) {
+    function addQuestion(array, submitted, id) {
         
         let question;
         let answersArray;
@@ -164,9 +215,9 @@ export function showEdit(ctx) {
                                 Save</button>
                             <button class="input submit action" @click=${onCancel}><i class="fas fa-times"></i> Cancel</button>
                         </div>
-                        <h3>Question ${questions.length + 1}</h3>
+                        <h3>Question ${id? questions.findIndex(e => e.objectId == id) + 1 : questions.length + 1}</h3>
                     </div>
-                    <form id="question-form" @submit=${createSubmitHandler(onFormClick)}>
+                    <form id="question-form" data-id="${id ? id : nothing}" @submit=${createSubmitHandler(onFormClick)}>
                         <textarea class="input editor-input editor-text" name="text" placeholder="Enter question" .value=${question}></textarea>
                         
                         ${answersArray.map((answer, index) => createChoiceCard(answer, index))}
@@ -190,21 +241,21 @@ export function showEdit(ctx) {
                 array.push('');
                 ctx.render(editTemplate(quiz, questions, true, array));
             } else if (currentBtn.textContent.trim() == 'Save') {
-                
                 const text = data.text;
                 const correctIndex = array.find(([k,v]) => k.includes('question'));
                 const answers = array.filter(([k,v]) => k.includes('answer')).map(el => el[1]);
                 array = array.filter(([k, v]) => k == 'text' || k.includes('answer')).map(el => el[1]);
-                ctx.render(editTemplate(quiz, questions, true, array, true));
-                submitQuestion(text, correctIndex, answers, array);
+                
+                const questionId = event.target.dataset.id;
+                
+                // ctx.render(editTemplate(quiz, questions, true, array, true));
+                submitQuestion(text, correctIndex, answers, array, questionId);
             } else {
                 const index = currentBtn.previousElementSibling.name.split('-')[1];
                 array = array.filter(([k, v]) => k == 'text' || k.includes('answer')).map(el => el[1]);
                 array.splice(Number(index) + 1, 1);
                 ctx.render(editTemplate(quiz, questions, true, array));
             }
-
-
         }
 
         function createChoiceCard(answer, index) {

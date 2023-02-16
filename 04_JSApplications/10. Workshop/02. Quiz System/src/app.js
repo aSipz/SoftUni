@@ -3,7 +3,7 @@ import page from './lib/page.mjs';
 import { addRender } from './middlewares/render.js';
 import { addSession } from './middlewares/session.js';
 import { addUserNav } from './middlewares/userNav.js';
-import { preloadQuestion, preloadQuiz } from './middlewares/preloader.js';
+import { preloadQuiz, preloadCount, preloadLastQuiz } from './middlewares/preloader.js';
 import { hasUser, isOwner } from './middlewares/guards.js';
 
 import { showLogin } from './views/loginView.js';
@@ -13,6 +13,7 @@ import { showBrowse } from './views/browseView.js';
 import { showHome } from './views/homeView.js';
 import { showCreate } from './views/createView.js';
 import { showEdit } from './views/editView.js';
+import { showQuiz } from './views/quizView.js';
 
 // import { showDetails } from './views/detailsView.js';
 // import { showCatalog } from './views/catalogView.js';
@@ -27,12 +28,13 @@ page(addRender(main, nav));
 page(addSession(getUserData));
 page(addUserNav(navTemplate));
 
-page('/', showHome);
+page('/', preloadCount(), preloadLastQuiz(), showHome);
 page('/login', showLogin);
 page('/register', showRegister);
 page('/browse', showBrowse)
 page('/create', hasUser(), showCreate);
-page('/edit/:id', preloadQuiz('id'), preloadQuestion('id'), isOwner(), showEdit);
+page('/edit/:id', preloadQuiz('id'), isOwner(), showEdit);
+page('/view/:id', preloadQuiz('id'), showQuiz);
 
 // page('/rooms/:id', preloadRoom('id', 'room'), showDetails);
 // page('/rooms', showCatalog);

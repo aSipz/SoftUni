@@ -11,7 +11,6 @@ export async function showBrowse(ctx) {
     ctx.render(browseTemplate(quizzes));
 
 
-
     function browseTemplate(quizzes) {
         return html`
         <section id="browse">
@@ -24,7 +23,7 @@ export async function showBrowse(ctx) {
                         <option value="hardware">Hardware</option>
                         <option value="software">Tools and Software</option>
                     </select>
-                    <input class="input submit action" type="submit" value="Filter Quizes">
+                    <input class="input submit action" type="submit" value="Filter Quizzes">
                 </form>
                 <h1>All quizes</h1>
             </header>
@@ -34,60 +33,25 @@ export async function showBrowse(ctx) {
                     ${repeat(quizzes, q => q.objectId, createCard)}
                 </div>` 
                 : loading()}
-        
-            <div class="pad-large alt-page">
-        
-                <article class="preview layout">
-                    <div class="right-col">
-                        <a class="action cta" href="#">View Quiz</a>
-                    </div>
-                    <div class="left-col">
-                        <h3><a class="quiz-title-link" href="#">Extensible Markup Language</a></h3>
-                        <span class="quiz-topic">Topic: Languages</span>
-                        <div class="quiz-meta">
-                            <span>15 questions</span>
-                            <span>|</span>
-                            <span>Taken 54 times</span>
-                        </div>
-                    </div>
-                </article>
-        
-                <article class="preview layout">
-                    <div class="right-col">
-                        <a class="action cta" href="#">View Quiz</a>
-                    </div>
-                    <div class="left-col">
-                        <h3><a class="quiz-title-link" href="#">RISC Architecture</a></h3>
-                        <span class="quiz-topic">Topic: Hardware</span>
-                        <div class="quiz-meta">
-                            <span>10 questions</span>
-                            <span>|</span>
-                            <span>Taken 107 times</span>
-                        </div>
-                    </div>
-                </article>
-        
-
-            </div>
 
         </section>`
     }
 
 }
 
-function createCard() {
+function createCard(quiz) {
     return html`
     <article class="preview layout">
                     <div class="right-col">
-                        <a class="action cta" href="#">View Quiz</a>
+                        <a class="action cta" href="/view/${quiz.objectId}">View Quiz</a>
                     </div>
                     <div class="left-col">
-                        <h3><a class="quiz-title-link" href="#">Webpack</a></h3>
-                        <span class="quiz-topic">Topic: Tools and Software</span>
+                        <h3><a class="quiz-title-link" href="/view/${quiz.objectId}">${quiz.title}</a></h3>
+                        <span class="quiz-topic">Topic: ${quiz.topic}</span>
                         <div class="quiz-meta">
-                            <span>17 questions</span>
+                            <span>${quiz.questionCount} questions</span>
                             <span>|</span>
-                            <span>Taken 189 times</span>
+                            <span>Taken ${quiz.taken} times</span>
                         </div>
                     </div>
                 </article>`
