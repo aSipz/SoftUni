@@ -56,8 +56,9 @@ export function showCreate(ctx) {
         }
 
         const userId = ctx.user.objectId;
-        const result = await quizService.create({ title, topic, description }, userId);
-        debugger
+        const author = ctx.user.username;
+        const result = await quizService.create({ title, topic, description, author }, userId);
+        
 
         ctx.page.redirect('/edit/' + result.objectId);
     }

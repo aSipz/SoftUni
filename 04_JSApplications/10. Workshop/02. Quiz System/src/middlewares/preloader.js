@@ -35,6 +35,12 @@ export function preloadQuiz(param) {
     }
 }
 
+export function preloadAuthor() {
+    return async function (ctx, next) {
+        const authorId = ctx.data.owner;
+    }
+}
+
 export function preloadCount() {
     return async function (ctx, next) {
 

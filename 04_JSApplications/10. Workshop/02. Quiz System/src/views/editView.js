@@ -34,6 +34,7 @@ export function showEdit(ctx) {
                         <span class="label-col">Topic:</span>
                         <select class="input i-med" name="topic" .value=${quiz.topic}>
                             <option value="all">All Categories</option>
+                            <option value="general">General</option>
                             <option value="languages">Languages</option>
                             <option value="hardware">Hardware</option>
                             <option value="software">Tools and Software</option>
@@ -84,7 +85,9 @@ export function showEdit(ctx) {
             return alert('Topic is required');
         }
 
-        await quizService.update(quizId, { title, topic, description }, userId);
+        const author = ctx.user.username;
+
+        await quizService.update(quizId, { title, topic, description, author }, userId);
 
         ctx.page.redirect('/edit/' + quizId);
     }

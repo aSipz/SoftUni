@@ -5,6 +5,7 @@ import { addSession } from './middlewares/session.js';
 import { addUserNav } from './middlewares/userNav.js';
 import { preloadQuiz, preloadCount, preloadLastQuiz } from './middlewares/preloader.js';
 import { hasUser, isOwner } from './middlewares/guards.js';
+import { addQuery } from './middlewares/query.js';
 
 import { showLogin } from './views/loginView.js';
 import { showRegister } from './views/registerView.js';
@@ -27,6 +28,7 @@ const nav = document.getElementById('titlebar');
 page(addRender(main, nav));
 page(addSession(getUserData));
 page(addUserNav(navTemplate));
+page(addQuery());
 
 page('/', preloadCount(), preloadLastQuiz(), showHome);
 page('/login', showLogin);

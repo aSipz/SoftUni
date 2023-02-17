@@ -1,25 +1,32 @@
 import { html } from '../lib/lit-html.js';
 import {repeat } from '../lib/directives/repeat.js';
 import * as quizService from '../data/quiz.js'
+import { createSubmitHandler } from '../util.js';
 
 
 export async function showBrowse(ctx) {
     ctx.render(browseTemplate());
 
-    const { results: quizzes } = await quizService.getAll();
+    const query = ctx.query.search;
 
-    ctx.render(browseTemplate(quizzes));
+    if (query) {
+        debugger;
+    } else {
+        const { results: quizzes } = await quizService.getAll();
 
+        ctx.render(browseTemplate(quizzes));
+    }
 
     function browseTemplate(quizzes) {
         return html`
         <section id="browse">
             <header class="pad-large">
-                <form class="browse-filter">
-                    <input class="input" type="text" name="query">
+                <form class="browse-filter" @submit=${createSubmitHandler(onSearch)}>
+                    <input class="input" type="text" name="title">
                     <select class="input" name="topic">
                         <option value="all">All Categories</option>
-                        <option value="it">Languages</option>
+                        <option value="general">General</option>
+                        <option value="languages">Languages</option>
                         <option value="hardware">Hardware</option>
                         <option value="software">Tools and Software</option>
                     </select>
@@ -35,6 +42,15 @@ export async function showBrowse(ctx) {
                 : loading()}
 
         </section>`
+    }
+
+    function onSearch({title, topic}) {
+
+        if(!title) {
+            return
+        }
+        debugger
+        ctx.page.redirect(('/browse?search=title%2B' + title + '&topic%2B' + topic));
     }
 
 }
