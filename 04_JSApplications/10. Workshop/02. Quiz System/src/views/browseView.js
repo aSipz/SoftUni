@@ -10,7 +10,13 @@ export async function showBrowse(ctx) {
     const query = ctx.query.search;
 
     if (query) {
-        debugger;
+        const search = Object.fromEntries(query
+        .split('+')
+        .map(el => el.split(':')));
+        
+        const { results: quizzes } = await quizService.search(search.title, search.topic);
+        
+        ctx.render(browseTemplate(quizzes));
     } else {
         const { results: quizzes } = await quizService.getAll();
 
@@ -46,11 +52,11 @@ export async function showBrowse(ctx) {
 
     function onSearch({title, topic}) {
 
-        if(!title) {
-            return
+        if(!title && topic == 'all') {
+            return ctx.page.redirect('/browse');
         }
-        debugger
-        ctx.page.redirect(('/browse?search=title%2B' + title + '&topic%2B' + topic));
+        
+        ctx.page.redirect('/browse?search=title:' + title + '%2Btopic:' + topic);
     }
 
 }

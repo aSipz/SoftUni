@@ -4,12 +4,23 @@ import { addOwner } from '../util.js';
 
 const endpoints = {
     'quizzes': '/classes/quiz',
-    'count' : '/classes/quiz?count=1',
-    'last' : '/classes/quiz?order=-createdAt&limit=1'
+    'count': '/classes/quiz?count=1',
+    'last': '/classes/quiz?order=-createdAt&limit=1',
+    'search': (title, topic) => {
+        if (topic != 'all') {
+            return '/classes/quiz?where=' + encodeURIComponent(`{"title": {"$regex": "${title.split('').map(e => `${e.toLowerCase()}|${e.toUpperCase()}`).join('')}"}, "topic": "${topic}"}`);
+        } else {
+            return '/classes/quiz?where=' + encodeURIComponent(`{"title": {"$regex": "${title.split('').map(e => `${e.toLowerCase()}|${e.toUpperCase()}`).join('')}"}}`);
+        }
+    }
 }
 
 export async function getAll() {
     return get(endpoints.quizzes);
+}
+
+export async function search(title, topic) {
+    return get(endpoints.search(title, topic));
 }
 
 export async function getNewest() {

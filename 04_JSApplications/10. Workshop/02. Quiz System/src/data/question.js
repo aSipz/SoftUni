@@ -3,7 +3,8 @@ import { del, get, post, put } from './api.js';
 
 const endpoints = {
     'questionByQuizId': (quizId) => '/classes/question?where=' + encodeObject(filterRelation('quiz', 'quiz', quizId)) + '&include=owner',
-    'reservations': '/classes/Reservation',
+    'question': (quizId, skip) => '/classes/question?where=' + encodeObject(filterRelation('quiz', 'quiz', quizId)) + '&count=1' + '&limit=1' + `&skip=${skip}`,
+    'questions': '/classes/question',
     'count' : '/classes/question?count=1'
 }
 
@@ -18,6 +19,10 @@ export async function getByQuizId(quizId) {
 export async function create(questionData, quiz) {
     questionData.quiz = createPointer('quiz', quiz);
     return post(endpoints.questions, questionData);
+}
+
+export async function getQuestion(quizId, num) {
+    return await get(endpoints.question(quizId, num - 1));
 }
 
 export async function remove(id) {
