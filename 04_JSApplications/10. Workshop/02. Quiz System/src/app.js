@@ -32,8 +32,8 @@ page('/login', showLogin);
 page('/register', showRegister);
 page('/browse', showBrowse)
 page('/create', hasUser(), showCreate);
-page('/edit/:id', isOwner(), preloadQuiz('id'), showEdit);
+page('/edit/:id', preloadQuiz('id'), isOwner(), showEdit);
 page('/view/:id', preloadQuiz('id'), showDetails);
-page('/quiz/:id', hasUser(), preloadQuestion('id'), showQuiz);
+page('/quiz/:id', hasUser(), preloadQuiz('id'), showQuiz);
 
 page.start();

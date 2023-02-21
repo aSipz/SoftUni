@@ -27,7 +27,7 @@ export function showDetails(ctx) {
                 ${userId
                 ? html`
                 <div>
-                    <a class="cta action" href="/quiz/${quiz.objectId}?question=1">Begin Quiz</a>
+                    <a class="cta action" href="/quiz/${quiz.objectId}">Begin Quiz</a>
                 </div>`
                 : nothing}
     

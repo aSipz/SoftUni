@@ -1,5 +1,6 @@
 import * as quizService from '../data/quiz.js';
 import * as questionService from '../data/question.js';
+import * as solutionService from '../data/solution.js';
 import { repeat } from '../lib/directives/repeat.js';
 import { html, nothing } from '../lib/lit-html.js';
 import { createSubmitHandler } from '../util.js';
@@ -113,16 +114,25 @@ export function showEdit(ctx) {
 
             ctx.render(editTemplate(quiz, questions));
 
-            await questionService.update(questionId, {text, answers, correctIndex}, quizId);
+            const [{results : solution}] = await Promise.all([
+                solutionService.getByQuestionId(questionId),
+                questionService.update(questionId, {text, answers}, quizId, userId)
+            ]);
+
+            const solutionId = solution[0].objectId;
+
+            await solutionService.update(solutionId, {correct : correctIndex}, userId);
+            
 
         } else {
             ctx.render(editTemplate(quiz, questions, true, array, true));
 
-            await Promise.all([
+            const [question] = await Promise.all([
+                questionService.create({text, answers}, quizId, userId),
                 quizService.update(quizId, { title:quiz.title, topic:quiz.topic, questionCount:questions.length + 1 }, userId),
-                questionService.create({text, answers, correctIndex}, quizId)
             ]);
 
+            solutionService.create({correct : correctIndex}, userId, question.objectId);
         }
        
         ctx.page.redirect('/edit/' + quizId);
@@ -142,12 +152,17 @@ export function showEdit(ctx) {
         const btnText = document.activeElement.textContent.trim();
 
         if (btnText == 'Delete') {
-            await Promise.all([
+           const [{results : solution}] = await Promise.all([
+                solutionService.getByQuestionId(questionId),
                 questionService.remove(questionId),
                 quizService.update(quizId, { title:quiz.title, topic:quiz.topic, questionCount:questions.length - 1 }, userId),
             ]);
+
+            const solutionId = solution[0].objectId;
             
             ctx.page.redirect('/edit/' + quizId);
+
+            solutionService.remove(solutionId);
         }
 
         if (btnText == 'Edit') {

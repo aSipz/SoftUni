@@ -21,6 +21,14 @@ export function addOwner(record, ownerId) {
     return data;
 }
 
+export function addOwnerQuestion(record, ownerId, questionId) {
+    const data = Object.assign({}, record);
+    data.owner = createPointer('_User', ownerId);
+    data.question = createPointer('question', questionId);
+
+    return data;
+}
+
 export function filterRelation(field, collection, objectId) {
     return {
         [field]: createPointer(collection, objectId)

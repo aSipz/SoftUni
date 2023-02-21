@@ -9,26 +9,30 @@ export function showQuiz(ctx) {
     const userId = ctx.user?.objectId;
     const quizId = ctx.params.id;
     const quiz = ctx.data;
-    const question = ctx.question;
-    const qCount = ctx.qCount;
-    const currentNum = Number(ctx.query.question);
-    const questionsStatus = new Array(qCount);
+    const questions = ctx.questions.results.map(el => Object.assign(el, {status : ''}));
+    const qCount = questions.length;
+    let currentQuestion = 1;
+    let remaining = qCount;
+    questions[currentQuestion - 1].status = 'q-current';
+
 
     console.log(quiz);
-    console.log(question);
+    console.log(questions);
     console.log(qCount);
-    console.log(currentNum);
+    console.log(currentQuestion);
 
-    ctx.render(quizTemplate());
+    ctx.render(quizTemplate(questions[currentQuestion - 1]));
 
-    function quizTemplate() {
+    function quizTemplate(question) {
         return html`
     <section id="quiz">
         <header class="pad-large">
-            <h1>${quiz.title}: Question ${currentNum} / ${qCount}</h1>
-            <nav class="layout q-control">
+            <h1>${quiz.title}: Question ${currentQuestion} / ${qCount}</h1>
+            <nav class="layout q-control"  @click=${onNavClick}>
                 <span class="block">Question index</span>
-                <a class="q-index q-current" href="#"></a>
+
+                ${questions.map(questionIndex)}
+                <!-- <a class="q-index q-current" href="#"></a>
                 <a class="q-index q-answered" href="#"></a>
                 <a class="q-index q-answered" href="#"></a>
                 <a class="q-index q-answered" href="#"></a>
@@ -42,7 +46,7 @@ export function showQuiz(ctx) {
                 <a class="q-index" href="#"></a>
                 <a class="q-index" href="#"></a>
                 <a class="q-index" href="#"></a>
-                <a class="q-index" href="#"></a>
+                <a class="q-index" href="#"></a> -->
             </nav>
         </header>
         <div class="pad-large alt-page">
@@ -58,18 +62,18 @@ export function showQuiz(ctx) {
     
                 </div>
     
-                <nav class="q-control">
-                    <span class="block">12 questions remaining</span>
+                <nav class="q-control" @click=${onQuestionClick}>
+                    <span class="block">${remaining} questions remaining</span>
 
-                    ${currentNum > 1
-                        ? html`<a class="action" href="?question=${currentNum - 1}"><i class="fas fa-arrow-left"></i> Previous</a>`
+                    ${currentQuestion > 1
+                        ? html`<a class="action" href="javascript:void(0)"><i class="fas fa-arrow-left"></i> Previous</a>`
                         : nothing}
     
-                    <a class="action" href=#><i class="fas fa-sync-alt"></i> Start over</a>
+                    <a class="action" href="javascript:void(0)"><i class="fas fa-sync-alt"></i> Start over</a>
                     <div class="right-col">
 
-                    ${currentNum < qCount
-                        ? html `<a class="action" href="?question=${currentNum + 1}">Next <i class="fas fa-arrow-right"></i></a>`
+                    ${currentQuestion < qCount
+                        ? html `<a class="action" href="javascript:void(0)">Next <i class="fas fa-arrow-right"></i></a>`
                         :nothing}
                         
                         <a class="action" href=#>Submit answers</a>
@@ -79,20 +83,70 @@ export function showQuiz(ctx) {
     
         </div>
     </section>`;
+
+        function questionIndex(question) {
+            return html`
+            <a class="q-index ${question.status}" href="javascript:void(0)"></a>`;
+        }
+
+        function answerCard(answer) {
+            return html`
+            <label class="q-answer radio">
+                <input class="input" type="radio" name="question-${currentQuestion}" value="${question.answers.indexOf(answer)}" />
+                <i class="fas fa-check-circle"></i>
+                ${answer}
+            </label>`;
+        }
+
     }
 
-    function questionIndex() {
-        return html`
-        <a class="q-index" href="#"></a>`;
+    function onNavClick(e) {
+        
+        if (e.target.tagName != 'A') {
+            return;
+        }
+
+        const index = [...e.target.parentElement.children].indexOf(e.target);
+
+        currentQuestion = index;
+
+        changeStatus();
     }
 
-    function answerCard(answer) {
-        return html`
-        <label class="q-answer radio">
-            <input class="input" type="radio" name="question-${currentNum}" value="${question.answers.indexOf(answer)}" />
-            <i class="fas fa-check-circle"></i>
-            ${answer}
-        </label>`;
+    function onQuestionClick(e) {
+        if (e.target.textContent.includes('Previous')) {
+            currentQuestion--;
+        }
+        if (e.target.textContent.includes('Next')) {
+            currentQuestion++;
+        }
+        if (e.target.textContent.includes('Start over')) {
+            currentQuestion = 1;
+        }
+
+        changeStatus();
+
+    }
+
+    function changeStatus() {
+
+        let isChecked = false;
+
+        const result = document.getElementsByName(`question-${currentQuestion - 1}`);
+        if (result.some(e => e.checked)) {
+            isChecked = true;
+        }
+ 
+        questions.forEach((q, i) => {
+            if (q.status == 'q-current') {
+                q.status = ''
+            }
+            if(i == currentQuestion - 1) {
+                q.status = 'q-current';
+            } 
+        });
+
+        ctx.render(quizTemplate(questions[currentQuestion - 1]));
     }
 
 }

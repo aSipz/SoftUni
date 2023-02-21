@@ -16,8 +16,9 @@ export async function getByQuizId(quizId) {
     return await get(endpoints.questionByQuizId(quizId));
 }
 
-export async function create(questionData, quiz) {
+export async function create(questionData, quiz, userId) {
     questionData.quiz = createPointer('quiz', quiz);
+    questionData = addOwner(questionData, userId);
     return post(endpoints.questions, questionData);
 }
 
@@ -33,8 +34,9 @@ export async function getById(id) {
     return get(endpoints.questions + '/' + id);
 }
 
-export async function update(id, questionData, quiz) {
+export async function update(id, questionData, quiz, userId) {
     questionData.quiz = createPointer('quiz', quiz);
+    questionData = addOwner(questionData, userId);
     return put(endpoints.questions + '/' + id, questionData);
 }
 
