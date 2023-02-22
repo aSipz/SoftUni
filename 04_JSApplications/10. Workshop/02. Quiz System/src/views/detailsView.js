@@ -20,11 +20,11 @@ export function showDetails(ctx) {
                 <div class="quiz-meta">
                     <span>${quiz.questionCount} Questions</span>
                     <span>|</span>
-                    <span>Taken ${quiz.taken} times</span>
+                    <span>Taken ${ctx.taken.taken} times</span>
                 </div>
                 <p class="quiz-desc">${quiz.description}</p>
     
-                ${userId
+                ${userId && quiz.questionCount > 0
                 ? html`
                 <div>
                     <a class="cta action" href="/quiz/${quiz.objectId}">Begin Quiz</a>

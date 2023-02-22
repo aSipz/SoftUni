@@ -1,8 +1,10 @@
 import { get, post, put } from './api.js';
-import { addOwner } from '../util.js';
+import { addOwner, createPointer, encodeObject, filterRelation } from '../util.js';
 
 
 const endpoints = {
+    'taken' : '/classes/quizStats',
+    'statsByQuizId' : (quizId) => '/classes/quizStats?where=' + encodeObject(filterRelation('quiz', 'quiz', quizId)),
     'quizzes': '/classes/quiz',
     'count': '/classes/quiz?count=1',
     'last': '/classes/quiz?order=-createdAt&limit=1',
@@ -13,6 +15,22 @@ const endpoints = {
             return '/classes/quiz?where=' + encodeURIComponent(`{"title": {"$regex": "${title.split('').map(e => `${e.toLowerCase()}|${e.toUpperCase()}`).join('')}"}}`);
         }
     }
+}
+
+export async function createStat(quizId) {
+    return post(endpoints.taken, { quiz : createPointer('quiz', quizId)});
+}
+
+export async function getStatByQuizId(quizId) {
+    return get(endpoints.statsByQuizId(quizId));
+}
+
+export async function getAllStat() {
+    return get(endpoints.taken);
+}
+
+export async function updateStat(statId, quizId, taken) {
+    return put(endpoints.taken + '/' + statId, {taken, quiz : createPointer('quiz', quizId)});
 }
 
 export async function getAll() {

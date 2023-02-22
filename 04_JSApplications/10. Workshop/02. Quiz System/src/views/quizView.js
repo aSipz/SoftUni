@@ -1,7 +1,10 @@
 import * as quizService from '../data/quiz.js';
 import * as questionService from '../data/question.js';
+import * as solutionService from '../data/solution.js';
+import * as answersService from '../data/answers.js';
 import { repeat } from '../lib/directives/repeat.js';
 import { html, nothing } from '../lib/lit-html.js';
+import { classMap } from '../lib/directives/class-map.js';
 import { createSubmitHandler } from '../util.js';
 
 export function showQuiz(ctx) {
@@ -13,13 +16,15 @@ export function showQuiz(ctx) {
     const qCount = questions.length;
     let currentQuestion = 1;
     let remaining = qCount;
-    questions[currentQuestion - 1].status = 'q-current';
 
+    questions.forEach((q, i) => {
+        q.solution = null;
+        q.status = {'q-current' : false, 'q-answered' : false};
+        if (i == currentQuestion - 1) {
+            q.status['q-current'] = true;
+        }
+    });
 
-    console.log(quiz);
-    console.log(questions);
-    console.log(qCount);
-    console.log(currentQuestion);
 
     ctx.render(quizTemplate(questions[currentQuestion - 1]));
 
@@ -32,21 +37,7 @@ export function showQuiz(ctx) {
                 <span class="block">Question index</span>
 
                 ${questions.map(questionIndex)}
-                <!-- <a class="q-index q-current" href="#"></a>
-                <a class="q-index q-answered" href="#"></a>
-                <a class="q-index q-answered" href="#"></a>
-                <a class="q-index q-answered" href="#"></a>
-                <a class="q-index" href="#"></a>
-                <a class="q-index" href="#"></a>
-                <a class="q-index" href="#"></a>
-                <a class="q-index" href="#"></a>
-                <a class="q-index" href="#"></a>
-                <a class="q-index" href="#"></a>
-                <a class="q-index" href="#"></a>
-                <a class="q-index" href="#"></a>
-                <a class="q-index" href="#"></a>
-                <a class="q-index" href="#"></a>
-                <a class="q-index" href="#"></a> -->
+               
             </nav>
         </header>
         <div class="pad-large alt-page">
@@ -76,7 +67,7 @@ export function showQuiz(ctx) {
                         ? html `<a class="action" href="javascript:void(0)">Next <i class="fas fa-arrow-right"></i></a>`
                         :nothing}
                         
-                        <a class="action" href=#>Submit answers</a>
+                        <a class="action" href="javascript:void(0)">Submit answers</a>
                     </div>
                 </nav>
             </article>
@@ -86,7 +77,7 @@ export function showQuiz(ctx) {
 
         function questionIndex(question) {
             return html`
-            <a class="q-index ${question.status}" href="javascript:void(0)"></a>`;
+            <a class="q-index ${classMap(question.status)}" href="javascript:void(0)"></a>`;
         }
 
         function answerCard(answer) {
@@ -106,6 +97,8 @@ export function showQuiz(ctx) {
             return;
         }
 
+        checkAnswer();
+
         const index = [...e.target.parentElement.children].indexOf(e.target);
 
         currentQuestion = index;
@@ -113,14 +106,47 @@ export function showQuiz(ctx) {
         changeStatus();
     }
 
+    async function onSubmit() {
+
+        checkAnswer();
+
+        ctx.taken.taken++;
+
+        quizService.updateStat(ctx.taken.objectId, quizId, ctx.taken.taken);
+
+        const {results : correctAnswers} = await solutionService.getByQuizId(quizId);
+
+        const answers = questions.map(q => Object.assign({}, {
+            solution : q.solution, 
+            questionId : q.objectId,
+            correct : correctAnswers.find(e => e.question.objectId == q.objectId).correct}));
+        const total = answers.length;
+        const correct = answers.filter(e => e.solution == e.correct).length;
+
+        const result = await answersService.create({answers, total, correct}, userId, quizId);
+
+        ctx.page.redirect(`/result/${result.objectId}`);
+
+    }
+
     function onQuestionClick(e) {
+        if (e.target.textContent.includes('Submit answers')) {
+            onSubmit();
+        }
         if (e.target.textContent.includes('Previous')) {
+            checkAnswer();
             currentQuestion--;
         }
         if (e.target.textContent.includes('Next')) {
+            checkAnswer();
             currentQuestion++;
         }
         if (e.target.textContent.includes('Start over')) {
+            questions.forEach(q => {
+                q.status['q-answered'] = false;
+                q.solution = null;
+                remaining = qCount;
+            });
             currentQuestion = 1;
         }
 
@@ -128,25 +154,43 @@ export function showQuiz(ctx) {
 
     }
 
+    function applyAnswer() {
+        const solutionIndex = questions[currentQuestion - 1].solution;
+        const answers = [...document.getElementsByName(`question-${currentQuestion}`)];
+        answers.forEach(a => a.checked = false);
+        if (solutionIndex !== null && solutionIndex !== undefined) {
+            answers[solutionIndex].checked = true;
+        }
+    }
+
+    function checkAnswer() {
+        const result = [...document.getElementsByName(`question-${currentQuestion}`)];
+        if ( result.some(e => e.checked)) {
+            questions[currentQuestion - 1].status['q-answered'] = true;
+            questions[currentQuestion - 1].solution = result.findIndex(e => e.checked);
+        }
+        const answered = questions.filter( q => typeof q.solution == 'number').length;
+        remaining = qCount - answered;
+    }
+
     function changeStatus() {
 
-        let isChecked = false;
-
-        const result = document.getElementsByName(`question-${currentQuestion - 1}`);
-        if (result.some(e => e.checked)) {
-            isChecked = true;
-        }
- 
         questions.forEach((q, i) => {
-            if (q.status == 'q-current') {
-                q.status = ''
-            }
+            q.status['q-current'] = false;
+               
             if(i == currentQuestion - 1) {
-                q.status = 'q-current';
+                q.status['q-current'] = true;
             } 
         });
 
         ctx.render(quizTemplate(questions[currentQuestion - 1]));
+        applyAnswer();
     }
 
+}
+
+class Answer {
+    constructor() {
+
+    }
 }

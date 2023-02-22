@@ -8,22 +8,30 @@ export async function showBrowse(ctx) {
     ctx.render(browseTemplate());
 
     const query = ctx.query.search;
+    
 
     if (query) {
         const search = Object.fromEntries(query
         .split('+')
         .map(el => el.split(':')));
         
-        const { results: quizzes } = await quizService.search(search.title, search.topic);
-        
-        ctx.render(browseTemplate(quizzes));
+        const [{ results: quizzes }, {results: taken}] = await Promise.all([
+             quizService.search(search.title, search.topic),
+             quizService.getAllStat()
+            ]);
+            
+        ctx.render(browseTemplate(quizzes, taken));
     } else {
-        const { results: quizzes } = await quizService.getAll();
+        const [{ results: quizzes }, {results: taken}] = await Promise.all([
+            quizService.getAll(),
+            quizService.getAllStat()
+        ]);
 
-        ctx.render(browseTemplate(quizzes));
+
+        ctx.render(browseTemplate(quizzes, taken));
     }
 
-    function browseTemplate(quizzes) {
+    function browseTemplate(quizzes, taken) {
         return html`
         <section id="browse">
             <header class="pad-large">
@@ -41,9 +49,9 @@ export async function showBrowse(ctx) {
                 <h1>All quizes</h1>
             </header>
         
-            ${quizzes 
+            ${quizzes
                 ? html`<div class="pad-large alt-page">
-                    ${repeat(quizzes, q => q.objectId, createCard)}
+                    ${repeat(quizzes, q => q.objectId, q => createCard(q ,taken))}
                 </div>` 
                 : loading()}
 
@@ -61,7 +69,7 @@ export async function showBrowse(ctx) {
 
 }
 
-function createCard(quiz) {
+function createCard(quiz, taken) {
     return html`
     <article class="preview layout">
                     <div class="right-col">
@@ -73,7 +81,7 @@ function createCard(quiz) {
                         <div class="quiz-meta">
                             <span>${quiz.questionCount} questions</span>
                             <span>|</span>
-                            <span>Taken ${quiz.taken} times</span>
+                            <span>Taken ${taken.find( e => e.quiz.objectId == quiz.objectId).taken} times</span>
                         </div>
                     </div>
                 </article>`

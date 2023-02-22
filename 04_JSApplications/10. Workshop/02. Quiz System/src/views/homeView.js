@@ -38,7 +38,7 @@ export async function showHome(ctx) {
                         <div class="quiz-meta">
                             <span>${quiz.questionCount} questions</span>
                             <span>|</span>
-                            <span>Taken ${quiz.taken} times</span>
+                            <span>Taken ${ctx.taken} times</span>
                         </div>
                     </div>
                 </article>

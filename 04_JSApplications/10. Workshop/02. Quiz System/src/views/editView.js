@@ -121,7 +121,7 @@ export function showEdit(ctx) {
 
             const solutionId = solution[0].objectId;
 
-            await solutionService.update(solutionId, {correct : correctIndex}, userId);
+            await solutionService.update(solutionId, {correct : correctIndex}, userId, quizId);
             
 
         } else {
@@ -132,7 +132,7 @@ export function showEdit(ctx) {
                 quizService.update(quizId, { title:quiz.title, topic:quiz.topic, questionCount:questions.length + 1 }, userId),
             ]);
 
-            solutionService.create({correct : correctIndex}, userId, question.objectId);
+            solutionService.create({correct : correctIndex}, userId, question.objectId, quizId);
         }
        
         ctx.page.redirect('/edit/' + quizId);

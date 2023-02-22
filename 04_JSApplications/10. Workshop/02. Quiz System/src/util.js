@@ -29,6 +29,23 @@ export function addOwnerQuestion(record, ownerId, questionId) {
     return data;
 }
 
+export function addOwnerQuestionQuiz(record, ownerId, questionId, quizId) {
+    const data = Object.assign({}, record);
+    data.owner = createPointer('_User', ownerId);
+    data.question = createPointer('question', questionId);
+    data.quiz = createPointer('quiz', quizId);
+
+    return data;
+}
+
+export function addOwnerQuiz(record, ownerId, quizId) {
+    const data = Object.assign({}, record);
+    data.owner = createPointer('_User', ownerId);
+    data.quiz = createPointer('quiz', quizId);
+
+    return data;
+}
+
 export function filterRelation(field, collection, objectId) {
     return {
         [field]: createPointer(collection, objectId)

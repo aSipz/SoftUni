@@ -11,7 +11,7 @@ export function hasUser() {
 export function isOwner() {
     return function (ctx, next) {
         if (ctx.data?.owner?.objectId !== ctx.user?.objectId) {
-            ctx.page.redirect('/login');
+            ctx.page.redirect('/');
         } else {
             next();
         }
