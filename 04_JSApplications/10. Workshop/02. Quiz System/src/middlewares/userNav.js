@@ -6,7 +6,7 @@ export function addUserNav(navTemplate) {
     return function(ctx, next) {
         if(Boolean(ctx.user) !== hasUser) {
             hasUser = Boolean(ctx.user);
-            ctx.renderNav(navTemplate(hasUser, logoutAction));
+            ctx.renderNav(navTemplate(hasUser, logoutAction, ctx.user?.objectId));
         }
 
         next();

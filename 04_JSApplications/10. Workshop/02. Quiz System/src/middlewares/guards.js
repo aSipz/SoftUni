@@ -17,3 +17,14 @@ export function isOwner() {
         }
     }
 }
+
+export function isCurrentUser() {
+    return function (ctx, next) {
+
+        ctx.user?.objectId == ctx.params.id
+            ? ctx.isCurrentUser = true
+            : ctx.isCurrentUser = false;
+
+        next();
+    }
+}

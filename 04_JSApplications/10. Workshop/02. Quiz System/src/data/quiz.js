@@ -6,6 +6,7 @@ const endpoints = {
     'taken' : '/classes/quizStats',
     'statsByQuizId' : (quizId) => '/classes/quizStats?where=' + encodeObject(filterRelation('quiz', 'quiz', quizId)),
     'quizzes': '/classes/quiz',
+    'quizByUserId' : (userId) => '/classes/quiz?where=' + encodeObject(filterRelation('owner', '_User', userId)),
     'count': '/classes/quiz?count=1',
     'last': '/classes/quiz?order=-createdAt&limit=1',
     'search': (title, topic) => {
@@ -23,6 +24,10 @@ export async function createStat(quizId) {
 
 export async function getStatByQuizId(quizId) {
     return get(endpoints.statsByQuizId(quizId));
+}
+
+export async function getQuizByUserId(userId) {
+    return get(endpoints.quizByUserId(userId));
 }
 
 export async function getAllStat() {

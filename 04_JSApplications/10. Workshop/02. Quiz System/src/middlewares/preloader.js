@@ -1,13 +1,14 @@
 import * as quizService from '../data/quiz.js';
 import * as questionService from '../data/question.js';
 import * as answersService from '../data/answers.js';
+import {getUserById} from '../data/user.js'
 import { html } from '../lib/lit-html.js';
 
 export function preloadAnswers(param) {
     return async function (ctx, next) {
         const id = ctx.params[param];
-    
-            ctx.render(html`
+
+        ctx.render(html`
                 <div class="pad-large alt-page async">
                     <div class="sk-cube-grid">
                         <div class="sk-cube sk-cube1"></div>
@@ -23,12 +24,49 @@ export function preloadAnswers(param) {
                 </div>`);
 
 
-            const results  = await answersService.getById(id);
+        const results = await answersService.getById(id);
 
-            ctx.data = results;
+        ctx.data = results;
 
-            const {results:questions} = await questionService.getByQuizId(results.quiz.objectId);
-            ctx.questions = questions;
+        const { results: questions } = await questionService.getByQuizId(results.quiz.objectId);
+        ctx.questions = questions;
+
+        next();
+    }
+}
+
+export function preloadProfile(param) {
+    return async function (ctx, next) {
+
+        const id = ctx.params[param];
+
+        ctx.render(html`
+            <div class="pad-large alt-page async">
+                <div class="sk-cube-grid">
+                    <div class="sk-cube sk-cube1"></div>
+                    <div class="sk-cube sk-cube2"></div>
+                    <div class="sk-cube sk-cube3"></div>
+                    <div class="sk-cube sk-cube4"></div>
+                    <div class="sk-cube sk-cube5"></div>
+                    <div class="sk-cube sk-cube6"></div>
+                    <div class="sk-cube sk-cube7"></div>
+                    <div class="sk-cube sk-cube8"></div>
+                    <div class="sk-cube sk-cube9"></div>
+                </div>
+            </div>`);
+
+        const [{ results: quizzes }, { results: results }, author, {results : solutions}] = await Promise.all([
+            quizService.getQuizByUserId(id),
+            quizService.getAllStat(),
+            getUserById(id),
+            ctx.isCurrentUser && answersService.getByUserId(ctx.user.objectId)
+        ]);
+
+        ctx.data = quizzes;
+        ctx.results = results;
+        ctx.author = author;
+        solutions ? ctx.solutions = solutions : null;
+
 
         next();
     }
@@ -41,18 +79,18 @@ export function preloadQuiz(param) {
 
             ctx.render(html`
             <div class="pad-large alt-page async">
-                    <div class="sk-cube-grid">
-                        <div class="sk-cube sk-cube1"></div>
-                        <div class="sk-cube sk-cube2"></div>
-                        <div class="sk-cube sk-cube3"></div>
-                        <div class="sk-cube sk-cube4"></div>
-                        <div class="sk-cube sk-cube5"></div>
-                        <div class="sk-cube sk-cube6"></div>
-                        <div class="sk-cube sk-cube7"></div>
-                        <div class="sk-cube sk-cube8"></div>
-                        <div class="sk-cube sk-cube9"></div>
-                    </div>
-                </div>`);
+                <div class="sk-cube-grid">
+                    <div class="sk-cube sk-cube1"></div>
+                    <div class="sk-cube sk-cube2"></div>
+                    <div class="sk-cube sk-cube3"></div>
+                    <div class="sk-cube sk-cube4"></div>
+                    <div class="sk-cube sk-cube5"></div>
+                    <div class="sk-cube sk-cube6"></div>
+                    <div class="sk-cube sk-cube7"></div>
+                    <div class="sk-cube sk-cube8"></div>
+                    <div class="sk-cube sk-cube9"></div>
+                </div>
+            </div>`);
 
             const [data, questions, taken] = await Promise.all([
                 quizService.getById(id),
@@ -72,35 +110,35 @@ export function preloadQuiz(param) {
 export function preloadQuestion(param) {
     return async function (ctx, next) {
         const id = ctx.params[param];
-        
+
         const num = Number(ctx.query.question);
         if (id) {
 
             ctx.render(html`
             <div class="pad-large alt-page async">
-                    <div class="sk-cube-grid">
-                        <div class="sk-cube sk-cube1"></div>
-                        <div class="sk-cube sk-cube2"></div>
-                        <div class="sk-cube sk-cube3"></div>
-                        <div class="sk-cube sk-cube4"></div>
-                        <div class="sk-cube sk-cube5"></div>
-                        <div class="sk-cube sk-cube6"></div>
-                        <div class="sk-cube sk-cube7"></div>
-                        <div class="sk-cube sk-cube8"></div>
-                        <div class="sk-cube sk-cube9"></div>
-                    </div>
-                </div>`);
+                <div class="sk-cube-grid">
+                    <div class="sk-cube sk-cube1"></div>
+                    <div class="sk-cube sk-cube2"></div>
+                    <div class="sk-cube sk-cube3"></div>
+                    <div class="sk-cube sk-cube4"></div>
+                    <div class="sk-cube sk-cube5"></div>
+                    <div class="sk-cube sk-cube6"></div>
+                    <div class="sk-cube sk-cube7"></div>
+                    <div class="sk-cube sk-cube8"></div>
+                    <div class="sk-cube sk-cube9"></div>
+                </div>
+            </div>`);
 
             const [data, question] = await Promise.all([
                 quizService.getById(id),
                 questionService.getQuestion(id, num)
             ]);
-            
+
             ctx.data = data;
             ctx.question = question.results[0];
             ctx.qCount = Number(question.count);
 
-            if(num > ctx.qCount) {
+            if (num > ctx.qCount) {
                 ctx.page.redirect(ctx.path.split('=')[0] + '=1');
             }
         }
@@ -132,7 +170,7 @@ export function preloadLastQuiz() {
         const taken = await quizService.getStatByQuizId(data.results[0].objectId);
 
         ctx.quiz = data.results[0];
-        
+
         ctx.taken = taken.results[0].taken;
 
         next();

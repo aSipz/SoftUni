@@ -1,6 +1,6 @@
 import { html } from '../lib/lit-html.js';
 
-export function navTemplate(hasUser, logoutAction) {
+export function navTemplate(hasUser, logoutAction, userId) {
     return html`
     <nav>
         <a class="logotype" href="/"><i class="fas fa-question-circle"></i><i
@@ -11,7 +11,7 @@ export function navTemplate(hasUser, logoutAction) {
             ? html`
             <div id="user-nav">
                 <a class="nav-link" href="/create">Create</a>
-                <a class="nav-link profile-link" href="#"><i class="fas fa-user-circle"></i></a>
+                <a class="nav-link profile-link" href="/user/${userId}"><i class="fas fa-user-circle"></i></a>
                 <a id="logoutBtn" class="nav-link" href="javascript:void(0)" @click=${logoutAction}>Logout</a>
             </div>`
             : html`

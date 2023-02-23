@@ -27,6 +27,10 @@ export async function login(email, password) {
     setUserData(userData);
 }
 
+export async function getUserById(id) {
+    return get(`/users/${id}`);
+}
+
 export async function logout() {
     // const result = get('/logout');
     clearUserData();

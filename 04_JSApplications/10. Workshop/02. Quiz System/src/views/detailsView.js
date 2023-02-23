@@ -6,7 +6,8 @@ export function showDetails(ctx) {
     const userId = ctx.user?.objectId;
    
     const quiz = ctx.data;
-   
+
+    const creatorId = ctx.data.owner.objectId;
 
     ctx.render(quizTemplate());
 
@@ -16,7 +17,7 @@ export function showDetails(ctx) {
         <div class="pad-large alt-page">
             <article class="details">
                 <h1>${quiz.title}</h1>
-                <span class="quiz-topic">A quiz by <a href="#">${quiz.author}</a> on the topic of ${quiz.topic}</span>
+                <span class="quiz-topic">A quiz by <a href="/user/${creatorId}">${quiz.author}</a> on the topic of ${quiz.topic}</span>
                 <div class="quiz-meta">
                     <span>${quiz.questionCount} Questions</span>
                     <span>|</span>
