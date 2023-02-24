@@ -1,17 +1,9 @@
 import { html, nothing } from '../lib/lit-html.js';
 import {repeat } from '../lib/directives/repeat.js';
-import * as quizService from '../data/quiz.js'
-import { createSubmitHandler } from '../util.js';
+import { deleteQuiz } from '../util.js';
 
 
 export async function showUser(ctx) {
-
-    console.log(ctx.data);
-    console.log(ctx.results);
-    console.log(ctx.author);
-    console.log(ctx.solutions);
-
-    debugger
 
     const quizzes = ctx.data;
     const user = ctx.user;
@@ -25,7 +17,6 @@ export async function showUser(ctx) {
         return html`
         <section id="profile">
                 
-
                 ${isAuthor
                 ? html`
                 <header class="pad-large">
@@ -46,12 +37,9 @@ export async function showUser(ctx) {
                         <h2>Your Quiz Results</h2>
                         <table class="quiz-results">
                             <tbody>
-                                <tr class="results-row">
-                                    <td class="cell-1">23. March 2021</td>
-                                    <td class="cell-2"><a href="#">RISC Architecture</a></td>
-                                    <td class="cell-3 s-correct">85%</td>
-                                    <td class="cell-4 s-correct">12/15 correct answers</td>
-                                </tr>
+                                
+                            ${repeat(solutions, s => s.objectId, solutionCard)}
+
                             </tbody>
                         </table>
                     </article>
@@ -62,7 +50,7 @@ export async function showUser(ctx) {
                     <h2>Quizes created by ${isAuthor? 'you' : ctx.author.username}</h2>
                 </header>
 
-                <div class="pad-large alt-page">
+                <div class="pad-large alt-page" @click=${onDelete}>
 
                     ${repeat(quizzes, q => q.objectId, quizCard)}
 
@@ -70,33 +58,78 @@ export async function showUser(ctx) {
 
             </section>`
 
-            function quizCard(quiz) {
+    }
 
-                const taken = ctx.results.find(e => e.quiz.objectId == quiz.objectId).taken;
+    async function onDelete(e) {
+        let quizId;
 
-                return html`
-                <article class="preview layout">
-                        <div class="right-col">
-                            <a class="action cta" href="/view/${quiz.objectId}">View Quiz</a>
+        if (e.target.tagName == 'A' && e.target.dataset.action == 'delete') {
+            quizId = e.target.dataset.id;
+        }
 
-                            ${isAuthor
-                            ? html `
-                            <a class="action cta" href="#"><i class="fas fa-edit"></i></a>
-                            <a class="action cta" href="#"><i class="fas fa-trash-alt"></i></a>`
-                            : nothing}
-                            
-                        </div>
-                        <div class="left-col">
-                            <h3><a class="quiz-title-link" href="/view/${quiz.objectId}">${quiz.title}</a></h3>
-                            <span class="quiz-topic">Topic: ${quiz.topic}</span>
-                            <div class="quiz-meta">
-                                <span>${quiz.questionCount} questions</span>
-                                <span>|</span>
-                                <span>Taken ${taken} times</span>
-                            </div>
-                        </div>
-                    </article>`;
-            }
+        if (e.target.className.includes('fa-trash-alt')) {
+            quizId = e.target.parentElement.dataset.id;
+        }
+
+        if(!quizId) {
+            return;
+        }
+
+        const answer = confirm('Are you sure?')
+
+        if(answer) {
+
+            const quiz = quizzes.find(e => e.objectId == quizId);
+            quiz.toDelete = true;
+
+            ctx.render(userTemplate(quizzes));
+
+            await deleteQuiz(quizId);
+
+            ctx.page.redirect(`/user/${ctx.user.objectId}`);
+        }
+
+    }
+
+    function solutionCard(solution) {
+        return html`
+        <tr class="results-row">
+            <td class="cell-1">${new Date(solution.createdAt).toDateString()}</td>
+            ${solution.quiz
+            ? html`<td class="cell-2"><a href="/view/${solution.quiz.objectId}">${solution.quiz.title}</a></td>`
+            : html`<td class="cell-2">Deleted quiz</td>`}
+            <td class="cell-3 s-correct">${(solution.correct * 100 / solution.total).toFixed()}%</td>
+            <td class="cell-4 s-correct">${solution.correct}/${solution.total} correct answers</td>
+        </tr>`;
+    }
+
+    function quizCard(quiz) {
+
+        const taken = ctx.results.find(e => e.quiz.objectId == quiz.objectId).taken;
+
+        return html`
+        <article class="preview layout">
+                <div class="right-col">
+                    <a class="action cta" href="/view/${quiz.objectId}">View Quiz</a>
+
+                    ${isAuthor
+                    ? html `
+                    <a class="action cta" href="/edit/${quiz.objectId}"><i class="fas fa-edit"></i></a>
+                    <a class="action cta" href="javascript:void(0)" data-id="${quiz.objectId}" data-action="delete"><i class="fas fa-trash-alt"></i></a>`
+                    : nothing}
+                    
+                </div>
+                <div class="left-col">
+                    <h3><a class="quiz-title-link" href="/view/${quiz.objectId}">${quiz.title}</a></h3>
+                    <span class="quiz-topic">Topic: ${quiz.topic}</span>
+                    <div class="quiz-meta">
+                        <span>${quiz.questionCount} questions</span>
+                        <span>|</span>
+                        <span>Taken ${taken} times</span>
+                    </div>
+                </div>
+                ${quiz.toDelete ? html`<div class="loading-overlay working"></div>` : nothing}
+            </article>`;
     }
 
 }

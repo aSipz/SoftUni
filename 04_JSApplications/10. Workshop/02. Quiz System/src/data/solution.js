@@ -1,4 +1,4 @@
-import { addOwner, addOwnerQuestion, addOwnerQuestionQuiz, encodeObject, filterRelation } from '../util.js';
+import { addOwnerQuestionQuiz, encodeObject, filterRelation } from '../util.js';
 import { del, get, post, put } from './api.js';
 
 const endpoints = {

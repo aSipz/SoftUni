@@ -1,12 +1,12 @@
-import { get, post, put } from './api.js';
+import { del, get, post, put } from './api.js';
 import { addOwner, createPointer, encodeObject, filterRelation } from '../util.js';
 
 
 const endpoints = {
-    'taken' : '/classes/quizStats',
-    'statsByQuizId' : (quizId) => '/classes/quizStats?where=' + encodeObject(filterRelation('quiz', 'quiz', quizId)),
+    'taken': '/classes/quizStats',
+    'statsByQuizId': (quizId) => '/classes/quizStats?where=' + encodeObject(filterRelation('quiz', 'quiz', quizId)),
     'quizzes': '/classes/quiz',
-    'quizByUserId' : (userId) => '/classes/quiz?where=' + encodeObject(filterRelation('owner', '_User', userId)),
+    'quizByUserId': (userId) => '/classes/quiz?where=' + encodeObject(filterRelation('owner', '_User', userId)),
     'count': '/classes/quiz?count=1',
     'last': '/classes/quiz?order=-createdAt&limit=1',
     'search': (title, topic) => {
@@ -19,7 +19,7 @@ const endpoints = {
 }
 
 export async function createStat(quizId) {
-    return post(endpoints.taken, { quiz : createPointer('quiz', quizId)});
+    return post(endpoints.taken, { quiz: createPointer('quiz', quizId) });
 }
 
 export async function getStatByQuizId(quizId) {
@@ -35,7 +35,7 @@ export async function getAllStat() {
 }
 
 export async function updateStat(statId, quizId, taken) {
-    return put(endpoints.taken + '/' + statId, {taken, quiz : createPointer('quiz', quizId)});
+    return put(endpoints.taken + '/' + statId, { taken, quiz: createPointer('quiz', quizId) });
 }
 
 export async function getAll() {
@@ -60,6 +60,14 @@ export async function create(quizData, userId) {
 
 export async function getById(id) {
     return get(endpoints.quizzes + '/' + id);
+}
+
+export async function deleteById(id) {
+    return del(endpoints.quizzes + '/' + id);
+}
+
+export async function deleteStatById(id) {
+    return del(endpoints.taken + '/' + id);
 }
 
 export async function update(id, quizData, userId) {

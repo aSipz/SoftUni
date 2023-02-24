@@ -1,3 +1,7 @@
+import * as quizService from './data/quiz.js';
+import * as questionService from './data/question.js';
+import * as solutionService from './data/solution.js';
+
 export function setUserData(data) {
     sessionStorage.setItem('userData', JSON.stringify(data));
 }
@@ -57,8 +61,8 @@ export function encodeObject(obj) {
 }
 
 export function encodeDate(date) {
-    return{__type: 'Date', iso: date.toISOString()};
-}   
+    return { __type: 'Date', iso: date.toISOString() };
+}
 
 export function createSubmitHandler(callback) {
     return function (event) {
@@ -68,4 +72,25 @@ export function createSubmitHandler(callback) {
 
         callback(data, event);
     }
+}
+
+export async function deleteQuiz(id) {
+
+    const [{ results: questions }, { results: solutions }, { results: quizStats }] = await Promise.all([
+        questionService.getByQuizId(id),
+        solutionService.getByQuizId(id),
+        quizService.getStatByQuizId(id)
+    ]);
+
+    console.log(questions);
+    console.log(solutions);
+    console.log(quizStats);
+
+    await Promise.all([
+        questions.forEach(q => questionService.remove(q.objectId)),
+        solutions.forEach(s => solutionService.remove(s.objectId)),
+        quizStats.forEach(s => quizService.deleteStatById(s.objectId)),
+        quizService.deleteById(id)
+    ]);
+
 }

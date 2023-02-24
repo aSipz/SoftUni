@@ -5,13 +5,7 @@ const endpoints = {
     'answers' : '/classes/answers',
     'answersById' : (id) => '/classes/answers/' + id + '?include=quiz',
     'answersByUserId' : (userId) => '/classes/answers?where=' + encodeObject(filterRelation('owner', '_User', userId)) + '&include=quiz',
-    // 'getByQuizAndOwner' : (questionId) => '/classes/solution?where=' + encodeObject(filterRelation('question', 'question', questionId)),
 };
-
-
-// export async function getByQuestionId(id) {
-//     return get(endpoints.getByQuestion(id));
-// }
 
 export async function getById(id) {
     return get(endpoints.answersById(id));

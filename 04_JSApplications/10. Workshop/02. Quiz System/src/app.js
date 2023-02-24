@@ -3,7 +3,7 @@ import page from './lib/page.mjs';
 import { addRender } from './middlewares/render.js';
 import { addSession } from './middlewares/session.js';
 import { addUserNav } from './middlewares/userNav.js';
-import { preloadQuiz, preloadCount, preloadLastQuiz, preloadQuestion, preloadAnswers, preloadProfile } from './middlewares/preloader.js';
+import { preloadQuiz, preloadCount, preloadLastQuiz, preloadAnswers, preloadProfile } from './middlewares/preloader.js';
 import { hasUser, isCurrentUser, isOwner } from './middlewares/guards.js';
 import { addQuery } from './middlewares/query.js';
 
@@ -38,6 +38,7 @@ page('/edit/:id', preloadQuiz('id'), isOwner(), showEdit);
 page('/view/:id', preloadQuiz('id'), showDetails);
 page('/quiz/:id', hasUser(), preloadQuiz('id'), showQuiz);
 page('/result/:id', hasUser(), preloadAnswers('id'), isOwner(), showResult);
-page('/user/:id', isCurrentUser(), preloadProfile('id'), showUser)
+page('/user/:id', isCurrentUser(), preloadProfile('id'), showUser);
+page('*', '/');
 
 page.start();

@@ -1,11 +1,8 @@
 import * as quizService from '../data/quiz.js';
-import * as questionService from '../data/question.js';
 import * as solutionService from '../data/solution.js';
 import * as answersService from '../data/answers.js';
-import { repeat } from '../lib/directives/repeat.js';
 import { html, nothing } from '../lib/lit-html.js';
 import { classMap } from '../lib/directives/class-map.js';
-import { createSubmitHandler } from '../util.js';
 
 export function showQuiz(ctx) {
 
@@ -24,7 +21,6 @@ export function showQuiz(ctx) {
             q.status['q-current'] = true;
         }
     });
-
 
     ctx.render(quizTemplate(questions[currentQuestion - 1]));
 
@@ -187,10 +183,4 @@ export function showQuiz(ctx) {
         applyAnswer();
     }
 
-}
-
-class Answer {
-    constructor() {
-
-    }
 }
