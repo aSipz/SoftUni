@@ -1,14 +1,16 @@
 import Footer from "./components/Footer";
 import Header from "./components/Header";
-import Main from "./Main";
+import UserSection from "./components/UserSection";
 
 function App() {
   return (
     <div className="App">
 
       <Header />
-      
-      <Main />
+
+      <main className="main">
+        <UserSection />
+      </main>
 
       <Footer />
 

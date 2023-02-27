@@ -1,4 +1,4 @@
-export default function TableHead() {
+export default function TableHead({ setUsers }) {
     return (
         <thead>
             <tr>

@@ -1,42 +1,105 @@
-import { useState } from 'react';
-import AddBtn from "./AddBtn";
-import Overlap from "./Overlap";
+import { useState, useEffect } from 'react';
+
+import AddBtn from "./user/AddBtn";
+import Overlap from "./overlap/Overlap";
 import Pagination from "./Pagination";
 import Search from "./Search";
-import Table from "./Table";
+import Table from "./user-list/Table";
 
-export default function UserSection(props) {
-    const [status, setStatus] = useState('loading');
+import * as userService from "../service/UserService";
 
-    function addUserHandler() {
-        props.userAction('add');
-    }
+import { currentStatus, userActions } from './constants/Constants';
+import EditUser from './user/EditUser';
+import Details from './user/Details';
+import DeleteUser from './user/DeleteUser';
+
+export default function UserSection() {
+    const [users, setUsers] = useState(null)
+    const [status, setStatus] = useState(currentStatus.loading);
+    const [user, setUser] = useState({ user: {}, action: null })
+
+    useEffect(() => {
+        userService.getAll()
+            .then(result => {
+                if (result.count === 0) {
+                    setStatus(currentStatus['no-user']);
+                }
+                if (result.count > 0) {
+                    setStatus(currentStatus.success);
+                }
+                setUsers(result.users);
+            })
+            .catch(err => setStatus(currentStatus.error));
+    }, []);
+
 
     return (
-        <section className="card users-container">
-            {/* <!-- Search bar component --> */}
+        <>
+            <section className="card users-container">
+                {/* <!-- Search bar component --> */}
 
-            <Search />
+                <Search />
 
-            {/* <!-- Table component --> */}
-            <div className="table-wrapper">
+                {/* <!-- Table component --> */}
+                <div className="table-wrapper">
 
-                {/* <!-- Overlap components  --> */}
+                    {/* <!-- Overlap components  --> */}
 
-                {status !== 'success' ? <Overlap status={status} /> : null}
+                    {status !== currentStatus.success ? <Overlap status={status} /> : null}
 
-                <Table
-                    userAction={{...props.userAction}}
-                    status={setStatus}
-                />
+                    <Table
+                        actions={{ setStatus, setUsers, userHandler, closeHandler }}
+                        users={users}
+                    />
 
-            </div>
+                </div>
 
-            {/* <!-- New user button  --> */}
-            <AddBtn onClick={addUserHandler} />
+                {/* <!-- New user button  --> */}
+                <AddBtn onClick={userHandler.bind(null, userActions.add, null)} />
 
-            {/* <!-- Pagination component  --> */}
-            <Pagination />
-        </section >
+                {/* <!-- Pagination component  --> */}
+                <Pagination />
+            </section >
+
+            {(user.action === userActions.add || user.action === userActions.edit) &&
+                <EditUser
+                    onClose={closeHandler}
+                    user={user.user}
+                    setUsers={setUsers}
+                    setStatus={setStatus}
+                />}
+
+            {user.action === userActions.details &&
+                <Details
+                    onClose={closeHandler}
+                    user={user.user}
+                />}
+
+            {user.action === userActions.delete &&
+                <DeleteUser
+                    onClose={closeHandler}
+                    user={user.user}
+                    setUsers={setUsers}
+                    setStatus={setStatus}
+                />}
+        </>
     );
+
+    function userHandler(action, id) {
+        if (action === userActions.details || action === userActions.edit) {
+            setStatus(currentStatus.loading);
+            userService.getUser(id)
+                .then(result => {
+                    setStatus(currentStatus.success);
+                    setUser({ user: { ...result }, action: action })
+                })
+                .catch(err => setStatus(currentStatus.error));
+        } else {
+            setUser({ user: { id }, action: action });
+        }
+    }
+
+    function closeHandler() {
+        setUser({ user: {}, action: null })
+    }
 }

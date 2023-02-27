@@ -1,19 +1,19 @@
-export default function User(props) {
-   
+export default function User({ user, actions }) {
+
     return (
-        <tr>
+        <>
             <td>
-                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-                    alt="Peter's profile" className="image" />
+                <img src={user.imageUrl}
+                    alt={`${user.firstName}'s profile`} className="image" />
             </td>
-            <td>{props.firstName}</td>
-            <td>{props.lastName}</td>
-            <td>{props.email}</td>
-            <td>{props.phoneNumber}</td>
-            <td>{new Date(props.createdAt).toDateString()}</td>
+            <td>{user.firstName}</td>
+            <td>{user.lastName}</td>
+            <td>{user.email}</td>
+            <td>{user.phoneNumber}</td>
+            <td>{new Date(user.createdAt).toDateString()}</td>
 
             <td className="actions">
-                <button className="btn edit-btn" title="Edit" onClick={() => props.userActions.editHandler(props._id)}>
+                <button className="btn edit-btn" title="Edit" onClick={actions.userHandler.bind(null, 'edit', user._id)}>
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="pen-to-square"
                         className="svg-inline--fa fa-pen-to-square" role="img" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 532 512">
@@ -22,7 +22,7 @@ export default function User(props) {
                         </path>
                     </svg>
                 </button>
-                <button className="btn delete-btn" title="Delete" onClick={() => props.userActions.deleteHandler(props._id)}>
+                <button className="btn delete-btn" title="Delete" onClick={actions.userHandler.bind(null, 'delete', user._id)}>
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash"
                         className="svg-inline--fa fa-trash" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 498 512">
                         <path fill="currentColor"
@@ -30,7 +30,7 @@ export default function User(props) {
                         </path>
                     </svg>
                 </button>
-                <button className="btn info-btn" title="Info" onClick={() => props.userActions.detailsHandler(props._id)}>
+                <button className="btn info-btn" title="Info" onClick={actions.userHandler.bind(null, 'details', user._id)}>
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="info"
                         className="svg-inline--fa fa-info" role="img" xmlns="http://www.w3.org/2000/svg"
                         viewBox="-150 0 512 612">
@@ -40,6 +40,6 @@ export default function User(props) {
                     </svg>
                 </button>
             </td>
-        </tr>
+        </>
     );
 }

@@ -3,26 +3,29 @@ import NoContent from "./NoContent";
 import NoUser from "./NoUser";
 import OnError from "./OnError";
 
-export default function Overlap(props) {
+import { currentStatus } from "../constants/Constants"; 
+
+
+export default function Overlap({status}) {
     return (
         <div className="loading-shade">
 
             {/* <!-- Loading spinner  --> */}
 
-            {props.status === 'loading' ? <LoadingSpinner /> : null}
+            {status === currentStatus.loading ? <LoadingSpinner /> : null}
 
             {/* <!-- No users added yet  --> */}
 
-            {props.status === 'no-user' ? <NoUser /> : null}
+            {status === currentStatus["no-user"] ? <NoUser /> : null}
             
 
             {/* <!-- No content overlap component  --> */}
 
-            {props.status === 'no-content' ? <NoContent /> : null}
+            {status === currentStatus["no-content"] ? <NoContent /> : null}
 
             {/* <!-- On error overlap component  --> */}
 
-            {props.status === 'error' ? <OnError /> : null}
+            {status === currentStatus.error ? <OnError /> : null}
             
 
         </div>
