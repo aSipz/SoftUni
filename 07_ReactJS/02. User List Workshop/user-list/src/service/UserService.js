@@ -3,20 +3,29 @@ const host = 'http://localhost:3005/api/users';
 export async function getAll() {
     const response = await fetch(host);
     const result = await response.json();
+    if (result.message) {
+        throw new Error(result.message);
+    }
     return result;
 }
 
 export async function getUser(id) {
     const response = await fetch(`${host}/${id}`);
     const result = await response.json();
+    if (result.message) {
+        throw new Error(result.message);
+    }
     return result.user;
 }
 
 export async function del(id) {
-    const response = await fetch(`${host}/${id}`,{
+    const response = await fetch(`${host}/${id}`, {
         method: 'DELETE'
     });
     const result = await response.json();
+    if (result.message) {
+        throw new Error(result.message);
+    }
     return result;
 }
 
@@ -27,6 +36,10 @@ export async function create(data) {
         body: JSON.stringify(data)
     });
     const result = await response.json();
+
+    if (result.message) {
+        throw new Error(result.message);
+    }
     return result.user;
 }
 
@@ -37,5 +50,8 @@ export async function update(id, data) {
         body: JSON.stringify(data)
     });
     const result = await response.json();
+    if (result.message) {
+        throw new Error(result.message);
+    }
     return result.user;
 }

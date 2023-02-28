@@ -1,15 +1,27 @@
+import { useState, useEffect } from 'react';
 import * as userService from '../../service/UserService';
 import { currentStatus } from '../constants/Constants'
 
-export default function EditUser(
-    {
-        onClose,
-        user,
-        setUsers,
-        setStatus
-    }
-) {
+export default function EditUser({ onClose, user, setUsers, setStatus }) {
     const hasUser = Boolean(user._id);
+    const [formErrors, setFormErrors] = useState({});
+    const [formValues, setFormValues] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        imageUrl: '',
+        country: '',
+        city: '',
+        street: '',
+        streetNumber: '',
+    });
+
+    const isValid = Object.values(formErrors).length < 1 || Object.values(formErrors).some(x => x);
+
+    useEffect(() => {
+        hasUser && setFormValues(Object.assign({}, { ...user.address, ...user }));
+    }, []);
 
     return (
         <div className="overlay">
@@ -33,21 +45,24 @@ export default function EditUser(
                                 <label htmlFor="firstName">First name</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-user"></i></span>
-                                    <input id="firstName" name="firstName" type="text" defaultValue={hasUser ? user.firstName : ''} />
+                                    <input id="firstName" name="firstName" type="text" value={formValues.firstName} onChange={changeHandler} onBlur={(e) => lengthValidation(e, 3)} />
                                 </div>
-                                <p className="form-error">
-                                    First name should be at least 3 characters long!
-                                </p>
+                                {formErrors.firstName &&
+                                    <p className="form-error">
+                                        First name should be at least 3 characters long!
+                                    </p>}
+
                             </div>
                             <div className="form-group">
                                 <label htmlFor="lastName">Last name</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-user"></i></span>
-                                    <input id="lastName" name="lastName" type="text" defaultValue={hasUser ? user.lastName : ''} />
+                                    <input id="lastName" name="lastName" type="text" value={formValues.lastName} onChange={changeHandler} onBlur={(e) => lengthValidation(e, 3)} />
                                 </div>
-                                <p className="form-error">
-                                    Last name should be at least 3 characters long!
-                                </p>
+                                {formErrors.lastName &&
+                                    <p className="form-error">
+                                        Last name should be at least 3 characters long!
+                                    </p>}
                             </div>
                         </div>
 
@@ -56,17 +71,17 @@ export default function EditUser(
                                 <label htmlFor="email">Email</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-envelope"></i></span>
-                                    <input id="email" name="email" type="text" defaultValue={hasUser ? user.email : ''} />
+                                    <input id="email" name="email" type="text" value={formValues.email} onChange={changeHandler} onBlur={emailValidation} />
                                 </div>
-                                <p className="form-error">Email is not valid!</p>
+                                {formErrors.email && <p className="form-error">Email is not valid!</p>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="phoneNumber">Phone number</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-phone"></i></span>
-                                    <input id="phoneNumber" name="phoneNumber" type="text" defaultValue={hasUser ? user.phoneNumber : ''} />
+                                    <input id="phoneNumber" name="phoneNumber" type="text" value={formValues.phoneNumber} onChange={changeHandler} onBlur={phoneValidation} />
                                 </div>
-                                <p className="form-error">Phone number is not valid!</p>
+                                {formErrors.phoneNumber && <p className="form-error">Phone number is not valid!</p>}
                             </div>
                         </div>
 
@@ -74,9 +89,9 @@ export default function EditUser(
                             <label htmlFor="imageUrl">Image Url</label>
                             <div className="input-wrapper">
                                 <span><i className="fa-solid fa-image"></i></span>
-                                <input id="imageUrl" name="imageUrl" type="text" defaultValue={hasUser ? user.imageUrl : ''} />
+                                <input id="imageUrl" name="imageUrl" type="text" value={formValues.imageUrl} onChange={changeHandler} onBlur={urlValidation} />
                             </div>
-                            <p className="form-error">ImageUrl is not valid!</p>
+                            {formErrors.imageUrl && <p className="form-error">ImageUrl is not valid!</p>}
                         </div>
 
                         <div className="form-row">
@@ -84,21 +99,23 @@ export default function EditUser(
                                 <label htmlFor="country">Country</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-map"></i></span>
-                                    <input id="country" name="country" type="text" defaultValue={hasUser ? user.address.country : ''} />
+                                    <input id="country" name="country" type="text" value={formValues.country} onChange={changeHandler} onBlur={(e) => lengthValidation(e, 2)} />
                                 </div>
-                                <p className="form-error">
-                                    Country should be at least 2 characters long!
-                                </p>
+                                {formErrors.country &&
+                                    <p className="form-error">
+                                        Country should be at least 2 characters long!
+                                    </p>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="city">City</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-city"></i></span>
-                                    <input id="city" name="city" type="text" defaultValue={hasUser ? user.address.city : ''} />
+                                    <input id="city" name="city" type="text" value={formValues.city} onChange={changeHandler} onBlur={(e) => lengthValidation(e, 3)} />
                                 </div>
-                                <p className="form-error">
-                                    City should be at least 3 characters long!
-                                </p>
+                                {formErrors.city &&
+                                    <p className="form-error">
+                                        City should be at least 3 characters long!
+                                    </p>}
                             </div>
                         </div>
 
@@ -107,25 +124,27 @@ export default function EditUser(
                                 <label htmlFor="street">Street</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-map"></i></span>
-                                    <input id="street" name="street" type="text" defaultValue={hasUser ? user.address.street : ''} />
+                                    <input id="street" name="street" type="text" value={formValues.street} onChange={changeHandler} onBlur={(e) => lengthValidation(e, 3)} />
                                 </div>
-                                <p className="form-error">
-                                    Street should be at least 3 characters long!
-                                </p>
+                                {formErrors.street &&
+                                    <p className="form-error">
+                                        Street should be at least 3 characters long!
+                                    </p>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="streetNumber">Street number</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-house-chimney"></i></span>
-                                    <input id="streetNumber" name="streetNumber" type="text" defaultValue={hasUser ? user.address.streetNumber : ''} />
+                                    <input id="streetNumber" name="streetNumber" type="text" value={formValues.streetNumber} onChange={changeHandler} onBlur={streetNumValidation} />
                                 </div>
-                                <p className="form-error">
-                                    Street number should be a positive number!
-                                </p>
+                                {formErrors.streetNumber &&
+                                    <p className="form-error">
+                                        Street number should be a positive number!
+                                    </p>}
                             </div>
                         </div>
                         <div id="form-actions">
-                            <button id="action-save" className="btn" type="submit">Save</button>
+                            <button id="action-save" className="btn" type="submit" disabled={isValid}>Save</button>
                             <button id="action-cancel" className="btn" type="button" onClick={onClose}>
                                 Cancel
                             </button>
@@ -138,30 +157,9 @@ export default function EditUser(
 
     function onSubmit(e) {
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const {
-            firstName,
-            lastName,
-            email,
-            phoneNumber,
-            imageUrl,
-            country,
-            city,
-            street,
-            streetNumber
-        } = Object.fromEntries(formData);
 
-        const data = {
-            firstName,
-            lastName,
-            email,
-            phoneNumber,
-            imageUrl,
-            address: {country,
-            city,
-            street,
-            streetNumber}
-        }
+        const { country, city, street, streetNumber, ...data } = formValues;
+        data.address = { country, city, street, streetNumber };
 
         onClose();
         setStatus(currentStatus.loading);
@@ -172,14 +170,45 @@ export default function EditUser(
                     setStatus(currentStatus.success);
                     setUsers(users => users.map(user => user._id === result._id ? result : user))
                 })
-                .catch(err => setStatus(currentStatus.error));
+                .catch(err => {
+                    setStatus(currentStatus.error);
+                    setTimeout(() => setStatus(currentStatus.success), 2000);
+                });
         } else {
             userService.create(data)
                 .then(result => {
                     setStatus(currentStatus.success);
                     setUsers(users => [...users, result])
                 })
-                .catch(err => setStatus(currentStatus.error));
+                .catch(err => {
+                    setStatus(currentStatus.error);
+                    setTimeout(() => setStatus(currentStatus.success), 2000);
+                });
         }
+    }
+
+    function changeHandler(e) {
+        setFormValues(values => ({ ...values, [e.target.name]: e.target.value }));
+    }
+
+    function lengthValidation(e, length) {
+        setFormErrors(errors => ({ ...errors, [e.target.name]: e.target.value.length < length }));
+    }
+
+    function emailValidation(e) {
+        const emailPattern = /@\w{3,}/;
+        setFormErrors(errors => ({ ...errors, [e.target.name]: !emailPattern.test(e.target.value) }));
+    }
+
+    function urlValidation(e) {
+        setFormErrors(errors => ({ ...errors, [e.target.name]: !e.target.value.startsWith('https://') }));
+    }
+
+    function phoneValidation(e) {
+        setFormErrors(errors => ({ ...errors, [e.target.name]: !(e.target.value.startsWith('0') && e.target.value.length === 10) }));
+    }
+
+    function streetNumValidation(e) {
+        setFormErrors(errors => ({ ...errors, [e.target.name]: (Number(e.target.value[0]) <= 0 || e.target.value.length < 1) }));
     }
 }
