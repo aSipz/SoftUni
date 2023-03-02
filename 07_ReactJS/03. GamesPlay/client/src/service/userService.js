@@ -5,10 +5,10 @@ const endpoints = {
     'logout': '/users/logout'
 }
 
-export function login(loginData) {
-    return post(endpoints.login, loginData);
+export function login(user, loginData) {
+    return post(endpoints.login, user, loginData);
 }
 
-export function logout() {
-    return get();
+export function logout(user) {
+    return get(endpoints.logout, user);
 }

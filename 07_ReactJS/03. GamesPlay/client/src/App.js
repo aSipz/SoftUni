@@ -19,10 +19,14 @@ function App() {
         setUser(userData);
     }
 
+    function userLogout() {
+        setUser(null);
+    }
+
     return (
         <div id="box">
 
-            <AuthContext.Provider value={{ user, userLogin }}>
+            <AuthContext.Provider value={{ user, userLogin, userLogout }}>
 
                 <Header />
 

@@ -9,7 +9,7 @@ export default function Login() {
         password: ''
     });
 
-    const { user, userLogin } = useContext(AuthContext);
+    const { userLogin } = useContext(AuthContext);
 
     const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ export default function Login() {
 
     function onSubmit(e) {
         e.preventDefault();
-        userService.login(formValues)
+        userService.login(null, formValues)
             .then(result => {
                 userLogin(result);
                 navigate('/');

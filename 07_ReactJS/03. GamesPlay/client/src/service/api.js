@@ -1,10 +1,7 @@
-// import { clearUserData, getUserData } from "../util.js";
-
 const host = 'http://localhost:3030';
 
-async function request(method, url, data) {
+async function request(method, url, user, data) {
 
-    // const user = getUserData();
     const options = {
         method,
         headers: {}
@@ -15,22 +12,20 @@ async function request(method, url, data) {
         options.body = JSON.stringify(data);
     }
 
-    // if (user) {
-    //     options.headers['X-Authorization'] = user.accessToken;
-    // }
+    if (user) {
+        options.headers['X-Authorization'] = user.accessToken;
+    }
     try {
         const response = await fetch(host + url, options);
 
-        if (response.status == 204) {
+        if (response.status === 204) {
             return response;
         }
 
         const data = await response.json();
 
-        if (response.ok != true) {
-            // if (response.status == 403) {
-            //     clearUserData();
-            // }
+        if (response.ok !== true) {
+            
             throw new Error(data.message);
         }
 
