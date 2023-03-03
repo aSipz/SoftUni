@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import Catalogue from "./components/catalogue/Catalogue";
@@ -11,9 +10,10 @@ import Logout from './components/logout/Logout';
 import Register from "./components/register/Register";
 
 import { AuthContext } from './contexts/AuthContext';
+import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useLocalStorage('auth', null);
 
     function userLogin(userData) {
         setUser(userData);
@@ -38,6 +38,7 @@ function App() {
                         <Route path="/register" element={<Register />} />
                         <Route path="/logout" element={<Logout />} />
                         <Route path="/create" element={<Create />} />
+                        <Route path="/edit/:gameId" element={<Create />} />
                         <Route path="/details/:gameId" element={<Details />} />
                         <Route path="/catalogue" element={<Catalogue />} />
                     </Routes>

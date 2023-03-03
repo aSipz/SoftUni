@@ -1,6 +1,10 @@
 const host = 'http://localhost:3030';
 
-async function request(method, url, user, data) {
+async function request(method, url, data) {
+
+    const auth = localStorage.getItem('auth');
+
+    const user = auth ? JSON.parse(auth) : null;
 
     const options = {
         method,
@@ -25,7 +29,7 @@ async function request(method, url, user, data) {
         const data = await response.json();
 
         if (response.ok !== true) {
-            
+
             throw new Error(data.message);
         }
 

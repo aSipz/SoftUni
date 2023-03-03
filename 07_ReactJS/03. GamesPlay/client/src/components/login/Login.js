@@ -19,7 +19,7 @@ export default function Login() {
 
     function onSubmit(e) {
         e.preventDefault();
-        userService.login(null, formValues)
+        userService.login(formValues)
             .then(result => {
                 userLogin(result);
                 navigate('/');

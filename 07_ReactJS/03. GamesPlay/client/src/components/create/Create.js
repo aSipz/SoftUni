@@ -1,10 +1,13 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import * as gameService from '../../service/gameService';
 
 export default function Create() {
+    const { gameId } = useParams();
+
     const navigate = useNavigate();
+
     const [formValues, setFormValues] = useState({
         title: '',
         category: '',
@@ -13,14 +16,28 @@ export default function Create() {
         summary: '',
     });
 
+    useEffect(() => {
+        if (gameId) {
+            gameService.getById(gameId)
+                .then(result => setFormValues(result));
+        }
+    }, [gameId])
+
     function changeHandler(e) {
         setFormValues(values => ({ ...values, [e.target.name]: e.target.value }));
     }
 
     function onSubmit(e) {
         e.preventDefault();
-        gameService.create(formValues)
-            .then(navigate('/'));
+        if (gameId) {
+            gameService.update(gameId, formValues)
+                .then(navigate('/details/' + gameId))
+                .catch(err => console.log(err));
+        } else {
+            gameService.create(formValues)
+                .then(result => navigate('/details/' + result._id))
+                .catch(err => console.log(err));
+        }
     }
 
     return (
@@ -74,7 +91,7 @@ export default function Create() {
                     <input
                         className="btn submit"
                         type="submit"
-                        value="Create Game"
+                        value={gameId ? 'Edit game' : 'Create game'}
                         disabled={Object.values(formValues).some(x => !x)}
                     />
                 </div>

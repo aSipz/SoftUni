@@ -1,4 +1,4 @@
-import { get, post } from './api';
+import { del, get, post, put } from './api';
 
 const endpoints = {
     'allGamesSorted': '/data/games?sortBy=_createdOn%20desc',
@@ -14,7 +14,15 @@ export function getById(id) {
     return get(endpoints.gameById(id));
 }
 
-export function create(user, data) {
-    return post(endpoints.allGames, user, data);
+export function create(data) {
+    return post(endpoints.allGames, data);
+}
+
+export function update(id, data) {
+    return put(endpoints.gameById(id), data);
+}
+
+export function remove(id) {
+    return del(endpoints.gameById(id));
 }
 

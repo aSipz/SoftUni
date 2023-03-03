@@ -1,9 +1,10 @@
-import { useParams, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
 
 import * as gameService from '../../service/gameService';
 import Comments from './Comments';
 import CreateComment from './CreateComments';
+import { AuthContext } from '../../contexts/AuthContext';
 
 export default function Details() {
     const { gameId } = useParams();
@@ -14,11 +15,23 @@ export default function Details() {
         imageUrl: '',
         summary: ''
     });
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         gameService.getById(gameId)
-            .then(result => setGame(result));
-    }, []);
+            .then(result => setGame(result))
+            .catch(err => {
+                console.log(err);
+                navigate('/catalogue');
+            });
+    }, [gameId, navigate]);
+
+    function gameDeleteHandler() {
+        gameService.remove(gameId)
+            .then(() => navigate('/catalogue'))
+            .catch(err => console.log(err));
+    }
 
     return (
         <section id="game-details">
@@ -36,14 +49,17 @@ export default function Details() {
                 {/* Bonus ( for Guests and Users ) */}
                 <Comments />
                 {/* Edit/Delete buttons ( Only for creator of this game )  */}
-                <div className="buttons">
-                    <a href="#" className="button">
-                        Edit
-                    </a>
-                    <a href="#" className="button">
-                        Delete
-                    </a>
-                </div>
+                {user._id === game._ownerId &&
+                    <div className="buttons">
+                        <Link to={'/edit/' + gameId} className="button">
+                            Edit
+                        </Link>
+                        <Link className="button" onClick={gameDeleteHandler}>
+                            Delete
+                        </Link>
+                    </div>
+                }
+
             </div>
             {/* Bonus */}
             {/* Add Comment ( Only for logged-in users, which is not creators of the current game ) */}
