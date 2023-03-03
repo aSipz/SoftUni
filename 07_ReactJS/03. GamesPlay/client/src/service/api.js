@@ -30,6 +30,8 @@ async function request(method, url, data) {
 
         if (response.ok !== true) {
 
+            localStorage.removeItem('auth');
+
             throw new Error(data.message);
         }
 

@@ -18,7 +18,7 @@ export default function Header() {
                 {user
                     ? <div id="user">
                         <Link to="/create">Create Game</Link>
-                        <Link to="/logout" >Logout</Link>
+                        <Link to="/logout">Logout</Link>
                     </div>
                     : <div id="guest">
                         <Link to="/login">Login</Link>

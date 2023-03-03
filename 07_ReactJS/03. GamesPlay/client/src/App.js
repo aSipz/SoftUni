@@ -9,24 +9,15 @@ import Login from "./components/login/Login";
 import Logout from './components/logout/Logout';
 import Register from "./components/register/Register";
 
-import { AuthContext } from './contexts/AuthContext';
-import useLocalStorage from './hooks/useLocalStorage';
+import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
-    const [user, setUser] = useLocalStorage('auth', null);
 
-    function userLogin(userData) {
-        setUser(userData);
-    }
-
-    function userLogout() {
-        setUser(null);
-    }
 
     return (
         <div id="box">
 
-            <AuthContext.Provider value={{ user, userLogin, userLogout }}>
+            <AuthProvider>
 
                 <Header />
 
@@ -45,7 +36,7 @@ function App() {
 
                 </main>
 
-            </AuthContext.Provider>
+            </AuthProvider>
 
         </div>
     );

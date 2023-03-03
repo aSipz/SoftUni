@@ -14,9 +14,13 @@ export default function Logout() {
         userService.logout(user)
             .then(() => {
                 userLogout();
-                navigate('/');
+                navigate('/', { replace: true });
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                userLogout();
+                navigate('/', { replace: true });
+            });
     });
 
     return null;
