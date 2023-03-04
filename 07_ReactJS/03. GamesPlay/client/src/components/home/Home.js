@@ -1,15 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+
+import { AuthContext } from '../../contexts/AuthContext';
 import * as gameService from '../../service/gameService';
 import GameItem from './GameItem';
 
 export default function Home() {
     const [games, setGames] = useState([]);
+    const { userLogout } = useContext(AuthContext);
 
     useEffect(() => {
         gameService.getAll()
             .then(result => {
                 setGames(result);
-            });
+            })
+            .catch(() => userLogout());
     }, []);
 
     return (

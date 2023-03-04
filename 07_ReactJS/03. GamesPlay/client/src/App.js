@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 
 import Catalogue from "./components/catalogue/Catalogue";
+import PrivateGuard from './components/common/PrivateGuard';
+import PublicGuard from './components/common/PublicGuard';
 import Create from "./components/create/Create";
 import Details from "./components/details/Details";
 import Header from "./components/header/Header";
@@ -25,11 +27,18 @@ function App() {
 
                     <Routes>
                         <Route path="/" element={<Home />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/logout" element={<Logout />} />
-                        <Route path="/create" element={<Create />} />
-                        <Route path="/edit/:gameId" element={<Create />} />
+
+                        <Route element={<PublicGuard />} >
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/register" element={<Register />} />
+                        </Route>
+
+                        <Route element={<PrivateGuard />}>
+                            <Route path="/create" element={<Create />} />
+                            <Route path="/logout" element={<Logout />} />
+                            <Route path="/edit/:gameId" element={<Create />} />
+                        </Route>
+
                         <Route path="/details/:gameId" element={<Details />} />
                         <Route path="/catalogue" element={<Catalogue />} />
                     </Routes>
