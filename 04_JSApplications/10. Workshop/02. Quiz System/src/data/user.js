@@ -29,7 +29,11 @@ export async function getUserById(id) {
     return get(`/users/${id}`);
 }
 
+export async function getUsers() {
+    return await get(`/users`);
+}
+
 export async function logout() {
-    // const result = get('/logout');
+    const result = await post('/logout');
     clearUserData();
 }
