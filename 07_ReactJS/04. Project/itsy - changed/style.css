@@ -1,4 +1,5 @@
 @import 'overlay.css';
+@import 'search.css';
 
 /*!
 
@@ -225,6 +226,7 @@ ol {
   list-style-type: decimal;
 }
 
+.header div li,
 nav ul,
 nav li {
   list-style: none;
@@ -1172,7 +1174,8 @@ body {
 a,
 .basic-item a h2,
 a h1,
-a h2 {
+a h2,
+header.header nav p.dropdown {
   text-decoration: none;
   -o-transition: all 0.25s ease-in-out;
   -webkit-transition: all 0.25s ease-in-out;
@@ -1306,7 +1309,6 @@ header.header .header-wrap {
   position: relative;
   display: table;
   width: 100%;
-  max-width: 1330px;
   padding: 1em;
   margin: 0 auto;
 }
@@ -1324,6 +1326,17 @@ header.header a.menu-trigger,
 header.header .logo {
   position: relative;
   z-index: 5;
+  line-height: 1;
+}
+
+header.header .header-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header.header .header-wrap li {
+  vertical-align: middle;
 }
 
 header.header nav {
@@ -1343,6 +1356,21 @@ header.header nav ul li {
   position: relative;
 }
 
+header.header .user li {
+  display: inline;
+}
+
+header.header .user p {
+  font-size: 2.4rem;
+  margin-right: 6px;
+}
+
+.user i {
+  /* border: 2px solid #f08c79; */
+  font-size: 2.4em;
+  /* border-radius: 100%; */
+}
+
 header.header nav ul li ul {
   display: none;
 }
@@ -1358,7 +1386,7 @@ header.header .nav-trigger {
 }
 
 header.header .logo {
-  width: 200px;
+  width: 150px;
 }
 
 header.header .site-tagline {
@@ -1488,6 +1516,11 @@ body.sticky-menu .wrap.full-wrap {
 .wrap {
   padding-left: 1em;
   padding-right: 1em;
+}
+
+.wrap.post {
+  padding: 0;
+  background-color: #fafbfc;
 }
 
 .inner {
@@ -1827,7 +1860,7 @@ h2.home-blog-title {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  height: 450px;
+  height: 640px;
   position: relative;
   display: table;
   width: 100%;
@@ -2366,13 +2399,14 @@ header.header nav,
   font-size: 95%;
 }
 
+.comments blockquote,
 .post-content blockquote {
   padding-left: 1em;
 }
 
 blockquote,
 .content-aside {
-  font-size: 210%;
+  font-size: 2em;
 }
 
 .wrap {
@@ -2518,7 +2552,6 @@ blockquote {
 
 blockquote cite {
   font-size: 80%;
-  padding-top: 1em;
   display: block;
 }
 
@@ -2674,7 +2707,8 @@ header.header nav a:hover,
 .side a:hover,
 .main-archive h2 a:hover,
 .related h6 a:hover,
-.home-sticky-post h3 a:hover {
+.home-sticky-post h3 a:hover,
+header.header nav p.dropdown:hover {
   color: #f08c79;
 }
 
@@ -2693,11 +2727,19 @@ a:hover,
 .widget a,
 .side a,
 header.header nav a,
+header.header nav p.dropdown,
 footer.footer a:hover,
 .main-archive h2 a,
 .related h6 a,
 .home-sticky-post h3 a {
   color: #34495e;
+}
+
+header.header nav p.dropdown {
+  font-size: 2.4rem;
+  width: auto;
+  height: auto;
+  cursor: pointer;
 }
 
 .site-title a,
@@ -2720,6 +2762,7 @@ footer.footer a {
   border-bottom: 1px solid #f08c79;
 }
 
+.comments blockquote,
 .post-content blockquote {
   border-left: 1px solid #f08c79;
 }
@@ -2962,24 +3005,32 @@ input[type="submit"],
 .edd_go_to_checkout.button.white,
 .edd-submit.button,
 .edd-submit.button.white {
-  color: #f08c79 !important;
+  color: #f08c79;
+  line-height: 1.2;
   padding: 1em 2.5em;
   text-shadow: none;
   display: inline-block;
   text-decoration: none;
   margin-bottom: 1em;
   font-weight: 700;
-  text-decoration: none !important;
-  border: 2px solid #f08c79 !important;
+  text-decoration: none;
+  border: 2px solid #f08c79;
   border-radius: 50px;
   background-color: transparent;
   font-size: 20px;
   font-size: 2rem;
 }
 
-button.menu-item {
+.menu-item button {
   padding: 0.2em 1em;
-  margin: 0 0 0 1em;
+  margin: 0;
+}
+
+.menu-item p {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  font-family: 'Amatic SC', 'Heveltica Neue', Arial, sans-serif;
 }
 
 a.button.square {
@@ -3068,14 +3119,16 @@ a.button.light-blue:hover {
   color: #4b7784 !important;
 }
 
+.button.blue,
 a.button.blue {
-  border-color: #3da1e3 !important;
-  color: #3da1e3 !important;
+  border-color: #3da1e3;
+  color: #3da1e3;
 }
 
+.button.blue:hover,
 a.button.blue:hover {
-  border-color: #266476 !important;
-  color: #266476 !important;
+  border-color: #266476;
+  color: #266476;
 }
 
 a.button.red {
@@ -4217,13 +4270,12 @@ header.header nav,
   header.header nav ul li:hover ul:before {
     content: '';
     position: absolute;
-    top: 0.75em;
+    top: 19px;
     left: 0;
     width: 100%;
-    height: 90%;
+    height: 85%;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
     opacity: 0.8;
-    margin-top: -1px;
   }
 
   header.header nav ul li:hover ul li {
@@ -4240,8 +4292,8 @@ header.header nav,
   }
 
   .main-wrap {
-    float: left;
-    width: 69%;
+    width: 80vw;
+    margin: 0 auto;
   }
 
   .main-wrap .main-archive {
@@ -4310,7 +4362,7 @@ header.header nav,
   .footer-wrap {
     display: table;
     width: 100%;
-    max-width: 1360px;
+    /* max-width: 1360px; */
     margin: 0 auto;
   }
 
