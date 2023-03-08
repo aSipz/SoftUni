@@ -51,10 +51,10 @@
                                 <a href="index.html">Blog</a>
                             </li>
                             <li class="menu-item">
-                                <a href="about.html">About me</a>
+                                <a href="index.html">Authors</a>
                             </li>
                             <li class="menu-item">
-                                <a href="contact.html">Contact me</a>
+                                <a href="about.html">About</a>
                             </li>
                             <li class="menu-item">
                                 <p class="dropdown">Creator Panel</p>
@@ -420,7 +420,7 @@
                         </li>
 
                         <li class="comments post-tags">
-                            <span>0 Comments</span>
+                            <a href="#comments">0 Comments</a>
                         </li>
 
                         <li class="likes post-tags">
@@ -452,15 +452,17 @@
                             et netus et malesuada fames ac turpis egestas. Pellentesque a erat velit, venenatis
                             porttitor mauris.</p>
                     </div>
+
                     <div class="user-controls">
                         <button class="button small blue"><i class="fa-solid fa-thumbs-up"></i></button>
-                        <a href="#comments" class="button small blue">Comment</a>
+                        <a href="#respond" class="button small blue">Comment</a>
                     </div>
+
                     <div class="author-controls">
                         <a href="#" class="button small green">Edit</a>
                         <button class="button small red">Delete</button>
                     </div>
-                    
+
 
 
 
@@ -488,12 +490,16 @@
                         <h3 id="respond-title">Comments (0)</h3>
                     </div>
 
-                    <aside class="comments">
+                    <div class="comments">
                         <blockquote>
                             <p>There are always two people in every picture: the photographer and the
                                 viewer.<cite>Ansel Adams</cite></p>
+                            <span>Edited:</span>
+                            <button class="button small green">Edit</button>
+                            <button class="button small red">Delete</button>
                         </blockquote>
-                    </aside>
+
+                    </div>
 
                     <div id="respond" class="comment-respond">
                         <h3 id="reply-title" class="comment-reply-title">Leave a comment <small><a rel="nofollow"
@@ -503,8 +509,11 @@
                             <label for="comment">Comment</label><textarea id="comment" name="comment" cols="45" rows="8"
                                 aria-required="true" placeholder="Comment"></textarea>
 
-                            <p class="form-submit"><input name="submit" type="submit" id="submit" class="submit"
-                                    value="Post Comment"></p>
+                            <div>
+                                <p class="form-submit"><button class="button red">Cancel</button></p>
+                                <p class="form-submit"><input name="submit" type="submit" id="submit"
+                                        class="button green" value="Post Comment"></p>
+                            </div>
                         </form>
                     </div><!-- #respond -->
 
@@ -513,6 +522,138 @@
             </div>
         </div>
 
+        <!-- users -->
+
+        <section class="main">
+            <article class="post page">
+
+                <div class="inner">
+                    <h1>My profile</h1>
+                    <div class="post-content">
+                        <p>You can contact me using the following form :)</p>
+                        <form id="fh5co_contact_form">
+                            <p>
+                                <input type="text" name="name" value="" size="40" placeholder="Name*">
+                            </p>
+                            <p>
+                                <input type="email" name="email" value="" size="40" placeholder="Email*">
+                            </p>
+                            <p>
+                                <textarea name="message" cols="40" rows="10" placeholder="Your Message"></textarea>
+                            </p>
+                            <p class="form-submit"><input type="submit" value="Send"></p>
+                        </form>
+                    </div>
+                </div>
+
+            </article>
+
+
+        </section>
+
+        <!-- profile -->
+
+        <section class="main">
+            <article class="post page">
+
+                <div class="inner">
+                    <h1>Users</h1>
+
+                    <form class="search-form">
+
+                        <div class="search-input-container">
+                            <input type="text" placeholder="Enter search criteria" name="search">
+                            <button class="close-btn">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <button class="btn" title="Search text">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+
+                    </form>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Image
+                                </th>
+                                <th>
+                                    First name
+                                    <i class="fa-solid fa-arrow-down"></i>
+                                </th>
+                                <th>
+                                    Last name
+                                    <i class="fa-solid fa-arrow-up"></i>
+                                </th>
+                                <th>
+                                    Username
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Created
+                                </th>
+                                <th>
+                                    Author
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table row component -->
+                            <tr>
+                                <td>
+                                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
+                                        alt="Peter's profile" class="image" />
+                                </td>
+                                <td>Peter</td>
+                                <td>Johnson</td>
+                                <td>peter@abv.bg</td>
+                                <td>0812345678</td>
+                                <td>June 28, 2022</td>
+
+                                <td class="actions">
+                                    <input type="checkbox">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="pagination position">
+                        <div class="limits">
+                          <span>Users per page:</span>
+                          <select name="limit" class="limit" value="5">
+                            <option value="5">5</option>
+                            <option value="5">10</option>
+                            <option value="5">15</option>
+                            <option value="5">20</option>
+                          </select>
+                        </div>
+                        <p class="pages">1 - 1 of 1</p>
+                        <div class="actions">
+                          <button class="btn" title="First Page">
+                            <i class="fa-solid fa-angles-left"></i>
+                          </button>
+                
+                          <button class="btn" title="Previous Page">
+                            <i class="fa-solid fa-angle-left"></i>
+                          </button>
+                          <button class="btn" title="Next Page">
+                            <i class="fa-solid fa-angle-right"></i>
+                          </button>
+                
+                          <button class="btn" title="Last Page">
+                            <i class="fa-solid fa-angles-right"></i>
+                          </button>
+                        </div>
+                        <button class="user-confirm">Confirm</button>
+                      </div>
+                </div>
+
+
+            </article>
     </main>
 
 
@@ -523,6 +664,7 @@
             <div id="footer-text">&copy; 2018 Itsy.
                 Designed by <a href="https://freehtml5.co" target="_blank">FreeHTML5</a>.
             </div>
+
 
         </div>
 
