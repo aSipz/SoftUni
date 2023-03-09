@@ -1,37 +1,121 @@
+import { useContext, useState } from "react";
+
+import Spinner from '../spinner/Spinner';
+
+import { ActionContext } from "../../contexts/ActionContext";
+import { AuthContext } from '../../contexts/AuthContext';
+import { LoadingContext } from '../../contexts/LoadingContext';
+import useCloseModal from "../../hooks/useCloseModal";
+
+import { userAction } from '../../const/actions';
+import { onChangeHandler, lengthValidation, emailValidation } from '../../utils/inputUtils';
+import * as userService from '../../service/user';
+
 export default function Login() {
+    const [formValues, setFormValues] = useState({
+        email: '',
+        password: '',
+    });
+    const [errors, setErrors] = useState({});
+
+    const { changeAction } = useContext(ActionContext);
+    const { userLogin } = useContext(AuthContext);
+    const { loading, changeLoading } = useContext(LoadingContext);
+
+    const [closeModalHandler] = useCloseModal();
+
+    const onChange = onChangeHandler.bind(null, setFormValues);
+
+    const lengthValidator = lengthValidation.bind(null, setErrors, 3);
+    const emailValidator = emailValidation.bind(null, setErrors);
+
+    const isDisabled = Object.values(errors).length < Object.values(formValues).length - 1 || Object.values(errors).some(x => x);
+
+    const onRegisterClick = () => {
+        changeAction(userAction.register);
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+
+        if (Object.values(errors).length < Object.values(formValues).length || Object.values(errors).some(x => x)) {
+            setErrors(errors => ({...errors, }))
+            return;
+        }
+
+        changeLoading();
+
+        userService.login(formValues)
+            .then((result) => {
+                console.log(result);
+                userLogin(result);
+                closeModalHandler();
+                changeLoading();
+            })
+            .catch((err) => {
+                debugger
+                console.log(err);
+            })
+    }
+
     return (
-        <div class="user-container login">
-            <header class="headers">
+        <div className="user-container login">
+            {loading && <Spinner />}
+            <header className="headers">
                 <h2>Login</h2>
-                <button class="btn close">
-                    <i class="fa-solid fa-xmark"></i>
+                <button className="btn close" onClick={closeModalHandler}>
+                    <i className="fa-solid fa-xmark"></i>
                 </button>
             </header>
-            <form>
-                <div class="form-group long-line">
+            <form onSubmit={onSubmit}>
+                <div className="form-group long-line">
 
-                    <div class="input-wrapper">
-                        <span><i class="fa-solid fa-envelope"></i></span>
-                        <input name="email" type="text" placeholder="Email" />
+                    <div className="input-wrapper">
+                        <span className={errors.email ? "error" : ""}><i className="fa-solid fa-envelope"></i></span>
+                        <input
+                            className={errors.email ? "error" : ""}
+                            name="email"
+                            type="text"
+                            placeholder="Email"
+                            value={formValues.email}
+                            onChange={onChange}
+                            onBlur={emailValidator}
+                        />
                     </div>
-                    <p class="form-error">Email is not valid!</p>
+                    {errors.email &&
+                        <p className="form-error">
+                            Email is not valid!
+                        </p>
+                    }
                 </div>
 
-                <div class="form-group long-line">
+                <div className="form-group long-line">
 
-                    <div class="input-wrapper">
-                        <span><i class="fa-solid fa-lock"></i></span>
-                        <input name="password" type="password" placeholder="Password" />
+                    <div className="input-wrapper">
+                        <span className={errors.password ? "error" : ""}><i className="fa-solid fa-lock"></i></span>
+                        <input
+                            className={errors.password ? "error" : ""}
+                            name="password"
+                            type="password"
+                            placeholder="Password"
+                            value={formValues.password}
+                            onChange={onChange}
+                            onBlur={lengthValidator}
+                        />
                     </div>
-                    <p class="form-error">Password is not valid!</p>
+                    {errors.password &&
+                        <p className="form-error">
+                            Password should be at least 3 characters long!
+                        </p>
+                    }
                 </div>
 
-                <div class="form-actions">
+                <div className="form-actions">
                     <div>
                         <p>Don't have an account?</p>
-                        <button class="form-actions btn">Register</button>
+                        <button className="form-actions btn" onClick={onRegisterClick}>Register</button>
                     </div>
-                    <button class="submit" type="submit">Login</button>
+                    <button className="submit" type="submit" disabled={isDisabled}>Login</button>
                 </div>
             </form>
         </div>

@@ -1,3 +1,4 @@
+import SearchBar from '../searchBar/SearchBar';
 import './Users.css'
 
 export default function Users() {
@@ -6,17 +7,9 @@ export default function Users() {
             <article className="post page">
                 <div className="inner">
                     <h1>Users</h1>
-                    <form className="search-form">
-                        <div className="search-input-container">
-                            <input type="text" placeholder="Enter search criteria" name="search" />
-                            <button className="close-btn">
-                                <i className="fa-solid fa-xmark" />
-                            </button>
-                            <button className="btn" title="Search text">
-                                <i className="fa-solid fa-magnifying-glass" />
-                            </button>
-                        </div>
-                    </form>
+
+                    <SearchBar />
+
                     <table className="table">
                         <thead>
                             <tr>

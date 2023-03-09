@@ -1,7 +1,6 @@
 @import 'https://use.fontawesome.com/releases/v6.3.0/css/all.css';
 @import 'https://fonts.googleapis.com/css?family=Amatic+SC%3A400%2C700%7CLato%3A400%2C700%2C400italic%2C700italic&amp;ver=4.9.8';
 
-@import 'search.css';
 
 /* ==========================================================================
     0 Resets & Box Sizing
@@ -375,8 +374,14 @@
   body {
     margin: 0;
     padding: 0;
-    height: 100%;
     color: #737171;
+    /* height: 100%; */
+    /* -ms-overflow-style: none;
+    scrollbar-width: none; */
+  }
+
+  body::-webkit-scrollbar {
+    /* display: none; */
   }
   
   a,
@@ -621,6 +626,10 @@
   .post h2.entry-title,
   .post h1 {
     text-align: center;
+  }
+
+  .post.page {
+    margin-top: 50px;
   }
   
   .page h1 {
@@ -1129,6 +1138,10 @@
   .home-sticky-post h3 a {
     color: #34495e;
   }
+
+  header.header nav a.active {
+    color: #f08c79;
+  }
   
   header.header nav p.dropdown {
     font-size: 2.4rem;
@@ -1142,6 +1155,10 @@
   footer.footer,
   footer.footer a {
     color: #737171;
+  }
+
+  .site-title a.active {
+    color: #f08c79;
   }
   
   .hero {

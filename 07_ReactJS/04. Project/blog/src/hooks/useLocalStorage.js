@@ -8,7 +8,11 @@ export default function useLocalStorage(key, defaultValue) {
     });
 
     const setLocaleStorageValue = (newValue) => {
-        localStorage.setItem(key, JSON.stringify(newValue));
+
+        newValue === null
+            ? localStorage.removeItem(key)
+            : localStorage.setItem(key, JSON.stringify(newValue));
+
 
         setValue(newValue);
     }

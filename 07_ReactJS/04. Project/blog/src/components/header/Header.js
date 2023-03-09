@@ -1,12 +1,15 @@
 import { useContext } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 
 import { ActionContext } from '../../contexts/ActionContext';
-import { userAction } from '../../const/actions'
+import { AuthContext } from '../../contexts/AuthContext';
+import { userAction } from '../../const/actions';
 
 export default function Header() {
     const { changeAction } = useContext(ActionContext);
+    const { user } = useContext(AuthContext);
 
-    const onClick = () => {
+    const onLoginClick = () => {
         changeAction(userAction.login);
     }
 
@@ -15,7 +18,7 @@ export default function Header() {
             <div className="header-wrap">
                 <div className="logo plain logo-left">
                     <div className="site-title">
-                        <a href="index.html" title="Go to Home">Home</a>
+                        <NavLink to="/" title="Go to Home">Home</NavLink>
                     </div>
                 </div>
                 <nav id="nav" role="navigation">
@@ -23,25 +26,25 @@ export default function Header() {
                         <div className="table-cell">
                             <ul id="menu-menu-1">
                                 <li className="menu-item">
-                                    <a href="index.html">Blog</a>
+                                    <NavLink to="/posts">Blog</NavLink>
                                 </li>
                                 <li className="menu-item">
-                                    <a href="index.html">Authors</a>
+                                    <NavLink to="/authors">Authors</NavLink>
                                 </li>
                                 <li className="menu-item">
-                                    <a href="about.html">About</a>
+                                    <NavLink to="/about">About</NavLink>
                                 </li>
                                 <li className="menu-item">
                                     <p className="dropdown">Creator Panel</p>
                                     <ul className="sub-menu">
                                         <li className="menu-item">
-                                            <a href="#">Create new article</a>
+                                            <NavLink to="/create">Create new article</NavLink>
                                         </li>
                                         <li className="menu-item">
-                                            <a href="#">My articles</a>
+                                            <NavLink to="my-articles">My articles</NavLink>
                                         </li>
                                         <li className="menu-item">
-                                            <a href="#">Users</a>
+                                            <NavLink to="/users">Users</NavLink>
                                         </li>
                                     </ul>
                                 </li>
@@ -52,13 +55,14 @@ export default function Header() {
                 <div className="user">
                     <ul>
                         <li className="menu-item">
-                            <p>Welcome, guest!</p>
+                            <p>Welcome, {user? `${user.firstName} ${user.lastName}` : 'guest'}!</p>
                         </li>
-                        <li>
-                            <a href="#"><i className="fa-solid fa-circle-user" /></a>
-                        </li>
+
                         <li className="menu-item">
-                            <button onClick={onClick}>Login</button>
+                            {user
+                                ? <Link to="/users/:userId"><i className="fa-solid fa-circle-user" /></Link>
+                                : <button onClick={onLoginClick}>Login</button>
+                            }
                         </li>
                     </ul>
                 </div>

@@ -16,6 +16,6 @@ export function getUsers() {
     return get(`/users`);
 }
 
-export async function logout() {
+export function logout() {
     return post('/logout');
 }

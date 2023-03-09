@@ -1,17 +1,11 @@
+import SearchBar from "../searchBar/SearchBar";
+
 export default function Blog() {
     return (
         <div className="wrap full-wrap">
-            <form className="search-form">
-                <div className="search-input-container">
-                    <input type="text" placeholder="Enter search criteria" name="search" />
-                    <button className="close-btn">
-                        <i className="fa-solid fa-xmark" />
-                    </button>
-                    <button className="btn" title="Search text">
-                        <i className="fa-solid fa-magnifying-glass" />
-                    </button>
-                </div>
-            </form>
+
+            <SearchBar />
+
             <div className="main-wrap">
                 <section className="main main-archive">
                     <div className="loop">

@@ -1,9 +1,45 @@
+import './Profile.css';
+
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { AuthContext } from '../../contexts/AuthContext';
+import { LoadingContext } from '../../contexts/LoadingContext';
+import Spinner from '../spinner/Spinner';
+
+import * as userService from '../../service/user';
+
 export default function Profile() {
+    const navigate = useNavigate();
+
+    const { userLogout } = useContext(AuthContext);
+    const { loading, changeLoading } = useContext(LoadingContext);
+
+    const onLogout = () => {
+        changeLoading();
+        userService.logout()
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        changeLoading();
+        navigate('/');
+        userLogout();
+    }
+
     return (
         <section className="main">
+
+            {loading && <Spinner />}
+
             <article className="post page">
                 <div className="inner">
-                    <h1>My profile</h1>
+                    <div className="profile-header">
+                        <h1>My profile</h1>
+                        <button onClick={onLogout}>Logout</button>
+                    </div>
                     <div className="post-content">
                         <p>You can contact me using the following form :)</p>
                         <form id="fh5co_contact_form">

@@ -1,8 +1,6 @@
-import { getUserData } from '../util.js';
-
 const host = 'https://parseapi.back4app.com';
 const appId = 'KO7uRRDLVlasFYYkMmW7DccDMIgDZWfambF6oCUe';
-const apiKey = '5Mr95pV6WcO8P2TJhI4qjf7mIbPSqvpfMFTFDNOc';
+const apiKey = 'x6o62QKFMi6tR0DvrvHDLwkwdJB9Uvu6O4tzLhST';
 
 async function request(method, url = '/', data) {
     const options = {
@@ -29,14 +27,14 @@ async function request(method, url = '/', data) {
     try {
         const response = await fetch(host + url, options);
 
-        if (response.status == 204) {
+        if (response.status === 204) {
             return response;
         }
 
         const result = await response.json();
 
-        if (response.ok != true) {
-            throw new Error(result.message || result.error);
+        if (response.ok !== true) {
+            throw new Error(result.code || result.message );
         }
  
         return result;
