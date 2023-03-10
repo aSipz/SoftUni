@@ -17,6 +17,7 @@ export default function Login() {
         password: '',
     });
     const [errors, setErrors] = useState({});
+    const [serverError, setServerError] = useState('');
 
     const { changeAction } = useContext(ActionContext);
     const { userLogin } = useContext(AuthContext);
@@ -29,8 +30,6 @@ export default function Login() {
     const lengthValidator = lengthValidation.bind(null, setErrors, 3);
     const emailValidator = emailValidation.bind(null, setErrors);
 
-    const isDisabled = Object.values(errors).length < Object.values(formValues).length - 1 || Object.values(errors).some(x => x);
-
     const onRegisterClick = () => {
         changeAction(userAction.register);
     }
@@ -39,7 +38,11 @@ export default function Login() {
         e.preventDefault();
 
         if (Object.values(errors).length < Object.values(formValues).length || Object.values(errors).some(x => x)) {
-            setErrors(errors => ({...errors, }))
+            setErrors(errors => {
+                const newErrors = {};
+                Object.keys(formValues).forEach(e => Object.hasOwn(errors, e) ? Object.assign(newErrors, { [e]: errors[e] }) : Object.assign(newErrors, { [e]: true }));
+                return newErrors;
+            });
             return;
         }
 
@@ -47,14 +50,13 @@ export default function Login() {
 
         userService.login(formValues)
             .then((result) => {
-                console.log(result);
                 userLogin(result);
                 closeModalHandler();
                 changeLoading();
             })
             .catch((err) => {
-                debugger
-                console.log(err);
+                setServerError(err.message);
+                changeLoading();
             })
     }
 
@@ -63,10 +65,18 @@ export default function Login() {
             {loading && <Spinner />}
             <header className="headers">
                 <h2>Login</h2>
+
+                {serverError &&
+                    <p className="server-error">
+                        {serverError}
+                    </p>
+                }
+
                 <button className="btn close" onClick={closeModalHandler}>
                     <i className="fa-solid fa-xmark"></i>
                 </button>
             </header>
+
             <form onSubmit={onSubmit}>
                 <div className="form-group long-line">
 
@@ -87,6 +97,7 @@ export default function Login() {
                             Email is not valid!
                         </p>
                     }
+
                 </div>
 
                 <div className="form-group long-line">
@@ -115,7 +126,7 @@ export default function Login() {
                         <p>Don't have an account?</p>
                         <button className="form-actions btn" onClick={onRegisterClick}>Register</button>
                     </div>
-                    <button className="submit" type="submit" disabled={isDisabled}>Login</button>
+                    <button className="submit" type="submit">Login</button>
                 </div>
             </form>
         </div>

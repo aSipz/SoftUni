@@ -1,5 +1,6 @@
 export const userAction = {
     default: '',
     register: 'register',
-    login: 'login'
+    login: 'login',
+    confirm: 'confirm'
 }

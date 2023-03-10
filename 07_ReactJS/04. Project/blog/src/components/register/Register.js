@@ -10,6 +10,7 @@ import useCloseModal from '../../hooks/useCloseModal';
 import { userAction } from '../../const/actions';
 import { onChangeHandler, lengthValidation, emailValidation, urlValidation, repassValidation } from '../../utils/inputUtils';
 import * as userService from '../../service/user';
+import {createPointer} from '../../service/helpers';
 
 export default function Login() {
     const [formValues, setFormValues] = useState({
@@ -22,6 +23,7 @@ export default function Login() {
         imageUrl: '',
     });
     const [errors, setErrors] = useState({});
+    const [serverError, setServerError] = useState('');
 
     const { changeAction } = useContext(ActionContext);
     const { userLogin } = useContext(AuthContext);
@@ -36,8 +38,6 @@ export default function Login() {
     const urlValidator = urlValidation.bind(null, setErrors);
     const repassValidator = repassValidation.bind(null, setErrors, formValues.password, formValues.repass);
 
-    const isDisabled = Object.values(errors).length < Object.values(formValues).length - 1 || Object.values(errors).some(x => x);
-
     const onLoginClick = () => {
         changeAction(userAction.login);
     }
@@ -46,6 +46,11 @@ export default function Login() {
         e.preventDefault();
 
         if (Object.values(errors).length < Object.values(formValues).length || Object.values(errors).some(x => x)) {
+            setErrors(errors => {
+                const newErrors = {};
+                Object.keys(formValues).forEach(e => Object.hasOwn(errors, e) ? Object.assign(newErrors, { [e]: errors[e] }) : Object.assign(newErrors, { [e]: true }));
+                return newErrors;
+            });
             return;
         }
 
@@ -56,17 +61,18 @@ export default function Login() {
         userService.register(userData)
             .then((result) => {
                 console.log(result);
+                
                 userLogin(Object.assign({}, userData, result));
                 closeModalHandler();
                 changeLoading();
             })
             .catch((err) => {
-                debugger
-                console.log(err);
+                setServerError(err.message);
+                changeLoading();
                 // 202 Account already exists for this username.
                 // 203 Account already exists for this email address.
                 // 209	InvalidSessionToken
-                //142
+                // 142
             })
     }
 
@@ -75,6 +81,13 @@ export default function Login() {
             {loading && <Spinner />}
             <header className="headers">
                 <h2>Register</h2>
+
+                {serverError &&
+                    <p className="server-error">
+                        {serverError}
+                    </p>
+                }
+
                 <button className="btn close" onClick={closeModalHandler}>
                     <i className="fa-solid fa-xmark"></i>
                 </button>
@@ -229,7 +242,7 @@ export default function Login() {
                         <p>Already have an account?</p>
                         <button className="form-actions btn" onClick={onLoginClick}>Login</button>
                     </div>
-                    <button className="submit" type="submit" disabled={isDisabled}>Register</button>
+                    <button className="submit" type="submit">Register</button>
                 </div>
 
             </form>

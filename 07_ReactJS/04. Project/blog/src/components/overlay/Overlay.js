@@ -9,6 +9,7 @@ import { ActionContext } from '../../contexts/ActionContext';
 import { userAction } from '../../const/actions';
 import useCloseModal from '../../hooks/useCloseModal';
 import { LoadingContext } from '../../contexts/LoadingContext';
+import Confirm from '../confirm/Confirm';
 
 export default function Overlay() {
 
@@ -18,12 +19,14 @@ export default function Overlay() {
 
     return (
         <div className="overlay">
-            <div className="backdrop" onClick={loading ? () => {} : closeModalHandler}></div>
+            <div className="backdrop" onClick={loading ? () => { } : closeModalHandler}></div>
             <div className="modal">
 
                 {action === userAction.register && <Register />}
 
                 {action === userAction.login && < Login />}
+
+                {action === userAction.confirm && <Confirm />}
 
             </div>
         </div>

@@ -1,18 +1,25 @@
 import './Profile.css';
 
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import EditProfile from './EditProfile';
+import Spinner from '../spinner/Spinner';
 
 import { AuthContext } from '../../contexts/AuthContext';
 import { LoadingContext } from '../../contexts/LoadingContext';
-import Spinner from '../spinner/Spinner';
+import { ActionContext } from '../../contexts/ActionContext';
+import { userAction } from '../../const/actions';
 
 import * as userService from '../../service/user';
 
 export default function Profile() {
+    const [edit, setEdit] = useState(false);
+
     const navigate = useNavigate();
 
-    const { userLogout } = useContext(AuthContext);
+    const { changeAction } = useContext(ActionContext);
+    const { user, userLogout } = useContext(AuthContext);
     const { loading, changeLoading } = useContext(LoadingContext);
 
     const onLogout = () => {
@@ -29,6 +36,14 @@ export default function Profile() {
         userLogout();
     }
 
+    const onEdit = () => {
+        setEdit(state => !state);
+    }
+
+    const onDelete = () => {
+        changeAction(userAction.confirm);
+    }
+
     return (
         <section className="main">
 
@@ -40,22 +55,30 @@ export default function Profile() {
                         <h1>My profile</h1>
                         <button onClick={onLogout}>Logout</button>
                     </div>
-                    <div className="post-content">
-                        <p>You can contact me using the following form :)</p>
-                        <form id="fh5co_contact_form">
-                            <p>
-                                <input type="text" name="name" defaultValue size={40} placeholder="Name*" />
-                            </p>
-                            <p>
-                                <input type="email" name="email" defaultValue size={40} placeholder="Email*" />
-                            </p>
-                            <p>
-                                <textarea name="message" cols={40} rows={10} placeholder="Your Message" defaultValue={""} />
-                            </p>
-                            <p className="form-submit">
-                                <button type='submit'>Send</button></p>
-                        </form>
+
+                    <div className="content">
+                        <div className="image-container">
+                            <img src={user.imageUrl} alt="profile-image" className="image" />
+                        </div>
+                        <div className="user-details">
+                            <p>First Name: <strong> {user.firstName} </strong></p>
+                            <p>Last Name: <strong> {user.lastName} </strong></p>
+                            <p>Username: <strong> {user.username} </strong></p>
+                            <p>Email: <strong> {user.email}</strong></p>
+                            <p>About me: <strong> {user.description}</strong></p>
+                            <p>Joined: <strong> {new Date(user.createdAt).toUTCString()}</strong></p>
+                            {user.createdAt !== user.updatedAt && <p>Last updated: <strong> {new Date(user.updatedAt).toUTCString()}</strong></p>}
+                        </div>
+
+                        <div className="profile-control">
+                            <button className='button green' onClick={onEdit}>Edit</button>
+                            <button className='button red delete' onClick={onDelete}>Delete</button>
+                        </div>
+
                     </div>
+
+                    {edit && <EditProfile onClose={onEdit} />}
+
                 </div>
             </article>
         </section>

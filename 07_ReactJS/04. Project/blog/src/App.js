@@ -11,6 +11,7 @@ import Overlay from './components/overlay/Overlay';
 import Post from './components/post/Post';
 import Profile from './components/profile/Profile';
 import Users from './components/users/Users';
+import PrivateGuard from './components/guards/PrivateGuard';
 
 import { AuthProvider } from './contexts/AuthContext';
 import { ActionContext } from './contexts/ActionContext';
@@ -46,7 +47,9 @@ function App() {
 
                             <Route path="/posts/:postId/edit" element={<></>} />
 
-                            <Route path="/users/:userId" element={<Profile />} />
+                            <Route element={<PrivateGuard />}>
+                                <Route path="/profile" element={<Profile />} />
+                            </Route>
 
                             <Route path="/users" element={<Users />} />
 

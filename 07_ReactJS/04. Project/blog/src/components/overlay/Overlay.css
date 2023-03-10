@@ -43,6 +43,7 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 24px;
+  align-items: center;
 }
 
 .modal button{
@@ -51,7 +52,7 @@
 }
 
 .modal button.close {
-  padding: 0.1em 0.8em;
+  padding: 0.5em 0.8em;
   margin: 0;
   color: #f77564;
   border-color: #f77564;
@@ -61,7 +62,6 @@
 .user-container form {
   display: flex;
   flex-direction: column;
-  
 }
 
 .input-wrapper {
@@ -107,8 +107,6 @@
   border-top-right-radius: 1.25rem;
   border-bottom-right-radius: 1.25rem;
 }
-
- /* error */
 
 .input-wrapper span.error  {
   background-color: #f9e1e1;
@@ -162,6 +160,12 @@
   position: absolute;
 }
 
+.server-error {
+  color: #f08c79;
+  font-size: 1.1em;
+  margin: 0;
+}
+
 .form-actions {
   display: flex;
   justify-content: space-between;
@@ -174,12 +178,6 @@ form button.submit {
   margin: 0;
   padding: 0.1em 0.8em;
   align-self: flex-end;
-}
-
-form button.submit:disabled {
-  cursor: not-allowed;
-  color: #8f9192;
-  border-color: #8f9192;
 }
 
 .form-actions div{

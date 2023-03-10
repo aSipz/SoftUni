@@ -20,7 +20,7 @@ async function request(method, url = '/', data) {
 
     const user = auth ? JSON.parse(auth) : null;
 
-    if(user) {
+    if (user) {
         options.headers['X-Parse-Session-Token'] = user.sessionToken;
     }
 
@@ -34,9 +34,10 @@ async function request(method, url = '/', data) {
         const result = await response.json();
 
         if (response.ok !== true) {
-            throw new Error(result.code || result.message );
+            throw new Error(result.error);
+            // result.code
         }
- 
+
         return result;
     } catch (err) {
         throw err;

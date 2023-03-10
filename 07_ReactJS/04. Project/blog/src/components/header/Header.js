@@ -60,7 +60,7 @@ export default function Header() {
 
                         <li className="menu-item">
                             {user
-                                ? <Link to="/users/:userId"><i className="fa-solid fa-circle-user" /></Link>
+                                ? <Link to="/profile"><i className="fa-solid fa-circle-user" /></Link>
                                 : <button onClick={onLoginClick}>Login</button>
                             }
                         </li>

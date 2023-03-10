@@ -1,6 +1,7 @@
 export default function Hero() {
     return (
-        <div className="hero" style={{ backgroundImage: 'url("images/lead.jpg")', textAlign: 'right' }}>
+        <div className="hero" >
+            <img src="images/lead.jpg" alt="hero" />
             <div className="hero-inner">
                 <div className="inner">
                     <h1><span className="border border-top border-bottom">itsy</span></h1>
