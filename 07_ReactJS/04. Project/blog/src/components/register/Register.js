@@ -10,7 +10,6 @@ import useCloseModal from '../../hooks/useCloseModal';
 import { userAction } from '../../const/actions';
 import { onChangeHandler, lengthValidation, emailValidation, urlValidation, repassValidation } from '../../utils/inputUtils';
 import * as userService from '../../service/user';
-import {createPointer} from '../../service/helpers';
 
 export default function Login() {
     const [formValues, setFormValues] = useState({
@@ -61,19 +60,20 @@ export default function Login() {
         userService.register(userData)
             .then((result) => {
                 console.log(result);
-                
                 userLogin(Object.assign({}, userData, result));
+                userService.addUserRole(result.objectId)
+                    .then(res => console.log(res))
+                    .catch(e => console.log(e));
                 closeModalHandler();
-                changeLoading();
             })
             .catch((err) => {
                 setServerError(err.message);
-                changeLoading();
                 // 202 Account already exists for this username.
                 // 203 Account already exists for this email address.
                 // 209	InvalidSessionToken
                 // 142
             })
+        changeLoading();
     }
 
     return (
@@ -240,7 +240,7 @@ export default function Login() {
                 <div className="form-actions">
                     <div>
                         <p>Already have an account?</p>
-                        <button className="form-actions btn" onClick={onLoginClick}>Login</button>
+                        <button type='button' className="form-actions btn" onClick={onLoginClick}>Login</button>
                     </div>
                     <button className="submit" type="submit">Register</button>
                 </div>

@@ -1,8 +1,10 @@
 import { del, get, post, put } from './api.js';
-import { createPointer, filterRelation } from './helpers';
+import { createPointer, encodeObject, filterRelation } from './helpers';
 
 const endpoints = {
-    roleUser: () => {'/classes/question?where=' + encodeObject(filterRelation('quiz', 'quiz', quizId))}
+    'roleUser': '/classes/_Role/ugNVXLHWEW',
+    'roleAdmin': '/classes/_Role/vvXf7kKdv5',
+    'getUserRole' : (userId) => '/classes/_Role?where=' + encodeObject(filterRelation('users', '_User', userId)),
 }
 
 export function register(userData) {
@@ -34,8 +36,13 @@ export function logout() {
 }
 
 export function addUserRole(userId) {
-    const data = {};
-    const users = createPointer('_user', userId);
+    const data = {
+        users: { __op: "AddRelation", objects: [createPointer('_User', userId)] }
+    };
 
-    return put('/logout');
+    return put(endpoints.roleUser, data);
+}
+
+export function getUserRole(userId) {
+    return get(endpoints.getUserRole(userId));
 }

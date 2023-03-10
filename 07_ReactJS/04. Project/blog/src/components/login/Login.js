@@ -51,6 +51,12 @@ export default function Login() {
         userService.login(formValues)
             .then((result) => {
                 userLogin(result);
+                userService.getUserRole(result.objectId)
+                    .then(res => {
+                        const roles = res.results.map(e => e.name);
+                        userLogin({...result, roles});
+                    })
+                    .catch(e => console.log(e));
                 closeModalHandler();
                 changeLoading();
             })
@@ -124,7 +130,7 @@ export default function Login() {
                 <div className="form-actions">
                     <div>
                         <p>Don't have an account?</p>
-                        <button className="form-actions btn" onClick={onRegisterClick}>Register</button>
+                        <button type="button" className="form-actions btn" onClick={onRegisterClick}>Register</button>
                     </div>
                     <button className="submit" type="submit">Login</button>
                 </div>

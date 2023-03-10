@@ -168,7 +168,7 @@ export default function EditProfile({ onClose }) {
                 </div>
 
                 <div className="form-actions">
-                    <button onClick={onClose}>Cancel</button>
+                    <button type="button" onClick={onClose}>Cancel</button>
                     {serverError &&
                         <p className="server-error">
                             {serverError}
