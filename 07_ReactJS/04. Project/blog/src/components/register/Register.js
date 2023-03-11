@@ -1,7 +1,5 @@
 import { useContext, useState } from 'react';
 
-import Spinner from '../spinner/Spinner';
-
 import { ActionContext } from '../../contexts/ActionContext';
 import { AuthContext } from '../../contexts/AuthContext';
 import { LoadingContext } from '../../contexts/LoadingContext';
@@ -26,7 +24,7 @@ export default function Login() {
 
     const { changeAction } = useContext(ActionContext);
     const { userLogin } = useContext(AuthContext);
-    const { loading, changeLoading } = useContext(LoadingContext);
+    const { changeLoading } = useContext(LoadingContext);
 
     const [closeModalHandler] = useCloseModal();
 
@@ -41,7 +39,7 @@ export default function Login() {
         changeAction(userAction.login);
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
 
         if (Object.values(errors).length < Object.values(formValues).length || Object.values(errors).some(x => x)) {
@@ -57,28 +55,23 @@ export default function Login() {
 
         const { repass, ...userData } = formValues;
 
-        userService.register(userData)
-            .then((result) => {
-                console.log(result);
-                userLogin(Object.assign({}, userData, result));
-                userService.addUserRole(result.objectId)
-                    .then(res => console.log(res))
-                    .catch(e => console.log(e));
-                closeModalHandler();
-            })
-            .catch((err) => {
-                setServerError(err.message);
-                // 202 Account already exists for this username.
-                // 203 Account already exists for this email address.
-                // 209	InvalidSessionToken
-                // 142
-            })
+        try {
+            const result = await userService.register(userData);
+
+            userLogin(Object.assign({}, userData, result));
+
+            await userService.addUserRole(result.objectId);
+
+            closeModalHandler();
+        } catch (error) {
+            setServerError(error.message);
+        }
+
         changeLoading();
     }
 
     return (
         <div className="user-container register">
-            {loading && <Spinner />}
             <header className="headers">
                 <h2>Register</h2>
 

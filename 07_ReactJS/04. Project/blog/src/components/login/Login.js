@@ -1,7 +1,5 @@
 import { useContext, useState } from "react";
 
-import Spinner from '../spinner/Spinner';
-
 import { ActionContext } from "../../contexts/ActionContext";
 import { AuthContext } from '../../contexts/AuthContext';
 import { LoadingContext } from '../../contexts/LoadingContext';
@@ -21,7 +19,7 @@ export default function Login() {
 
     const { changeAction } = useContext(ActionContext);
     const { userLogin } = useContext(AuthContext);
-    const { loading, changeLoading } = useContext(LoadingContext);
+    const { changeLoading } = useContext(LoadingContext);
 
     const [closeModalHandler] = useCloseModal();
 
@@ -34,7 +32,7 @@ export default function Login() {
         changeAction(userAction.register);
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
 
         if (Object.values(errors).length < Object.values(formValues).length || Object.values(errors).some(x => x)) {
@@ -48,27 +46,23 @@ export default function Login() {
 
         changeLoading();
 
-        userService.login(formValues)
-            .then((result) => {
-                userLogin(result);
-                userService.getUserRole(result.objectId)
-                    .then(res => {
-                        const roles = res.results.map(e => e.name);
-                        userLogin({...result, roles});
-                    })
-                    .catch(e => console.log(e));
-                closeModalHandler();
-                changeLoading();
-            })
-            .catch((err) => {
-                setServerError(err.message);
-                changeLoading();
-            })
+        try {
+            const result = await userService.login(formValues);
+            userLogin(result);
+            const roleResult = await userService.getUserRole(result.objectId);
+            const roles = roleResult.results.map(e => e.name);
+            userLogin({ ...result, roles });
+            closeModalHandler();
+        } catch (error) {
+            setServerError(error.message);
+        }
+
+        changeLoading();
+
     }
 
     return (
         <div className="user-container login">
-            {loading && <Spinner />}
             <header className="headers">
                 <h2>Login</h2>
 

@@ -17,20 +17,20 @@ export default function Confirm() {
 
     const [closeModalHandler] = useCloseModal();
 
-    const onDelete = () => {
+    const onDelete = async () => {
         changeLoading();
 
-        userService.deleteUser(user.objectId)
-            .then((result) => {
-                navigate('/');
-                userLogout();
+        try {
+            await userService.deleteUser(user.objectId);
+            navigate('/');
+            userLogout();
+            closeModalHandler();
+        } catch (error) {
+            console.log(error);
+        }
 
-                closeModalHandler();
-            })
-            .catch((err) => {
-                console.log(err);
-            });
         changeLoading();
+
     }
 
     return (
@@ -39,7 +39,7 @@ export default function Confirm() {
             {loading && <Spinner />}
 
             <header className="headers">
-                <h2>Are you sure you want to delete this account?</h2>
+                <h2>Are you sure you want to delete this profile?</h2>
             </header>
             <div className="actions">
                 <div className="form-actions">

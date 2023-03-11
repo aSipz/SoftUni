@@ -9,6 +9,8 @@ export default function Header() {
     const { changeAction } = useContext(ActionContext);
     const { user } = useContext(AuthContext);
 
+    const isAuthor = user?.roles?.includes('author');
+
     const onLoginClick = () => {
         changeAction(userAction.login);
     }
@@ -34,20 +36,24 @@ export default function Header() {
                                 <li className="menu-item">
                                     <NavLink to="/about">About</NavLink>
                                 </li>
-                                <li className="menu-item">
-                                    <p className="dropdown">Creator Panel</p>
-                                    <ul className="sub-menu">
-                                        <li className="menu-item">
-                                            <NavLink to="/create">Create new article</NavLink>
-                                        </li>
-                                        <li className="menu-item">
-                                            <NavLink to="my-articles">My articles</NavLink>
-                                        </li>
-                                        <li className="menu-item">
-                                            <NavLink to="/users">Users</NavLink>
-                                        </li>
-                                    </ul>
-                                </li>
+
+                                {isAuthor &&
+                                    <li className="menu-item">
+                                        <p className="dropdown">Creator Panel</p>
+                                        <ul className="sub-menu">
+                                            <li className="menu-item">
+                                                <NavLink to="/create">Create new post</NavLink>
+                                            </li>
+                                            <li className="menu-item">
+                                                <NavLink to="my-articles">My posts</NavLink>
+                                            </li>
+                                            <li className="menu-item">
+                                                <NavLink to="/users">Users</NavLink>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+
                             </ul>
                         </div>
                     </div>
@@ -55,7 +61,7 @@ export default function Header() {
                 <div className="user">
                     <ul>
                         <li className="menu-item">
-                            <p>Welcome, {user? `${user.firstName} ${user.lastName}` : 'guest'}!</p>
+                            <p>Welcome, {user ? `${user.firstName} ${user.lastName}` : 'guest'}!</p>
                         </li>
 
                         <li className="menu-item">

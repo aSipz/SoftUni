@@ -4,7 +4,6 @@ import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import EditProfile from './EditProfile';
-import Spinner from '../spinner/Spinner';
 
 import { AuthContext } from '../../contexts/AuthContext';
 import { LoadingContext } from '../../contexts/LoadingContext';
@@ -20,17 +19,17 @@ export default function Profile() {
 
     const { changeAction } = useContext(ActionContext);
     const { user, userLogout } = useContext(AuthContext);
-    const { loading, changeLoading } = useContext(LoadingContext);
+    const { changeLoading } = useContext(LoadingContext);
 
-    const onLogout = () => {
+    const onLogout = async () => {
         changeLoading();
-        userService.logout()
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+
+        try {
+            await userService.logout();
+        } catch (error) {
+            console.log(error);
+        }
+
         changeLoading();
         navigate('/');
         userLogout();
@@ -46,8 +45,6 @@ export default function Profile() {
 
     return (
         <section className="main">
-
-            {loading && <Spinner />}
 
             <article className="post page">
                 <div className="inner">
@@ -77,7 +74,7 @@ export default function Profile() {
 
                                 <div className="profile-control">
                                     <button className='button green' onClick={onEdit}>Edit</button>
-                                    <button className='button red delete' onClick={onDelete}>Delete</button>
+                                    <button className='button red delete' onClick={onDelete}>Delete profile</button>
                                 </div>
 
                             </div>

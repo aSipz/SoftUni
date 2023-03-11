@@ -1,0 +1,36 @@
+.post-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.create-post .wrapper {
+    position: relative;
+}
+
+.create-post label {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+}
+
+.create-post input,
+.create-post textarea {
+    margin-bottom: 24px;
+}
+
+.create-post input.error,
+.create-post textarea.error {
+    background-color: #f9e1e1;
+    color: #fc4343;
+}
+
+.create-post input.error:hover,
+.create-post textarea.error:hover {
+    background-color: #f7cdcd;
+}
+
+.create-post .form-error {
+    position: absolute;
+    color: #f08c79;
+    bottom: 0;
+    margin: 0;
+}

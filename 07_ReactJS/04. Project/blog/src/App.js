@@ -12,55 +12,58 @@ import Post from './components/post/Post';
 import Profile from './components/profile/Profile';
 import Users from './components/users/Users';
 import PrivateGuard from './components/guards/PrivateGuard';
+import AuthorGuard from './components/guards/AuthorGuard';
+import CreatePost from './components/createPost/CreatePost';
+import Spinner from './components/spinner/Spinner';
 
 import { AuthProvider } from './contexts/AuthContext';
 import { ActionContext } from './contexts/ActionContext';
-import { LoadingProvider } from './contexts/LoadingContext';
+import { LoadingContext } from './contexts/LoadingContext';
 import { userAction } from './const/actions';
 
 function App() {
     const { action } = useContext(ActionContext);
+    const { loading } = useContext(LoadingContext);
 
     return (
         <>
             <AuthProvider>
-                <LoadingProvider>
 
-                    <Header />
+                {loading && <Spinner />}
 
-                    <main>
-                        <Routes>
+                <Header />
 
-                            <Route path="/" element={<Home />} />
+                <main>
+                    <Routes>
 
-                            <Route path="/posts" element={<Blog />} />
+                        <Route path="/" element={<Home />} />
 
-                            <Route path="/create" element={<></>} />
+                        <Route path="/posts" element={<Blog />} />
 
-                            <Route path="/authors" element={<></>} />
+                        <Route path="/authors" element={<></>} />
 
+                        <Route path="/about" element={<></>} />
+
+                        <Route path="/posts/:postId/details" element={<Post />} />
+
+                        <Route element={<AuthorGuard />} >
+                            <Route path="/create" element={<CreatePost />} />
                             <Route path="/my-articles" element={<></>} />
-
-                            <Route path="/about" element={<></>} />
-
-                            <Route path="/posts/:postId/details" element={<Post />} />
-
                             <Route path="/posts/:postId/edit" element={<></>} />
-
-                            <Route element={<PrivateGuard />}>
-                                <Route path="/profile" element={<Profile />} />
-                            </Route>
-
                             <Route path="/users" element={<Users />} />
+                        </Route>
 
-                        </Routes>
-                    </main>
+                        <Route element={<PrivateGuard />}>
+                            <Route path="/profile" element={<Profile />} />
+                        </Route>
 
-                    <Footer />
+                    </Routes>
+                </main>
 
-                    {action !== userAction.default && <Overlay />}
+                <Footer />
 
-                </LoadingProvider>
+                {action !== userAction.default && <Overlay />}
+
             </AuthProvider>
         </>
     );

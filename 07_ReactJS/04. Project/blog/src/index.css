@@ -375,13 +375,6 @@ body {
   margin: 0;
   padding: 0;
   color: #737171;
-  /* height: 100%; */
-  /* -ms-overflow-style: none;
-    scrollbar-width: none; */
-}
-
-body::-webkit-scrollbar {
-  /* display: none; */
 }
 
 a,
@@ -481,6 +474,12 @@ header.header .user p {
 
 .user i {
   font-size: 2.4em;
+}
+
+.user-controls ,
+.author-controls {
+  display: flex;
+  justify-content: space-between;
 }
 
 header.header nav ul li ul {

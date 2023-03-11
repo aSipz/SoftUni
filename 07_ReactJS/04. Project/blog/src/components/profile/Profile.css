@@ -32,6 +32,10 @@
   margin: 0;
 }
 
+.edit-profile .form-actions {
+  align-items: flex-start;
+}
+
 .detail-container {
   width: 100%;
   height: 40vh;
@@ -75,12 +79,16 @@
   margin-right: 20px;
 }
 
-.image-container img {
+.image-container .image {
   border-radius: 50%;
-  width: 210px;
-  height: 210px;
+  width: 240px;
+  height: 240px;
   object-fit: cover;
   flex: 4;
+  padding: unset;
+  border: unset;
+  display: flex;
+  margin: auto;
 }
 
 .user-details {

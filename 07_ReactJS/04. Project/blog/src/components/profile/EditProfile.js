@@ -4,11 +4,10 @@ import { LoadingContext } from "../../contexts/LoadingContext";
 
 import { onChangeHandler, lengthValidation, emailValidation, urlValidation } from '../../utils/inputUtils';
 import * as userService from '../../service/user';
-import Spinner from "../spinner/Spinner";
 
 export default function EditProfile({ onClose }) {
     const { user, userLogin } = useContext(AuthContext);
-    const { loading, changeLoading } = useContext(LoadingContext);
+    const { changeLoading } = useContext(LoadingContext);
 
     const [formValues, setFormValues] = useState({
         firstName: user.firstName,
@@ -33,7 +32,7 @@ export default function EditProfile({ onClose }) {
     const emailValidator = emailValidation.bind(null, setErrors);
     const urlValidator = urlValidation.bind(null, setErrors);
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
 
         if (Object.values(errors).length < Object.keys(formValues).filter(e => e !== 'description').length || Object.values(errors).some(x => x)) {
@@ -47,21 +46,22 @@ export default function EditProfile({ onClose }) {
 
         changeLoading();
 
-        userService.updateUser(user.objectId, formValues)
-            .then((result) => {
-                userLogin(Object.assign({}, user, formValues, result));
-                changeLoading();
-                onClose();
-            })
-            .catch((err) => {
-                setServerError(err.message);
-                changeLoading();
-            })
+        try {
+            const result = await userService.updateUser(user.objectId, formValues);
+            userLogin(Object.assign({}, user, formValues, result));
+            onClose();
+        } catch (error) {
+            setServerError(error.message);
+        }
+
+        changeLoading();
+
     }
     return (
         <div className="edit-profile">
-
-            {loading && <Spinner />}
+            <div className="profile-header">
+                <h2>Edit profile</h2>
+            </div>
 
             <form onSubmit={onSubmit}>
                 <div className='wrapper'>
@@ -137,7 +137,7 @@ export default function EditProfile({ onClose }) {
                 </div>
 
                 <div className='wrapper'>
-                    <label htmlFor="imageUrl">Profile picture:</label>
+                    <label htmlFor="imageUrl">Profile picture URL:</label>
                     <input
                         className={errors.imageUrl ? "error" : ""}
                         id='imageUrl'

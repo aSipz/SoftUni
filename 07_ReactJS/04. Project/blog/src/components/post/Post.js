@@ -1,4 +1,25 @@
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { LoadingContext } from "../../contexts/LoadingContext";
+import Skeleton from "../skeleton/Skeleton";
+
 export default function Post() {
+    const postId = useParams('postId');
+    const [post, setPost] = useState(null);
+
+    const { changeLoading } = useContext(LoadingContext);
+
+    useEffect(() => {
+        debugger
+        setTimeout(() => {
+            setPost({});
+        }, 3000);
+    }, []);
+
+    if (post === null) {
+        return <Skeleton />
+    }
+
     return (
         <div className="wrap full-wrap post">
             <article className="post has-post-thumbnail">

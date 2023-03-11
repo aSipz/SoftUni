@@ -6,7 +6,7 @@ export const LoadingProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
 
     function changeLoading() {
-        setLoading(loading => !loading);
+        setLoading(loading => !loading );
     }
 
     return (
