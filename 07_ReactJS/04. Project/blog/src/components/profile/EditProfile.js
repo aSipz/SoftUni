@@ -1,13 +1,12 @@
-import { useContext, useState } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
-import { LoadingContext } from "../../contexts/LoadingContext";
+import { useContext, useState } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
 
+import Spinner from '../spinner/Spinner';
 import { onChangeHandler, lengthValidation, emailValidation, urlValidation } from '../../utils/inputUtils';
 import * as userService from '../../service/user';
 
 export default function EditProfile({ onClose }) {
     const { user, userLogin } = useContext(AuthContext);
-    const { changeLoading } = useContext(LoadingContext);
 
     const [formValues, setFormValues] = useState({
         firstName: user.firstName,
@@ -25,6 +24,7 @@ export default function EditProfile({ onClose }) {
         imageUrl: false,
     });
     const [serverError, setServerError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const onChange = onChangeHandler.bind(null, setFormValues);
 
@@ -44,7 +44,7 @@ export default function EditProfile({ onClose }) {
             return;
         }
 
-        changeLoading();
+        setLoading(loading => !loading);
 
         try {
             const result = await userService.updateUser(user.objectId, formValues);
@@ -54,11 +54,14 @@ export default function EditProfile({ onClose }) {
             setServerError(error.message);
         }
 
-        changeLoading();
+        setLoading(loading => !loading);
 
     }
     return (
         <div className="edit-profile">
+
+            {loading && <Spinner />}
+
             <div className="profile-header">
                 <h2>Edit profile</h2>
             </div>

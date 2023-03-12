@@ -8,7 +8,9 @@ export default function Hero() {
                     <div className="hero-line-one" />
                     <div className="hero-line-two"><span className="border border-bottom"><a href="https://freehtml5.co" style={{ color: '#FFF' }}>by FreeHTML5</a></span></div>
                 </div>
+                
             </div>
+            <a className="more-arrow" href="#content"><i className="fa fa-chevron-down" /></a>
         </div>
     );
 }

@@ -1,22 +1,26 @@
 import { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
-import { ActionContext } from '../../contexts/ActionContext';
+import Overlay from '../overlay/Overlay';
+import useOverlay from '../../hooks/useOverlay';
 import { AuthContext } from '../../contexts/AuthContext';
 import { userAction } from '../../const/actions';
 
 export default function Header() {
-    const { changeAction } = useContext(ActionContext);
+    const [action, setAction] = useOverlay();
     const { user } = useContext(AuthContext);
 
     const isAuthor = user?.roles?.includes('author');
 
     const onLoginClick = () => {
-        changeAction(userAction.login);
+        setAction(userAction.login);
     }
 
     return (
         <header className="header">
+
+            {action && <Overlay action={action} setAction={setAction} />}
+
             <div className="header-wrap">
                 <div className="logo plain logo-left">
                     <div className="site-title">

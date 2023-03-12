@@ -1,5 +1,5 @@
 export const userAction = {
-    default: '',
+    close: '',
     register: 'register',
     login: 'login',
     confirm: 'confirm'

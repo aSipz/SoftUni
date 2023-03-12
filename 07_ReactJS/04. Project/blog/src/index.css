@@ -195,7 +195,6 @@ i {
 
 img {
   max-width: 100%;
-  height: auto;
 }
 
 * {
@@ -476,7 +475,7 @@ header.header .user p {
   font-size: 2.4em;
 }
 
-.user-controls ,
+.user-controls,
 .author-controls {
   display: flex;
   justify-content: space-between;
@@ -517,7 +516,7 @@ body.sticky-menu .site-title {
 }
 
 body.sticky-menu .wrap.full-wrap {
-  padding-top: 6.5em;
+  padding-top: 4.5em;
 }
 
 .wrap {
@@ -531,7 +530,7 @@ body.sticky-menu .wrap.full-wrap {
 }
 
 .inner {
-  padding: 3em 2em;
+  padding: 1.5em 2em;
 }
 
 footer.footer {
@@ -575,9 +574,35 @@ h2.home-blog-title:after {
 }
 
 .hero {
-  height: 640px;
+  height: 100vh;
   position: relative;
   width: 100%;
+}
+
+.hero .more-arrow {
+  display: block;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px 2em;
+  z-index: 30;
+}
+
+.hero .more-arrow:hover {
+  opacity: 0.7;
+}
+
+.hero .more-arrow .fa {
+  color: #fff;
+  font-size: 25px;
+  font-size: 5rem;
+}
+
+.hero .more-arrow span {
+  position: absolute;
+  left: -9999em;
 }
 
 .hero .hero-inner {
@@ -651,11 +676,22 @@ h2.home-blog-title:after {
   position: relative;
   z-index: 3;
   background: #fff;
+  width: 100%;
+}
+
+.post-image.recent {
+  aspect-ratio: 1;
+}
+
+.post-image.details {
+  height: 50vh;
 }
 
 .post-image img {
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .meta {
@@ -704,7 +740,7 @@ p+.more-link {
 }
 
 .author-wrap {
-  padding: 3.5em 2em 3.5em 2em;
+  padding: 2em ;
 }
 
 .author-wrap,
@@ -731,6 +767,7 @@ p+.more-link {
   height: 95px;
   margin-bottom: 10px;
   border: none;
+  object-fit: cover;
 }
 
 .author-wrap .author-avatar img,
@@ -986,7 +1023,7 @@ header.header nav,
   font-weight: 700;
 }
 
-.hero * {
+.hero *:not(i) {
   font-weight: 400;
 }
 
@@ -1388,7 +1425,7 @@ textarea {
 
 .home-sticky .post-image,
 .related .post-image {
-  padding: 0 1em;
+  padding: 1em 1em;
 }
 
 .home-sticky .post-image img,
@@ -1425,6 +1462,7 @@ textarea {
 .sticky-inner {
   display: block;
   margin: 0 auto;
+  width: 80vw;
   max-width: 1680px;
 }
 
@@ -1490,7 +1528,7 @@ header.header nav,
   }
 
   .inner {
-    padding: 3em;
+    padding: 1.5em 3em;
   }
 
   .archive-layout {
@@ -1518,12 +1556,8 @@ header.header nav,
 
   /* 768px */
   .home-sticky {
-    padding-top: 6em;
+    padding-top: 5em;
     padding-bottom: 5em;
-  }
-
-  .home-sticky h2.home-sticky-title {
-    margin-bottom: 2em;
   }
 
   #map {

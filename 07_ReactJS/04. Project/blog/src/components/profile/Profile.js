@@ -4,25 +4,27 @@ import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import EditProfile from './EditProfile';
+import Overlay from '../overlay/Overlay';
+import Spinner from '../spinner/Spinner';
 
 import { AuthContext } from '../../contexts/AuthContext';
-import { LoadingContext } from '../../contexts/LoadingContext';
-import { ActionContext } from '../../contexts/ActionContext';
 import { userAction } from '../../const/actions';
 
 import * as userService from '../../service/user';
+import useOverlay from '../../hooks/useOverlay';
 
 export default function Profile() {
     const [edit, setEdit] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [action, setAction] = useOverlay();
 
     const navigate = useNavigate();
 
-    const { changeAction } = useContext(ActionContext);
     const { user, userLogout } = useContext(AuthContext);
-    const { changeLoading } = useContext(LoadingContext);
 
     const onLogout = async () => {
-        changeLoading();
+
+        setLoading(loading => !loading);
 
         try {
             await userService.logout();
@@ -30,7 +32,7 @@ export default function Profile() {
             console.log(error);
         }
 
-        changeLoading();
+        setLoading(loading => !loading);
         navigate('/');
         userLogout();
     }
@@ -40,15 +42,18 @@ export default function Profile() {
     }
 
     const onDelete = () => {
-        changeAction(userAction.confirm);
+        setAction(userAction.confirm);
     }
 
     return (
         <section className="main">
 
+            {action && <Overlay action={action} setAction={setAction} />}
+
+            {loading && <Spinner />}
+
             <article className="post page">
                 <div className="inner">
-
 
                     {edit
                         ? <EditProfile onClose={onEdit} />

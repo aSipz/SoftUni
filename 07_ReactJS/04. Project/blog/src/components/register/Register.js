@@ -1,15 +1,13 @@
 import { useContext, useState } from 'react';
 
-import { ActionContext } from '../../contexts/ActionContext';
+import Spinner from '../spinner/Spinner';
 import { AuthContext } from '../../contexts/AuthContext';
-import { LoadingContext } from '../../contexts/LoadingContext';
-import useCloseModal from '../../hooks/useCloseModal';
 
 import { userAction } from '../../const/actions';
 import { onChangeHandler, lengthValidation, emailValidation, urlValidation, repassValidation } from '../../utils/inputUtils';
 import * as userService from '../../service/user';
 
-export default function Login() {
+export default function Login({setAction}) {
     const [formValues, setFormValues] = useState({
         firstName: '',
         lastName: '',
@@ -21,12 +19,9 @@ export default function Login() {
     });
     const [errors, setErrors] = useState({});
     const [serverError, setServerError] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const { changeAction } = useContext(ActionContext);
     const { userLogin } = useContext(AuthContext);
-    const { changeLoading } = useContext(LoadingContext);
-
-    const [closeModalHandler] = useCloseModal();
 
     const onChange = onChangeHandler.bind(null, setFormValues);
 
@@ -36,7 +31,7 @@ export default function Login() {
     const repassValidator = repassValidation.bind(null, setErrors, formValues.password, formValues.repass);
 
     const onLoginClick = () => {
-        changeAction(userAction.login);
+        setAction(userAction.login);
     }
 
     const onSubmit = async (e) => {
@@ -51,7 +46,7 @@ export default function Login() {
             return;
         }
 
-        changeLoading();
+        setLoading(loading => !loading);
 
         const { repass, ...userData } = formValues;
 
@@ -62,16 +57,19 @@ export default function Login() {
 
             await userService.addUserRole(result.objectId);
 
-            closeModalHandler();
+            setAction(userAction.close);
         } catch (error) {
             setServerError(error.message);
         }
 
-        changeLoading();
+        setLoading(loading => !loading);
     }
 
     return (
         <div className="user-container register">
+
+            {loading && <Spinner />}
+
             <header className="headers">
                 <h2>Register</h2>
 
@@ -81,7 +79,7 @@ export default function Login() {
                     </p>
                 }
 
-                <button className="btn close" onClick={closeModalHandler}>
+                <button className="btn close" onClick={() => setAction(userAction.close)}>
                     <i className="fa-solid fa-xmark"></i>
                 </button>
             </header>

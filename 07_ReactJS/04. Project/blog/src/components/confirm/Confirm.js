@@ -1,36 +1,33 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { LoadingContext } from "../../contexts/LoadingContext";
 import { AuthContext } from "../../contexts/AuthContext";
 
-import useCloseModal from "../../hooks/useCloseModal";
 import Spinner from "../spinner/Spinner";
 
 import * as userService from '../../service/user';
+import { userAction } from "../../const/actions";
 
-export default function Confirm() {
+export default function Confirm({ setAction }) {
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const { loading, changeLoading } = useContext(LoadingContext);
     const { user, userLogout } = useContext(AuthContext);
 
-    const [closeModalHandler] = useCloseModal();
-
     const onDelete = async () => {
-        changeLoading();
+
+        setLoading(loading => !loading);
 
         try {
             await userService.deleteUser(user.objectId);
             navigate('/');
             userLogout();
-            closeModalHandler();
+            setAction(userAction.close);
         } catch (error) {
             console.log(error);
         }
 
-        changeLoading();
-
+        setLoading(loading => !loading);
     }
 
     return (
@@ -43,7 +40,7 @@ export default function Confirm() {
             </header>
             <div className="actions">
                 <div className="form-actions">
-                    <button onClick={closeModalHandler}>Cancel</button>
+                    <button onClick={() => setAction(userAction.close)}>Cancel</button>
                     <button className="button red" type="submit" onClick={onDelete}>Delete</button>
                 </div>
             </div>

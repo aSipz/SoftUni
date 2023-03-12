@@ -1,32 +1,23 @@
 import './Overlay.css';
 
-import { useContext } from 'react';
-
 import Login from '../login/Login';
 import Register from '../register/Register';
 
-import { ActionContext } from '../../contexts/ActionContext';
 import { userAction } from '../../const/actions';
-import useCloseModal from '../../hooks/useCloseModal';
-import { LoadingContext } from '../../contexts/LoadingContext';
 import Confirm from '../confirm/Confirm';
 
-export default function Overlay() {
-
-    const { action } = useContext(ActionContext);
-    const { loading } = useContext(LoadingContext);
-    const [closeModalHandler] = useCloseModal();
+export default function Overlay({ action, setAction }) {
 
     return (
         <div className="overlay">
-            <div className="backdrop" onClick={loading ? () => { } : closeModalHandler}></div>
+            <div className="backdrop" onClick={() => setAction(userAction.close)}></div>
             <div className="modal">
 
-                {action === userAction.register && <Register />}
+                {action === userAction.register && <Register setAction={setAction} />}
 
-                {action === userAction.login && < Login />}
+                {action === userAction.login && < Login setAction={setAction} />}
 
-                {action === userAction.confirm && <Confirm />}
+                {action === userAction.confirm && <Confirm setAction={setAction} />}
 
             </div>
         </div>

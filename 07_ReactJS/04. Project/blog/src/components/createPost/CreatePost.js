@@ -3,7 +3,7 @@ import './CreatePost.css';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { LoadingContext } from '../../contexts/LoadingContext';
+import Spinner from '../spinner/Spinner';
 import { AuthContext } from "../../contexts/AuthContext";
 
 import { onChangeHandler, lengthValidation, urlValidation } from '../../utils/inputUtils';
@@ -17,9 +17,9 @@ export default function CreatePost() {
     });
     const [errors, setErrors] = useState({});
     const [serverError, setServerError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const { user } = useContext(AuthContext);
-    const { changeLoading } = useContext(LoadingContext);
     const navigate = useNavigate();
 
     const onChange = onChangeHandler.bind(null, setFormValues);
@@ -44,7 +44,7 @@ export default function CreatePost() {
             return;
         }
 
-        changeLoading();
+        setLoading(state => !state);
 
         try {
             const result = await postService.createPost(formValues, user.objectId);
@@ -54,11 +54,13 @@ export default function CreatePost() {
             setServerError(error.message);
         };
 
-        changeLoading();
+        setLoading(state => !state);
     }
 
     return (
         <section className="main">
+
+            {loading && <Spinner />}
 
             <article className="post page">
                 <div className="inner">

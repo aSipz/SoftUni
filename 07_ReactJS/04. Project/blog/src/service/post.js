@@ -3,9 +3,19 @@ import { createPointer, encodeObject, filterRelation } from './helpers';
 
 const endpoints = {
     'createPost': '/classes/Post',
+    'recent': '/classes/Post?order=-createdAt&limit=6',
+    'getPostById': (postId) => '/classes/Post/' + postId + '?include=author',
 }
 
 export function createPost(postData, authorId) {
     const author = createPointer('_User', authorId);
     return post(endpoints.createPost, { ...postData, author });
+}
+
+export function getRecent() {
+    return get(endpoints.recent);
+}
+
+export function getPostById(postId) {
+    return get(endpoints.getPostById(postId));
 }

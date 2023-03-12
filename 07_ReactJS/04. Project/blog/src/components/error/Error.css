@@ -1,0 +1,10 @@
+.fetch-error {
+    color: #f77564;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.fetch-error i {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
