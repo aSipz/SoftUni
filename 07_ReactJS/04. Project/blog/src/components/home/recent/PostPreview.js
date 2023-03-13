@@ -10,11 +10,11 @@ export default function PostPreview({ post }) {
             </span>
             <div className="inner">
                 <h3 className="entry-title">
-                    <Link to={`/posts/${post.objectId}/details`}>The Lollipop</Link>
+                    <Link to={`/posts/${post.objectId}/details`}>{post.title}</Link>
                 </h3>
                 <ul className="meta top">
                     <li className="time">
-                        <time className="post-date created">{new Date(post.createdAt).toDateString()}</time>
+                        <time className="post-date created" dateTime={post.createdAt}>{new Date(post.createdAt).toDateString()}</time>
                     </li>
                 </ul>
             </div>

@@ -587,7 +587,7 @@ h2.home-blog-title:after {
   left: 0;
   width: 100%;
   padding: 40px 2em;
-  z-index: 30;
+  z-index: 15;
 }
 
 .hero .more-arrow:hover {
@@ -1351,6 +1351,10 @@ a.button.light-blue:hover {
 a.button.blue {
   border-color: #3da1e3;
   color: #3da1e3;
+}
+
+.button.blue i {
+  margin-left: 10px;
 }
 
 .button.blue:hover,
