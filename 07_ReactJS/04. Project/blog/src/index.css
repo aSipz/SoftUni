@@ -1363,6 +1363,12 @@ a.button.blue:hover {
   color: #266476 !important;
 }
 
+.button.blue:disabled {
+  cursor: wait;
+  border-color: #757c7e;
+  color: #757c7e;
+}
+
 a.button.red,
 .button.red {
   border-color: #f77564 !important;

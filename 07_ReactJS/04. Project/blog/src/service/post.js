@@ -1,5 +1,5 @@
 import { del, get, post, put } from './api.js';
-import { createPointer, encodeObject, filterRelation } from './helpers';
+import { createPointer, encodeObject, filterRelation } from '../utils/serviceUtils';
 
 const endpoints = {
     'createPost': '/classes/Post',

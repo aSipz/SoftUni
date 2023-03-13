@@ -15,11 +15,16 @@ import * as commentService from '../../service/comment';
 import * as likeService from '../../service/like';
 
 import { userAction } from '../../const/actions';
+import { createPointer } from '../../utils/serviceUtils';
 
 const postReducer = (state, action) => {
     switch (action.type) {
         case 'LOAD_POST':
             return action.payload;
+        case 'DISLIKE':
+            return { ...state, comments: [...state.comments], likes: state.likes.filter(x => x.objectId !== action.likeId) };
+        case 'LIKE':
+            return { ...state, comments: [...state.comments], likes: [...state.likes, action.payload] };
         // case 'ADD_GAMES':
         //     return action.payload.map(x => ({ ...x, comments: [] }));
         // case 'ADD_GAME':
@@ -40,6 +45,7 @@ export default function Post() {
     const { postId } = useParams('postId');
 
     const [loading, setLoading] = useState(false);
+    const [likeDisabled, setLikeDisabled] = useState(false);
     const [action, setAction] = useOverlay();
 
     const [post, dispatch] = useReducer(postReducer, null);
@@ -72,25 +78,50 @@ export default function Post() {
             });
     }, [postId]);
 
-    const onLike = () => {
-        likeService.createLike(postId, user.objectId)
-            .then(result => {
-                console.log(result);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+    const onLike = async () => {
+
+        setLikeDisabled(state => !state);
+
+        try {
+            const result = await likeService.createLike(postId, user.objectId);
+
+            result.owner = createPointer('_User', user.objectId);
+
+            const action = {
+                type: 'LIKE',
+                payload: result,
+            };
+
+            dispatch(action);
+        } catch (error) {
+            console.log(error);
+        }
+
+        setLikeDisabled(state => !state);
+
     }
 
-    const onDislike = () => {
+    const onDislike = async () => {
         const likeId = post.likes.find(x => x.owner.objectId === user.objectId).objectId;
-        likeService.removeLike(likeId)
-            .then(result => {
-                console.log(result);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+
+        setLikeDisabled(state => !state);
+
+        try {
+            await likeService.removeLike(likeId);
+
+            const action = {
+                type: 'DISLIKE',
+                payload: {},
+                likeId
+            };
+
+            dispatch(action);
+        } catch (error) {
+            console.log(error);
+        }
+
+        setLikeDisabled(state => !state);
+
     }
 
     const isUser = user && user.objectId !== post?.author.objectId;
@@ -136,7 +167,11 @@ export default function Post() {
 
                     {isUser &&
                         <div className="user-controls">
-                            <button className="button small blue" onClick={isLiked ? onDislike : onLike}>
+                            <button
+                                className="button small blue"
+                                onClick={isLiked ? onDislike : onLike}
+                                disabled={likeDisabled}
+                            >
                                 {isLiked
                                     ? 'Liked'
                                     : <>Like<i className="fa-solid fa-thumbs-up" /></>}
