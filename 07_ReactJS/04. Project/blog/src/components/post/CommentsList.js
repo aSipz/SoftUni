@@ -1,30 +1,48 @@
-export default function CommentsList() {
+import './CommentsList.css';
+
+import { useState } from 'react';
+
+import Spinner from '../spinner/Spinner';
+
+import Comment from './Comment';
+import CommentForm from './CommentForm';
+
+export default function CommentsList({ comments, dispatch, isAuthor }) {
+    const [comment, setComment] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const toggleCommentForm = () => {
+        setComment(state => !state);
+    }
+
     return (
         <div className="comments-wrapper">
+
+            {loading && <Spinner />}
+
             <div id="comments" className="inner">
                 <div className="comments-inner">
-                    <h3 id="respond-title">Comments (0)</h3>
+                    <h3 id="respond-title">Comments ({comments.length})</h3>
                 </div>
                 <div className="comments">
-                    <blockquote>
-                        <p>There are always two people in every picture: the photographer and the
-                            viewer.<cite>Ansel Adams</cite></p>
-                        <span>Edited:</span>
-                        <button className="button small green">Edit</button>
-                        <button className="button small red">Delete</button>
-                    </blockquote>
+
+                    {comments.map(c => <Comment key={c.objectId} comment={c} dispatch={dispatch} setLoading={setLoading}/>)}
+
                 </div>
-                <div id="respond" className="comment-respond">
-                    <h3 id="reply-title" className="comment-reply-title">Leave a comment <small><a rel="nofollow" id="cancel-comment-reply-link" href="#respond" style={{ display: 'none' }}>Cancel
-                        reply</a></small></h3>
-                    <form>
-                        <label htmlFor="comment">Comment</label><textarea id="comment" name="comment" cols={45} rows={8} aria-required="true" placeholder="Comment" defaultValue={""} />
-                        <div>
-                            <p className="form-submit"><button className="button red">Cancel</button></p>
-                            <p className="form-submit"><button type='submit' className="button green">Post Comment</button></p>
-                        </div>
-                    </form>
-                </div>
+
+                {!isAuthor &&
+                    <div id='respond' className="comment-respond" >
+
+                        {!comment
+                            ? <button className="button small blue" onClick={toggleCommentForm}>Add comment</button>
+                            : <>
+                                <h3 id="reply-title" className="comment-reply-title">Leave a comment </h3>
+                                <CommentForm setLoading={setLoading} dispatch={dispatch} toggleCommentForm={toggleCommentForm} />
+                            </>
+                        }
+
+                    </div>}
+
             </div>
         </div>
     );

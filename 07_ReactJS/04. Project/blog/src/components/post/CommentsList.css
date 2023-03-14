@@ -1,0 +1,36 @@
+.comment-respondlabel {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+  }
+  
+  .comment-respond input {
+    margin-bottom: 24px;
+  }
+  
+  .comment-respond textarea.error  {
+    background-color: #f9e1e1;
+    color: #fc4343;
+  }
+  
+  .comment-respond textarea.error:hover {
+    background-color: #f7cdcd;
+  }
+
+  .comment-respond div,
+  .comment div {
+    position: relative;
+  }
+
+  .comment-respond div button,
+  .comment div button {
+    margin-top: 0.7em;
+  }
+  
+  .comment-respond .form-error,
+  .comment .form-error {
+    position: absolute;
+    color: #f08c79;
+    top: 0;
+    margin: 0;
+    text-align: center;
+  }

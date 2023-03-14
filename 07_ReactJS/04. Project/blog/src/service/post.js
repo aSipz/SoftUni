@@ -5,6 +5,7 @@ const endpoints = {
     'createPost': '/classes/Post',
     'recent': '/classes/Post?order=-createdAt&limit=6',
     'getPostById': (postId) => '/classes/Post/' + postId + '?include=author',
+    'post' : (postId) => '/classes/Post/' + postId
 }
 
 export function createPost(postData, authorId) {
@@ -18,4 +19,8 @@ export function getRecent() {
 
 export function getPostById(postId) {
     return get(endpoints.getPostById(postId));
+}
+
+export function deletePost(postId) {
+    return del(endpoints.post(postId));
 }

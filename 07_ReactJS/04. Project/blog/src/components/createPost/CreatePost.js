@@ -1,7 +1,7 @@
 import './CreatePost.css';
 
-import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Spinner from '../spinner/Spinner';
 import { AuthContext } from "../../contexts/AuthContext";
@@ -10,6 +10,9 @@ import { onChangeHandler, lengthValidation, urlValidation } from '../../utils/in
 import * as postService from '../../service/post';
 
 export default function CreatePost() {
+    const { postId } = useParams();
+    const [post, setPost] = useState(null);
+
     const [formValues, setFormValues] = useState({
         title: '',
         text: '',
@@ -17,10 +20,32 @@ export default function CreatePost() {
     });
     const [errors, setErrors] = useState({});
     const [serverError, setServerError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(() => postId ? true : false);
 
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (postId) {
+            postService.getPostById(postId)
+                .then(result => {
+                    console.log(result);
+                    const { title, text, imageUrl } = result;
+                    setFormValues({ title, text, imageUrl });
+
+                    if (user.objectId !== result.author.objectId) {
+                        navigate('/', { replace: true });
+                    }
+                    
+                })
+                .catch(error => {
+                    console.log(error);
+                    navigate('/');
+                });
+
+            setLoading(false);
+        }
+    }, []);
 
     const onChange = onChangeHandler.bind(null, setFormValues);
 

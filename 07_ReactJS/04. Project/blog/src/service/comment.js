@@ -12,10 +12,8 @@ export function createComment(commentData, postId, ownerId) {
     return post(endpoints.comment, { ...commentData, post: article, owner });
 }
 
-export function updateComment(commentData, postId, ownerId) {
-    const post = createPointer('Post', postId);
-    const owner = createPointer('_User', ownerId);
-    return put(endpoints.comment, { ...commentData, post, owner });
+export function updateComment(commentData, commentId) {
+    return put(endpoints.comment + '/' + commentId, { ...commentData });
 }
 
 export function removeComment(commentId) {

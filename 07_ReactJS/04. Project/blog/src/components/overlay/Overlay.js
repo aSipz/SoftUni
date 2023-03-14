@@ -6,7 +6,7 @@ import Register from '../register/Register';
 import { userAction } from '../../const/actions';
 import Confirm from '../confirm/Confirm';
 
-export default function Overlay({ action, setAction }) {
+export default function Overlay({ action, setAction, confirmAction }) {
 
     return (
         <div className="overlay">
@@ -17,7 +17,7 @@ export default function Overlay({ action, setAction }) {
 
                 {action === userAction.login && < Login setAction={setAction} />}
 
-                {action === userAction.confirm && <Confirm setAction={setAction} />}
+                {action === userAction.confirm && <Confirm setAction={setAction} confirmAction={confirmAction} />}
 
             </div>
         </div>

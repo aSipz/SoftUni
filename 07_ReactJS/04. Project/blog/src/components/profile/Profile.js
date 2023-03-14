@@ -1,26 +1,45 @@
 import './Profile.css';
 
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import EditProfile from './EditProfile';
 import Overlay from '../overlay/Overlay';
 import Spinner from '../spinner/Spinner';
+import useOverlay from '../../hooks/useOverlay';
 
 import { AuthContext } from '../../contexts/AuthContext';
 import { userAction } from '../../const/actions';
 
 import * as userService from '../../service/user';
-import useOverlay from '../../hooks/useOverlay';
 
 export default function Profile() {
     const [edit, setEdit] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [confirm, setConfirm] = useState(false);
     const [action, setAction] = useOverlay();
 
     const navigate = useNavigate();
 
     const { user, userLogout } = useContext(AuthContext);
+
+    useEffect(() => {
+        if (confirm) {
+
+            userService.deleteUser(user.objectId)
+                .then(() => {
+                    setAction(userAction.close);
+                    navigate('/');
+                    userLogout();
+                })
+                .catch(error => {
+                    console.log(error);
+                    setConfirm(false);
+                })
+
+            setLoading(loading => !loading);
+        }
+    }, [confirm]);
 
     const onLogout = async () => {
 
@@ -41,14 +60,20 @@ export default function Profile() {
         setEdit(state => !state);
     }
 
-    const onDelete = () => {
+    const onDelete = async () => {
         setAction(userAction.confirm);
+    }
+
+    const confirmAction = {
+        action: () => setConfirm(true),
+        text: 'Are you sure you want to delete this profile?',
+        loading: () => setLoading(true)
     }
 
     return (
         <section className="main">
 
-            {action && <Overlay action={action} setAction={setAction} />}
+            {action && <Overlay action={action} setAction={setAction} confirmAction={confirmAction} />}
 
             {loading && <Spinner />}
 

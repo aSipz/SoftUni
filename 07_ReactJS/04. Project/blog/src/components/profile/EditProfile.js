@@ -57,6 +57,7 @@ export default function EditProfile({ onClose }) {
         setLoading(loading => !loading);
 
     }
+    
     return (
         <div className="edit-profile">
 

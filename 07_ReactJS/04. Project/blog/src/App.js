@@ -14,6 +14,7 @@ import CreatePost from './components/createPost/CreatePost';
 
 import { AuthProvider } from './contexts/AuthContext';
 import ScrollToTop from './components/scroll/ScrollToTop';
+import { OverlayProvider } from './contexts/OverlayContext';
 
 function App() {
 
@@ -25,7 +26,7 @@ function App() {
 
                 <main>
                     <ScrollToTop />
-                    
+
                     <Routes>
 
                         <Route path="/" element={<Home />} />
@@ -41,7 +42,7 @@ function App() {
                         <Route element={<AuthorGuard />} >
                             <Route path="/create" element={<CreatePost />} />
                             <Route path="/my-articles" element={<></>} />
-                            <Route path="/posts/:postId/edit" element={<></>} />
+                            <Route path="/posts/:postId/edit" element={<CreatePost />} />
                             <Route path="/users" element={<Users />} />
                         </Route>
 

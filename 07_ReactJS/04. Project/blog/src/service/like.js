@@ -3,7 +3,7 @@ import { createPointer, encodeObject, filterRelation } from '../utils/serviceUti
 
 const endpoints = {
     'like': '/classes/Like',
-    'getLikesByPostId': (postId) => '/classes/Like?where=' + encodeObject(filterRelation('post', 'Post', postId)) + '&include=owner',
+    'getLikesByPostId': (postId) => '/classes/Like?where=' + encodeObject(filterRelation('post', 'Post', postId)),
 }
 
 export function createLike(postId, ownerId) {

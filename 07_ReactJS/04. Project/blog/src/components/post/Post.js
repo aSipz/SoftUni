@@ -1,5 +1,5 @@
 import { useContext, useEffect, useReducer, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { AuthContext } from '../../contexts/AuthContext';
 import useOverlay from '../../hooks/useOverlay';
@@ -14,8 +14,8 @@ import * as postService from '../../service/post';
 import * as commentService from '../../service/comment';
 import * as likeService from '../../service/like';
 
-import { userAction } from '../../const/actions';
 import { createPointer } from '../../utils/serviceUtils';
+import { userAction } from '../../const/actions';
 
 const postReducer = (state, action) => {
     switch (action.type) {
@@ -25,17 +25,12 @@ const postReducer = (state, action) => {
             return { ...state, comments: [...state.comments], likes: state.likes.filter(x => x.objectId !== action.likeId) };
         case 'LIKE':
             return { ...state, comments: [...state.comments], likes: [...state.likes, action.payload] };
-        // case 'ADD_GAMES':
-        //     return action.payload.map(x => ({ ...x, comments: [] }));
-        // case 'ADD_GAME':
-        //     return [...state, action.payload];
-        // case 'FETCH_GAME_DETAILS':
-        // case 'EDIT_GAME':
-        //     return state.map(x => x._id === action.gameId ? action.payload : x);
-        // case 'ADD_COMMENT':
-        //     return state.map(x => x._id === action.gameId ? { ...x, comments: [...x.comments, action.payload] } : x);
-        // case 'REMOVE_GAME':
-        //     return state.filter(x => x._id !== action.gameId);
+        case 'ADD_COMMENT':
+            return { ...state, comments: [...state.comments, action.payload], likes: [...state.likes] };
+        case 'DELETE_COMMENT':
+            return { ...state, comments: state.comments.filter(x => x.objectId !== action.commentId), likes: [...state.likes] };
+        case 'UPDATE_COMMENT':
+            return { ...state, comments: state.comments.map(x => x.objectId !== action.payload.objectId ? x : action.payload), likes: [...state.likes] };
         default:
             return state;
     }
@@ -43,10 +38,12 @@ const postReducer = (state, action) => {
 
 export default function Post() {
     const { postId } = useParams('postId');
+    const navigate = useNavigate();
 
-    const [loading, setLoading] = useState(false);
     const [likeDisabled, setLikeDisabled] = useState(false);
-    const [action, setAction] = useOverlay();
+    const [loading, setLoading] = useState(false);
+    const [confirm, setConfirm] = useState(false);
+    const [act, setAct] = useOverlay();
 
     const [post, dispatch] = useReducer(postReducer, null);
 
@@ -59,13 +56,9 @@ export default function Post() {
             likeService.getLikesByPostId(postId)
         ])
             .then((result) => {
-                console.log(result);
 
                 const [currentPost, comments, likes] = result;
-                console.log(currentPost);
-                console.log(comments);
-                console.log(likes);
-                console.log({ ...currentPost, comments: comments.results, likes: likes.results });
+
                 const action = {
                     type: 'LOAD_POST',
                     payload: { ...currentPost, comments: comments.results, likes: likes.results }
@@ -77,6 +70,23 @@ export default function Post() {
                 console.log(error);
             });
     }, [postId]);
+
+    useEffect(() => {
+        if (confirm) {
+
+            postService.deletePost(postId)
+                .then(() => {
+                    setAct(userAction.close);
+                    navigate('/posts');
+                })
+                .catch(error => {
+                    console.log(error);
+                    setConfirm(false);
+                })
+
+            setLoading(loading => !loading);
+        }
+    }, [confirm]);
 
     const onLike = async () => {
 
@@ -124,9 +134,19 @@ export default function Post() {
 
     }
 
+    const onDelete = () => {
+        setAct(userAction.confirm);
+    }
+
     const isUser = user && user.objectId !== post?.author.objectId;
     const isAuthor = user && user.objectId === post?.author.objectId;
     const isLiked = post?.likes.some(x => x.owner.objectId === user.objectId);
+
+    const confirmAction = {
+        action: () => setConfirm(true),
+        loading: () => setLoading(true),
+        text: 'Are you sure you want to delete this article?'
+    }
 
     if (!post) {
         return <Skeleton />
@@ -135,7 +155,7 @@ export default function Post() {
     return (
         <div className="wrap full-wrap post">
 
-            {action && <Overlay action={action} setAction={setAction} />}
+            {act && <Overlay action={act} setAction={setAct} confirmAction={confirmAction} />}
 
             {loading && <Spinner />}
 
@@ -183,7 +203,7 @@ export default function Post() {
                     {isAuthor &&
                         <div className="author-controls">
                             <Link to={`/posts/${postId}/edit`} className="button small green">Edit</Link>
-                            <button className="button small red">Delete</button>
+                            <button className="button small red" onClick={onDelete}>Delete</button>
                         </div>
                     }
 
@@ -192,7 +212,7 @@ export default function Post() {
 
             <AuthorPreview author={post.author} />
 
-            <CommentsList comments={post.comments} />
+            <CommentsList comments={post.comments} dispatch={dispatch} isAuthor={isAuthor} />
         </div>
     );
 }
