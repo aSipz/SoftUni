@@ -24,7 +24,7 @@ export default function Header() {
             <div className="header-wrap">
                 <div className="logo plain logo-left">
                     <div className="site-title">
-                        <NavLink to="/" title="Go to Home">Home</NavLink>
+                        <NavLink to="/" title="Go to Home" end>Home</NavLink>
                     </div>
                 </div>
                 <nav id="nav" role="navigation">
@@ -32,7 +32,7 @@ export default function Header() {
                         <div className="table-cell">
                             <ul id="menu-menu-1">
                                 <li className="menu-item">
-                                    <NavLink to="/posts">Blog</NavLink>
+                                    <NavLink to="/posts" end>Blog</NavLink>
                                 </li>
                                 <li className="menu-item">
                                     <NavLink to="/authors">Authors</NavLink>

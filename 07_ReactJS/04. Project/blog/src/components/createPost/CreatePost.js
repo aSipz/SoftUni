@@ -11,7 +11,6 @@ import * as postService from '../../service/post';
 
 export default function CreatePost() {
     const { postId } = useParams();
-    const [post, setPost] = useState(null);
 
     const [formValues, setFormValues] = useState({
         title: '',
@@ -29,14 +28,14 @@ export default function CreatePost() {
         if (postId) {
             postService.getPostById(postId)
                 .then(result => {
-                    console.log(result);
                     const { title, text, imageUrl } = result;
                     setFormValues({ title, text, imageUrl });
+                    setErrors({ title: false, text: false, imageUrl: false });
 
                     if (user.objectId !== result.author.objectId) {
                         navigate('/', { replace: true });
                     }
-                    
+
                 })
                 .catch(error => {
                     console.log(error);
@@ -45,7 +44,7 @@ export default function CreatePost() {
 
             setLoading(false);
         }
-    }, []);
+    }, [postId, navigate, user]);
 
     const onChange = onChangeHandler.bind(null, setFormValues);
 
@@ -72,8 +71,11 @@ export default function CreatePost() {
         setLoading(state => !state);
 
         try {
-            const result = await postService.createPost(formValues, user.objectId);
-            navigate(`/posts/${result.objectId}/details`);
+            const result = postId
+                ? await postService.updatePost(postId, formValues)
+                : await postService.createPost(formValues, user.objectId);
+
+            navigate(`/posts/${postId ? postId : result.objectId}/details`);
         } catch (error) {
             console.log(error.message);
             setServerError(error.message);
@@ -91,7 +93,7 @@ export default function CreatePost() {
                 <div className="inner">
                     <div className="create-post">
                         <div className="post-header">
-                            <h2>Create new post</h2>
+                            <h2>{postId ? 'Edit' : 'Create new post'}</h2>
                         </div>
 
                         <form onSubmit={onSubmit}>
@@ -158,7 +160,7 @@ export default function CreatePost() {
                                         {serverError}
                                     </p>
                                 }
-                                <button type='submit' className="button green">Post</button>
+                                <button type='submit' className="button green">{postId ? 'Update' : 'Post'}</button>
                             </div>
 
                         </form>

@@ -1,56 +1,90 @@
-import SearchBar from "../searchBar/SearchBar";
+import { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
+import SearchBar from '../searchBar/SearchBar';
+import Error from '../error/Error';
+import BlogItem from './BlogItem';
+import Skeleton from '../skeleton/Skeleton';
+
+import * as postService from '../../service/post';
+import { addSearch } from '../../utils/serviceUtils';
+
+const loadingStep = 1;
 
 export default function Blog() {
+    const [skip, setSkip] = useState(0);
+    const [count, setCount] = useState();
+    const [posts, setPosts] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const searchQuery = searchParams.get('search');
+    const search = addSearch(searchQuery);
+
+    const hasMore = posts ? skip + loadingStep < count : true;
+
+    const onScroll = useCallback(() => {
+        const scrollTop = document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        if (scrollTop + clientHeight >= scrollHeight && hasMore) {
+            setSkip(state => state + loadingStep);
+            setLoading(true);
+        }
+    }, [hasMore]);
+
+    useEffect(() => {
+        postService.getPosts(loadingStep, skip, search)
+            .then(result => {
+
+                skip === 0 && setCount(result.count);
+
+                skip === 0
+                    ? setPosts(result.results)
+                    : setPosts(state => [...state, ...result.results]);
+
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setPosts('error');
+                setLoading(false);
+            });
+
+    }, [skip, searchParams, search]);
+
+    useEffect(() => {
+        window.addEventListener('scroll', onScroll)
+        return () => window.removeEventListener('scroll', onScroll)
+    }, [posts, onScroll]);
+
+
+    // function onScroll() {
+    //     const scrollTop = document.documentElement.scrollTop;
+    //     const scrollHeight = document.documentElement.scrollHeight;
+    //     const clientHeight = document.documentElement.clientHeight;
+    //     if (scrollTop + clientHeight >= scrollHeight && hasMore) {
+    //         setSkip(state => state + loadingStep);
+    //         setLoading(true);
+    //     }
+    // }
+
     return (
         <div className="wrap full-wrap">
 
-            <SearchBar />
+            <SearchBar searchParams={searchParams} setSearchParams={setSearchParams} />
 
-            <div className="main-wrap">
-                <section className="main main-archive">
-                    <div className="loop">
-                        <article className="post format-image has-post-thumbnail post_format-post-format-image">
-                            <span className="post-image">
-                                <a href="#" title="Camper Van Fun">
-                                    <img width={916} height={611} src="images/Camper-1.jpg" className="attachment-desktop size-desktop" alt="" />
-                                </a>
-                            </span>
-                            <div className="inner">
-                                <h2 className="entry-title">
-                                    <a href="#" title="Camper Van Fun">
-                                        Camper Van Fun </a>
-                                </h2>
-                                <ul className="meta top">
-                                    <li className="time">
-                                        <time className="post-date updated" dateTime="2014-10-06">October 6, 2014</time>
-                                    </li>
-                                    <li className="comments post-tags">
-                                        <span>0 Comments</span>
-                                    </li>
-                                    <li className="likes post-tags">
-                                        <span>0 Likes</span>
-                                    </li>
-                                    <li className="author-m post-tags">
-                                        <a href title="Posts by Clare Smith">By Clare Smith</a>
-                                    </li>
-                                </ul>
-                                <div className="post-content">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce at risus at lacus
-                                        laoreet
-                                        mollis sed id elit. Integer bibendum lobortis velit, eleifend commodo dui
-                                        facilisis nec.
-                                        Aliquam mi sapien, ultrices a ultrices non, sodales ut diam. Fusce semper risus
-                                        eu magna
-                                        placerat pulvinar. Nullam ac odio non ligula semper auctor. Fusce semper risus
-                                        eu magna
-                                        placerat pulvinar. </p>
-                                    <a href="#" className="more-link">Read More</a>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                </section>
-            </div>
+            {posts === 'error' && <Error error={'Failed to fetch'} />}
+
+            {Array.isArray(posts) && posts.length === 0 && <Error error={'No posts'} />}
+
+            {Array.isArray(posts)
+                && posts.length > 0
+                && posts.map(post => <BlogItem key={post.objectId} post={post} />)}
+
+            {loading && <Skeleton isBlog={true} />}
+
         </div>
     );
 }

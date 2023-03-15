@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+
+import PostPreview from './PostPreview';
+import Spinner from '../../spinner/Spinner';
 
 import * as postService from '../../../service/post';
-import Error from "../../error/Error";
-import PostPreview from "./PostPreview";
+import Error from '../../error/Error';
 
 export default function Recent() {
-    const [posts, setPosts] = useState();
+    const [posts, setPosts] = useState(null);
 
     useEffect(() => {
         postService.getRecent()
@@ -22,6 +24,8 @@ export default function Recent() {
         <div className="home-sticky" id="content">
             <h2 className="home-sticky-title">Recent posts</h2>
             <div className="sticky-inner">
+
+                {posts === null && <Spinner />}
 
                 {posts === 'error' && <Error error={'Failed to fetch'} />}
 

@@ -14,7 +14,6 @@ import CreatePost from './components/createPost/CreatePost';
 
 import { AuthProvider } from './contexts/AuthContext';
 import ScrollToTop from './components/scroll/ScrollToTop';
-import { OverlayProvider } from './contexts/OverlayContext';
 
 function App() {
 

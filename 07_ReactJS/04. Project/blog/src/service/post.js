@@ -1,11 +1,14 @@
 import { del, get, post, put } from './api.js';
-import { createPointer, encodeObject, filterRelation } from '../utils/serviceUtils';
+import { createPointer } from '../utils/serviceUtils';
 
 const endpoints = {
     'createPost': '/classes/Post',
     'recent': '/classes/Post?order=-createdAt&limit=6',
+    'pagination': (step, skip, search) => {
+        return `/classes/Post?order=-createdAt&limit=${step}&skip=${skip}&include=author&count=1${search ? '&where=' + search : ''}`
+    },
     'getPostById': (postId) => '/classes/Post/' + postId + '?include=author',
-    'post' : (postId) => '/classes/Post/' + postId
+    'post': (postId) => '/classes/Post/' + postId
 }
 
 export function createPost(postData, authorId) {
@@ -23,4 +26,12 @@ export function getPostById(postId) {
 
 export function deletePost(postId) {
     return del(endpoints.post(postId));
+}
+
+export function updatePost(postId, postData) {
+    return put(endpoints.post(postId), postData);
+}
+
+export function getPosts(step, skip, search) {
+    return get(endpoints.pagination(step, skip, search));
 }

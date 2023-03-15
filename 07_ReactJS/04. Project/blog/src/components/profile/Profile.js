@@ -31,15 +31,16 @@ export default function Profile() {
                     setAction(userAction.close);
                     navigate('/');
                     userLogout();
+
                 })
                 .catch(error => {
                     console.log(error);
                     setConfirm(false);
-                })
+                    setLoading(false);
+                });
 
-            setLoading(loading => !loading);
         }
-    }, [confirm]);
+    }, [confirm, navigate, setAction, user, userLogout]);
 
     const onLogout = async () => {
 

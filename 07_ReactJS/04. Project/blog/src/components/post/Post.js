@@ -86,7 +86,7 @@ export default function Post() {
 
             setLoading(loading => !loading);
         }
-    }, [confirm]);
+    }, [confirm, navigate, postId, setAct]);
 
     const onLike = async () => {
 
@@ -181,7 +181,7 @@ export default function Post() {
                     </ul>
                     <div className="post-content">
 
-                        {post.text.split('\n').map((el, i) => <p key={i}>{el}</p>)}
+                        {post.text.split('\n').map((el, i) => <p key={i + el.split('').shift()}>{el}</p>)}
 
                     </div>
 

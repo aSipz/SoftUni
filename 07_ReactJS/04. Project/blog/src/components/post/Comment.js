@@ -28,15 +28,15 @@ export default function Comment({ comment, dispatch, setLoading }) {
                     };
 
                     dispatch(action);
+                    setLoading(false);
                 })
                 .catch(error => {
                     console.log(error);
                     setConfirm(false);
-                })
-
-            setLoading(loading => !loading);
+                    setLoading(false);
+                });
         }
-    }, [confirm]);
+    }, [confirm, dispatch, setLoading, setAct, comment]);
 
     const isOwner = user.objectId === comment.owner.objectId;
 
@@ -73,7 +73,7 @@ export default function Comment({ comment, dispatch, setLoading }) {
 
             </blockquote>
 
-            {edit && <CommentForm setLoading={setLoading} dispatch={dispatch} toggleCommentForm={toggleCommentForm} comment={comment}/>}
+            {edit && <CommentForm setLoading={setLoading} dispatch={dispatch} toggleCommentForm={toggleCommentForm} comment={comment} />}
         </>
     )
 }

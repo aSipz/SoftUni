@@ -1,6 +1,7 @@
 import './SearchBar.css';
 
-export default function SearchBar() {
+export default function SearchBar({ searchParams, setSearchParams }) {
+
     return (
         <form className="search-form">
             <div className="search-input-container">
