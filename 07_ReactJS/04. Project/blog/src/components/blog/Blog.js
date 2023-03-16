@@ -7,9 +7,9 @@ import BlogItem from './BlogItem';
 import Skeleton from '../skeleton/Skeleton';
 
 import * as postService from '../../service/post';
-import { addSearch } from '../../utils/serviceUtils';
+import { addSearch, encodeObject } from '../../utils/serviceUtils';
 
-const loadingStep = 1;
+const loadingStep = 2;
 
 export default function Blog() {
     const [skip, setSkip] = useState(0);
@@ -19,8 +19,7 @@ export default function Blog() {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const searchQuery = searchParams.get('search');
-    const search = addSearch(searchQuery);
+    const search = addSearch(searchParams.get('search'));
 
     const hasMore = posts ? skip + loadingStep < count : true;
 
@@ -38,11 +37,15 @@ export default function Blog() {
         postService.getPosts(loadingStep, skip, search)
             .then(result => {
 
+                // console.log(result);
                 skip === 0 && setCount(result.count);
 
                 skip === 0
                     ? setPosts(result.results)
-                    : setPosts(state => [...state, ...result.results]);
+                    : setPosts(state => {
+                        console.log(skip);
+                        console.log(state);
+                        return [...state, ...result.results]});
 
                 setLoading(false);
             })
@@ -59,21 +62,26 @@ export default function Blog() {
         return () => window.removeEventListener('scroll', onScroll)
     }, [posts, onScroll]);
 
+    const onSearch = (searchData) => {
+        setSkip(0);
+        setPosts(null);
+        setLoading(true);
+        const hasKeys = Object.keys(searchData).length > 0;
+        setSearchParams(hasKeys ? `search=${encodeObject(searchData)}` : '');
+    }
 
-    // function onScroll() {
-    //     const scrollTop = document.documentElement.scrollTop;
-    //     const scrollHeight = document.documentElement.scrollHeight;
-    //     const clientHeight = document.documentElement.clientHeight;
-    //     if (scrollTop + clientHeight >= scrollHeight && hasMore) {
-    //         setSkip(state => state + loadingStep);
-    //         setLoading(true);
-    //     }
-    // }
+    const hasAuthorSearch = JSON.parse(searchParams.get('search'))?.author;
+    const addSearchParams = posts && hasAuthorSearch ? { author: `${posts[0].author.firstName} ${posts[0].author.lastName}` } : null;
 
     return (
         <div className="wrap full-wrap">
 
-            <SearchBar searchParams={searchParams} setSearchParams={setSearchParams} />
+            <SearchBar
+                searchParams={searchParams}
+                onSearch={onSearch}
+                searchFor={'title'}
+                addSearch={addSearchParams}
+            />
 
             {posts === 'error' && <Error error={'Failed to fetch'} />}
 

@@ -13,7 +13,6 @@ import AuthorGuard from './components/guards/AuthorGuard';
 import CreatePost from './components/createPost/CreatePost';
 
 import { AuthProvider } from './contexts/AuthContext';
-import ScrollToTop from './components/scroll/ScrollToTop';
 
 function App() {
 
@@ -24,7 +23,6 @@ function App() {
                 <Header />
 
                 <main>
-                    <ScrollToTop />
 
                     <Routes>
 

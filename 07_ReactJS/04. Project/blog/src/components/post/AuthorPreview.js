@@ -4,7 +4,7 @@ import { searchAuthor } from '../../utils/serviceUtils';
 
 export default function AuthorPreview({ author }) {
     const search = '/posts?search=' + searchAuthor(author.objectId);
-   
+
     return (
         <article id="author" className="author-wrap">
             <span className="author-avatar"><img alt="author" src={author.imageUrl} className="avatar avatar-200 photo" /></span>

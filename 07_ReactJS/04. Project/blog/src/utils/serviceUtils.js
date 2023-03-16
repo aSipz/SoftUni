@@ -11,11 +11,13 @@ export function addTitleSearch(searchParams) {
 }
 
 export function addSearch(searchQuery) {
-    const author = JSON.parse(searchQuery)?.author
+    const searchObj = JSON.parse(searchQuery);
+    
+    const author = searchObj?.author
         ? filterRelation('author', '_User', JSON.parse(searchQuery).author)
         : null;
 
-    const title = JSON.parse(searchQuery)?.title
+    const title = searchObj?.title
         ? addTitleSearch(JSON.parse(searchQuery).title)
         : null;
 
