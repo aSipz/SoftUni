@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useCallback, useEffect, useReducer } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 import SearchBar from '../searchBar/SearchBar';
 import Error from '../error/Error';
@@ -9,69 +9,137 @@ import Skeleton from '../skeleton/Skeleton';
 import * as postService from '../../service/post';
 import { addSearch, encodeObject } from '../../utils/serviceUtils';
 
-const loadingStep = 2;
+const loadingStep = 1;
+
+const blogControlReducer = (state, action) => {
+    switch (action.type) {
+        case 'SCROLL':
+            return { ...state, loading: true, skip: state.skip + loadingStep };
+        case 'ERROR':
+            return { ...state, loading: false, error: true };
+        case 'LOAD_POSTS':
+            return {
+                ...state,
+                posts: [...state.posts, ...action.payload.posts.filter(p => !state.posts.some(e => e.objectId === p.objectId))],
+                count: action.payload.count,
+                loading: false
+            };
+        case 'SEARCH':
+            return action.payload;
+        default:
+            return state;
+    }
+};
 
 export default function Blog() {
-    const [skip, setSkip] = useState(0);
-    const [count, setCount] = useState();
-    const [posts, setPosts] = useState(null);
-    const [loading, setLoading] = useState(true);
-
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const search = addSearch(searchParams.get('search'));
+    const [blogControl, dispatch] = useReducer(blogControlReducer, {
+        posts: [],
+        skip: 0,
+        count: 0,
+        loading: true,
+        error: false
+    });
 
-    const hasMore = posts ? skip + loadingStep < count : true;
+    const { search } = useLocation();
+
+
+
+    const hasMore = blogControl.skip + loadingStep < blogControl.count;
+
+    // useEffect(() => {
+    //     window.scrollTo({ top: 0, behavior: 'smooth' });
+    //     console.log('search');
+    //     dispatch({
+    //         type: 'SEARCH',
+    //         payload: { skip: 0, posts: [], loading: true, count: 0, error: false }
+    //     });
+
+    // }, [search]);
+
+    // useEffect(() => {
+
+    //     console.log(search);
+
+    //     if (search === '') {
+    //         dispatch({
+    //             type: 'SEARCH',
+    //             payload: { skip: 0, posts: [], loading: true }
+    //         });
+
+    //         window.scrollTo({ top: 0, behavior: 'auto' });
+    //     }
+
+
+
+    //     // setSearchParams('');
+
+    // }, [search])
 
     const onScroll = useCallback(() => {
         const scrollTop = document.documentElement.scrollTop;
         const scrollHeight = document.documentElement.scrollHeight;
         const clientHeight = document.documentElement.clientHeight;
-        if (scrollTop + clientHeight >= scrollHeight && hasMore) {
-            setSkip(state => state + loadingStep);
-            setLoading(true);
+
+        if (scrollTop + clientHeight >= scrollHeight && hasMore && !blogControl.loading) {
+
+            dispatch({ type: 'SCROLL' });
         }
-    }, [hasMore]);
+
+    }, [blogControl.loading, hasMore]);
+
+
 
     useEffect(() => {
-        postService.getPosts(loadingStep, skip, search)
+        // иф
+        const searchFor = addSearch(searchParams.get('search'));
+        postService.getPosts(loadingStep, blogControl.skip, searchFor)
             .then(result => {
 
-                // console.log(result);
-                skip === 0 && setCount(result.count);
-
-                skip === 0
-                    ? setPosts(result.results)
-                    : setPosts(state => {
-                        console.log(skip);
-                        console.log(state);
-                        return [...state, ...result.results]});
-
-                setLoading(false);
+                dispatch({
+                    type: 'LOAD_POSTS',
+                    payload: { posts: result.results, count: result.count }
+                });
             })
             .catch((error) => {
                 console.log(error);
-                setPosts('error');
-                setLoading(false);
+                dispatch({
+                    type: 'ERROR'
+                });
             });
 
-    }, [skip, searchParams, search]);
+    }, [blogControl.skip, searchParams]);
 
     useEffect(() => {
         window.addEventListener('scroll', onScroll)
         return () => window.removeEventListener('scroll', onScroll)
-    }, [posts, onScroll]);
+    }, [onScroll]);
 
     const onSearch = (searchData) => {
-        setSkip(0);
-        setPosts(null);
-        setLoading(true);
-        const hasKeys = Object.keys(searchData).length > 0;
-        setSearchParams(hasKeys ? `search=${encodeObject(searchData)}` : '');
-    }
 
-    const hasAuthorSearch = JSON.parse(searchParams.get('search'))?.author;
-    const addSearchParams = posts && hasAuthorSearch ? { author: `${posts[0].author.firstName} ${posts[0].author.lastName}` } : null;
+        const hasKeys = Object.keys(searchData).length > 0;
+
+        if ((!searchParams.get('search') && !hasKeys)
+            || (searchParams.get('search') === JSON.stringify(searchData))) {
+            return;
+        }
+
+        dispatch({
+            type: 'SEARCH',
+            payload: { skip: 0, posts: [], loading: true }
+        });
+
+        window.scrollTo({ top: 0, behavior: 'auto' });
+
+        setSearchParams(hasKeys ? `?search=${encodeObject(searchData)}` : '');
+    };
+
+    const hasAuthorSearch = !!JSON.parse(searchParams.get('search'))?.author;
+
+    const addSearchParams = (hasAuthorSearch && blogControl.posts.length > 0)
+        ? { 'author': `${blogControl.posts[0].author.firstName} ${blogControl.posts[0].author.lastName}` }
+        : null;
 
     return (
         <div className="wrap full-wrap">
@@ -83,15 +151,14 @@ export default function Blog() {
                 addSearch={addSearchParams}
             />
 
-            {posts === 'error' && <Error error={'Failed to fetch'} />}
+            {blogControl.error && <Error error={'Failed to fetch'} />}
 
-            {Array.isArray(posts) && posts.length === 0 && <Error error={'No posts'} />}
+            {blogControl.posts.length === 0 && !blogControl.loading && <Error error={'No posts for this search'} />}
 
-            {Array.isArray(posts)
-                && posts.length > 0
-                && posts.map(post => <BlogItem key={post.objectId} post={post} />)}
+            {blogControl.posts.length > 0
+                && blogControl.posts.map(post => <BlogItem key={post.objectId} post={post} onSearch={onSearch} />)}
 
-            {loading && <Skeleton isBlog={true} />}
+            {blogControl.loading && <Skeleton isBlog={true} />}
 
         </div>
     );

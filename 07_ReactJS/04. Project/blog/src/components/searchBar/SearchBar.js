@@ -13,7 +13,14 @@ export default function SearchBar({ searchParams, onSearch, searchFor, addSearch
     const onChange = onChangeHandler.bind(null, setFormValue);
 
     const onClear = () => {
-        setFormValue({ [searchFor]: '' })
+
+        const { [searchFor]: _, ...searchQuery } = JSON.parse(searchParams.get('search')) ? JSON.parse(searchParams.get('search')) : {};
+
+        setFormValue({ [searchFor]: '' });
+
+        const searchObj = Object.assign({}, searchQuery);
+
+        onSearch(searchObj);
     }
 
     const onSubmit = (e) => {
@@ -33,6 +40,7 @@ export default function SearchBar({ searchParams, onSearch, searchFor, addSearch
     const onClick = (field) => {
         const { [field]: _, ...searchQuery } = JSON.parse(searchParams.get('search'));
         const searchObj = Object.assign({}, searchQuery);
+
         onSearch(searchObj);
     }
 

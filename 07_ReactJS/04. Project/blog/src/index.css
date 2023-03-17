@@ -790,6 +790,20 @@ p+.more-link {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
 }
 
+.author-m.post-tags button {
+  text-transform: uppercase;
+  color: #34495e;
+  border: none;
+  padding: 0;
+  margin: 0;
+  transition: all 0.25s ease-in-out;
+  font-size: 1em;
+}
+
+.author-m.post-tags button:hover {
+  color: #f08c79 !important;
+}
+
 .header-widgets,
 .footer-widgets {
   padding: 3em 0 0 0;

@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { searchAuthor } from '../../utils/serviceUtils';
 
-export default function BlogItem({ post }) {
+export default function BlogItem({ post, onSearch }) {
     const search = '/posts?search=' + searchAuthor(post.author.objectId);
+    const authorSearch = { 'author': post.author.objectId };
 
     return (
         <article className="post format-image has-post-thumbnail post_format-post-format-image">
@@ -21,7 +22,11 @@ export default function BlogItem({ post }) {
                         <time className="post-date updated" dateTime={post.createdAt}>{new Date(post.createdAt).toDateString()}</time>
                     </li>
                     <li className="author-m post-tags">
-                        <Link to={search} title={`Posts by ${post.author.firstName} ${post.author.lastName}`}>By {post.author.firstName} {post.author.lastName}</Link>
+                        <button
+                            title={`Posts by ${post.author.firstName} ${post.author.lastName}`}
+                            onClick={onSearch.bind(null, authorSearch)}>
+                            By {post.author.firstName} {post.author.lastName}
+                        </button>
                     </li>
                 </ul>
                 <div className="post-content">

@@ -38,7 +38,7 @@ export default function Comment({ comment, dispatch, setLoading }) {
         }
     }, [confirm, dispatch, setLoading, setAct, comment]);
 
-    const isOwner = user.objectId === comment.owner.objectId;
+    const isOwner = user?.objectId === comment.owner.objectId;
 
     const toggleCommentForm = () => {
         setEdit(state => !state);

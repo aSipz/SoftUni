@@ -112,7 +112,7 @@ export default function Post() {
     }
 
     const onDislike = async () => {
-        const likeId = post.likes.find(x => x.owner.objectId === user.objectId).objectId;
+        const likeId = post.likes.find(x => x.owner.objectId === user?.objectId).objectId;
 
         setLikeDisabled(state => !state);
 
@@ -140,7 +140,7 @@ export default function Post() {
 
     const isUser = user && user.objectId !== post?.author.objectId;
     const isAuthor = user && user.objectId === post?.author.objectId;
-    const isLiked = post?.likes.some(x => x.owner.objectId === user.objectId);
+    const isLiked = post?.likes.some(x => x.owner.objectId === user?.objectId);
 
     const confirmAction = {
         action: () => setConfirm(true),

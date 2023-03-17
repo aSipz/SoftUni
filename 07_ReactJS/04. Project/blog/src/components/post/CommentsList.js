@@ -1,15 +1,18 @@
 import './CommentsList.css';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import Spinner from '../spinner/Spinner';
-
 import Comment from './Comment';
 import CommentForm from './CommentForm';
+
+import { AuthContext } from '../../contexts/AuthContext';
 
 export default function CommentsList({ comments, dispatch, isAuthor }) {
     const [comment, setComment] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const { user } = useContext(AuthContext);
 
     const toggleCommentForm = () => {
         setComment(state => !state);
@@ -30,7 +33,7 @@ export default function CommentsList({ comments, dispatch, isAuthor }) {
 
                 </div>
 
-                {!isAuthor &&
+                {user && !isAuthor &&
                     <div id='respond' className="comment-respond" >
 
                         {!comment
