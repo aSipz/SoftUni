@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import SearchBar from '../searchBar/SearchBar';
 import Error from '../error/Error';
@@ -20,10 +20,11 @@ const blogControlReducer = (state, action) => {
         case 'LOAD_POSTS':
             return {
                 ...state,
-                posts: [...state.posts, ...action.payload.posts.filter(p => !state.posts.some(e => e.objectId === p.objectId))],
-                count: action.payload.count,
-                loading: false
+                ...action.payload,
+                posts: [...state.posts, ...action.payload.posts.filter(p => !state.posts.some(e => e.objectId === p.objectId))]
             };
+        case 'INITIAL_LOAD':
+            return { ...state, ...action.payload }
         case 'SEARCH':
             return action.payload;
         default:
@@ -39,43 +40,21 @@ export default function Blog() {
         skip: 0,
         count: 0,
         loading: true,
-        error: false
+        error: false,
+        hadQuery: false
     });
-
-    const { search } = useLocation();
-
-
 
     const hasMore = blogControl.skip + loadingStep < blogControl.count;
 
-    // useEffect(() => {
-    //     window.scrollTo({ top: 0, behavior: 'smooth' });
-    //     console.log('search');
-    //     dispatch({
-    //         type: 'SEARCH',
-    //         payload: { skip: 0, posts: [], loading: true, count: 0, error: false }
-    //     });
+    const searchFor = addSearch(searchParams.get('search'));
 
-    // }, [search]);
+    const skip = !searchFor && blogControl.hadQuery ? 0 : blogControl.skip;
 
-    // useEffect(() => {
+    const scrollToTop = !searchFor && blogControl.hadQuery;
 
-    //     console.log(search);
-
-    //     if (search === '') {
-    //         dispatch({
-    //             type: 'SEARCH',
-    //             payload: { skip: 0, posts: [], loading: true }
-    //         });
-
-    //         window.scrollTo({ top: 0, behavior: 'auto' });
-    //     }
-
-
-
-    //     // setSearchParams('');
-
-    // }, [search])
+    if (scrollToTop) {
+        window.scrollTo(0, 0);
+    }
 
     const onScroll = useCallback(() => {
         const scrollTop = document.documentElement.scrollTop;
@@ -89,31 +68,33 @@ export default function Blog() {
 
     }, [blogControl.loading, hasMore]);
 
-
-
     useEffect(() => {
-        // иф
-        const searchFor = addSearch(searchParams.get('search'));
-        postService.getPosts(loadingStep, blogControl.skip, searchFor)
+
+        postService.getPosts(loadingStep, skip, searchFor)
             .then(result => {
 
                 dispatch({
-                    type: 'LOAD_POSTS',
-                    payload: { posts: result.results, count: result.count }
+                    type: skip === 0 ? 'INITIAL_LOAD' : 'LOAD_POSTS',
+                    payload: {
+                        posts: result.results,
+                        count: result.count,
+                        hadQuery: searchFor ? true : false,
+                        loading: false,
+                        skip
+                    }
                 });
+
             })
             .catch((error) => {
                 console.log(error);
-                dispatch({
-                    type: 'ERROR'
-                });
+                dispatch({ type: 'ERROR' });
             });
 
-    }, [blogControl.skip, searchParams]);
+    }, [skip, searchFor, searchParams]);
 
     useEffect(() => {
-        window.addEventListener('scroll', onScroll)
-        return () => window.removeEventListener('scroll', onScroll)
+        window.addEventListener('scroll', onScroll);
+        return () => window.removeEventListener('scroll', onScroll);
     }, [onScroll]);
 
     const onSearch = (searchData) => {
@@ -145,7 +126,6 @@ export default function Blog() {
         <div className="wrap full-wrap">
 
             <SearchBar
-                searchParams={searchParams}
                 onSearch={onSearch}
                 searchFor={'title'}
                 addSearch={addSearchParams}
@@ -153,13 +133,13 @@ export default function Blog() {
 
             {blogControl.error && <Error error={'Failed to fetch'} />}
 
-            {blogControl.posts.length === 0 && !blogControl.loading && <Error error={'No posts for this search'} />}
+            {blogControl.posts.length === 0 && !blogControl.loading && !blogControl.error && <Error error={'No posts for this search'} />}
 
-            {blogControl.posts.length > 0
+            {blogControl.posts.length > 0 && !scrollToTop
                 && blogControl.posts.map(post => <BlogItem key={post.objectId} post={post} onSearch={onSearch} />)}
 
-            {blogControl.loading && <Skeleton isBlog={true} />}
+            {(blogControl.loading || scrollToTop) && <Skeleton isBlog={true} />}
 
         </div>
     );
-}
+} 

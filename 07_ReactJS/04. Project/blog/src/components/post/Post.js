@@ -43,7 +43,7 @@ export default function Post() {
     const [likeDisabled, setLikeDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
     const [confirm, setConfirm] = useState(false);
-    const [act, setAct] = useOverlay();
+    const [action, setAction] = useOverlay();
 
     const [post, dispatch] = useReducer(postReducer, null);
 
@@ -59,12 +59,10 @@ export default function Post() {
 
                 const [currentPost, comments, likes] = result;
 
-                const action = {
+                dispatch({
                     type: 'LOAD_POST',
                     payload: { ...currentPost, comments: comments.results, likes: likes.results }
-                };
-
-                dispatch(action);
+                });
             })
             .catch(error => {
                 console.log(error);
@@ -76,7 +74,7 @@ export default function Post() {
 
             postService.deletePost(postId)
                 .then(() => {
-                    setAct(userAction.close);
+                    setAction(userAction.close);
                     navigate('/posts');
                 })
                 .catch(error => {
@@ -86,7 +84,7 @@ export default function Post() {
 
             setLoading(loading => !loading);
         }
-    }, [confirm, navigate, postId, setAct]);
+    }, [confirm, navigate, postId, setAction]);
 
     const onLike = async () => {
 
@@ -97,12 +95,10 @@ export default function Post() {
 
             result.owner = createPointer('_User', user.objectId);
 
-            const action = {
+            dispatch({
                 type: 'LIKE',
                 payload: result,
-            };
-
-            dispatch(action);
+            });
         } catch (error) {
             console.log(error);
         }
@@ -119,13 +115,11 @@ export default function Post() {
         try {
             await likeService.removeLike(likeId);
 
-            const action = {
+            dispatch({
                 type: 'DISLIKE',
                 payload: {},
                 likeId
-            };
-
-            dispatch(action);
+            });
         } catch (error) {
             console.log(error);
         }
@@ -135,7 +129,7 @@ export default function Post() {
     }
 
     const onDelete = () => {
-        setAct(userAction.confirm);
+        setAction(userAction.confirm);
     }
 
     const isUser = user && user.objectId !== post?.author.objectId;
@@ -143,8 +137,10 @@ export default function Post() {
     const isLiked = post?.likes.some(x => x.owner.objectId === user?.objectId);
 
     const confirmAction = {
-        action: () => setConfirm(true),
-        loading: () => setLoading(true),
+        action: () => {
+            setConfirm(true);
+            setLoading(true);
+        },
         text: 'Are you sure you want to delete this article?'
     }
 
@@ -155,7 +151,7 @@ export default function Post() {
     return (
         <div className="wrap full-wrap post">
 
-            {act && <Overlay action={act} setAction={setAct} confirmAction={confirmAction} />}
+            {action && <Overlay action={action} setAction={setAction} confirmAction={confirmAction} />}
 
             {loading && <Spinner />}
 

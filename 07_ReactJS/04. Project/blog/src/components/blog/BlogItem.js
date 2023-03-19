@@ -1,9 +1,9 @@
-import { Link } from 'react-router-dom';
-import { searchAuthor } from '../../utils/serviceUtils';
+import { Link, useSearchParams } from 'react-router-dom';
 
 export default function BlogItem({ post, onSearch }) {
-    const search = '/posts?search=' + searchAuthor(post.author.objectId);
-    const authorSearch = { 'author': post.author.objectId };
+    const [searchParams] = useSearchParams();
+    
+    const authorSearch = Object.assign({}, JSON.parse(searchParams.get('search')), { 'author': post.author.objectId });
 
     return (
         <article className="post format-image has-post-thumbnail post_format-post-format-image">

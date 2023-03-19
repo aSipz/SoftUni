@@ -1,14 +1,23 @@
 import './SearchBar.css';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { onChangeHandler } from '../../utils/inputUtils';
 
-export default function SearchBar({ searchParams, onSearch, searchFor, addSearch }) {
+export default function SearchBar({ onSearch, searchFor, addSearch }) {
+    const [searchParams] = useSearchParams();
+
     const [formValue, setFormValue] = useState(() =>
     (JSON.parse(searchParams.get('search'))?.[searchFor]
         ? { [searchFor]: JSON.parse(searchParams.get('search'))[searchFor] }
         : { [searchFor]: '' }));
+
+    useEffect(() => {
+        setFormValue(JSON.parse(searchParams.get('search'))?.[searchFor]
+            ? { [searchFor]: JSON.parse(searchParams.get('search'))[searchFor] }
+            : { [searchFor]: '' })
+    }, [searchParams, searchFor]);
 
     const onChange = onChangeHandler.bind(null, setFormValue);
 

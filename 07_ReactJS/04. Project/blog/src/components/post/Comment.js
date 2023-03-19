@@ -13,21 +13,20 @@ export default function Comment({ comment, dispatch, setLoading }) {
     const { user } = useContext(AuthContext);
     const [confirm, setConfirm] = useState(false);
     const [edit, setEdit] = useState(false);
-    const [act, setAct] = useOverlay();
+    const [action, setAction] = useOverlay();
 
     useEffect(() => {
         if (confirm) {
 
             commentService.removeComment(comment.objectId)
                 .then(() => {
-                    setAct(userAction.close);
-                    const action = {
+                    setAction(userAction.close);
+
+                    dispatch({
                         type: 'DELETE_COMMENT',
                         payload: {},
                         commentId: comment.objectId
-                    };
-
-                    dispatch(action);
+                    });
                     setLoading(false);
                 })
                 .catch(error => {
@@ -36,7 +35,7 @@ export default function Comment({ comment, dispatch, setLoading }) {
                     setLoading(false);
                 });
         }
-    }, [confirm, dispatch, setLoading, setAct, comment]);
+    }, [confirm, dispatch, setLoading, setAction, comment]);
 
     const isOwner = user?.objectId === comment.owner.objectId;
 
@@ -45,12 +44,14 @@ export default function Comment({ comment, dispatch, setLoading }) {
     }
 
     const onDelete = () => {
-        setAct(userAction.confirm);
+        setAction(userAction.confirm);
     }
 
     const confirmAction = {
-        action: () => setConfirm(true),
-        loading: () => setLoading(true),
+        action: () => {
+            setConfirm(true);
+            setLoading(true);
+        },
         text: 'Are you sure you want to delete this comment?'
     }
 
@@ -58,7 +59,7 @@ export default function Comment({ comment, dispatch, setLoading }) {
         <>
             <blockquote>
 
-                {act && <Overlay action={act} setAction={setAct} confirmAction={confirmAction} />}
+                {action && <Overlay action={action} setAction={setAction} confirmAction={confirmAction} />}
 
                 <p>{comment.text}<cite>{comment.owner.firstName} {comment.owner.lastName}</cite></p>
                 <span>{comment.createdAt !== comment.updatedAt ?

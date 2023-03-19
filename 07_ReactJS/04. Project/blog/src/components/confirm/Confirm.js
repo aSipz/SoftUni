@@ -2,11 +2,10 @@ import { userAction } from "../../const/actions";
 
 export default function Confirm({ setAction, confirmAction}) {
    
-    const { action, text, loading } = confirmAction;
+    const { action, text} = confirmAction;
 
     const onDelete = () => {
         action();
-        loading();
     }
 
     return (

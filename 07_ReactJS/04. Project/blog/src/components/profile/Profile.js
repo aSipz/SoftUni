@@ -66,9 +66,11 @@ export default function Profile() {
     }
 
     const confirmAction = {
-        action: () => setConfirm(true),
-        text: 'Are you sure you want to delete this profile?',
-        loading: () => setLoading(true)
+        action: () => {
+            setConfirm(true);
+            setLoading(true);
+        },
+        text: 'Are you sure you want to delete this profile?'
     }
 
     return (

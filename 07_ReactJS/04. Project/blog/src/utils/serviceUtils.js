@@ -7,7 +7,7 @@ export function searchAuthor(authorId) {
 }
 
 export function addTitleSearch(searchParams) {
-    return { title: { '$regex': searchParams } }
+    return { title: { '$regex': `(?i)${searchParams}` } }
 }
 
 export function addSearch(searchQuery) {
@@ -30,11 +30,6 @@ export function addSearch(searchQuery) {
     return null;
 }
 
-// export function addOwner(record, ownerId) {
-//     const data = Object.assign({}, record);
-//     data.owner = createPointer('_User', ownerId);
-//     return data;
-// }
 
 export function filterRelation(field, collection, objectId) {
     return {
