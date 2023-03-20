@@ -13,6 +13,8 @@ import AuthorGuard from './components/guards/AuthorGuard';
 import CreatePost from './components/createPost/CreatePost';
 
 import { AuthProvider } from './contexts/AuthContext';
+import ScrollBtn from './components/scroll/ScrollBtn';
+import AuthorsList from './components/authors/AuthorsList';
 
 function App() {
 
@@ -27,18 +29,13 @@ function App() {
                     <Routes>
 
                         <Route path="/" element={<Home />} />
-
                         <Route path="/posts" element={<Blog />} />
-
-                        <Route path="/authors" element={<></>} />
-
+                        <Route path="/authors" element={<AuthorsList />} />
                         <Route path="/about" element={<></>} />
-
                         <Route path="/posts/:postId/details" element={<Post />} />
 
                         <Route element={<AuthorGuard />} >
                             <Route path="/create" element={<CreatePost />} />
-                            <Route path="/my-articles" element={<></>} />
                             <Route path="/posts/:postId/edit" element={<CreatePost />} />
                             <Route path="/users" element={<Users />} />
                         </Route>
@@ -48,7 +45,10 @@ function App() {
                         </Route>
 
                     </Routes>
+
                 </main>
+
+                <ScrollBtn />
 
                 <Footer />
 

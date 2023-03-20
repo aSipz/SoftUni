@@ -30,23 +30,11 @@
 }
 
 .additional-search-params {
-    display: inline-block;
+    display: block;
+    max-width: 960px;
+    margin: 0 auto;
     
 }
-
-/* .additional-search-params p {
-    margin: 0;
-} */
-
-/* .additional-search-params {
-    background-color: rgba(0, 0, 0, 0.05);
-    display: inline-block;
-    color: #f08c79;
-    border: 2px solid #f08c79;
-    margin: 0;
-    display: inline-flex;
-    align-items: center;
-} */
 
 .additional-search-params button {
     background-color: transparent;

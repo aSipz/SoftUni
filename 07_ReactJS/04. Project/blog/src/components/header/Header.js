@@ -5,6 +5,7 @@ import Overlay from '../overlay/Overlay';
 import useOverlay from '../../hooks/useOverlay';
 import { AuthContext } from '../../contexts/AuthContext';
 import { userAction } from '../../const/actions';
+import { searchAuthor } from '../../utils/serviceUtils';
 
 export default function Header() {
     const [action, setAction] = useOverlay();
@@ -15,6 +16,8 @@ export default function Header() {
     const onLoginClick = () => {
         setAction(userAction.login);
     }
+
+    const search = isAuthor ? '/posts?search=' + searchAuthor(user.objectId) : '';
 
     return (
         <header className="header">
@@ -49,7 +52,7 @@ export default function Header() {
                                                 <NavLink to="/create">Create new post</NavLink>
                                             </li>
                                             <li className="menu-item">
-                                                <NavLink to="my-articles">My posts</NavLink>
+                                                <Link to={search}>My posts</Link>
                                             </li>
                                             <li className="menu-item">
                                                 <NavLink to="/users">Users</NavLink>

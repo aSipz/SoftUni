@@ -30,7 +30,6 @@ export function addSearch(searchQuery) {
     return null;
 }
 
-
 export function filterRelation(field, collection, objectId) {
     return {
         [field]: createPointer(collection, objectId)
@@ -41,6 +40,3 @@ export function encodeObject(obj) {
     return encodeURIComponent(JSON.stringify(obj));
 }
 
-export function encodeDate(date) {
-    return { __type: 'Date', iso: date.toISOString() };
-}

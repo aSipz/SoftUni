@@ -656,7 +656,7 @@ h2.home-blog-title:after {
 }
 
 .post.page {
-  margin-top: 50px;
+  margin-top: 62px;
 }
 
 .page h1 {
@@ -1563,6 +1563,11 @@ header.header nav ul li:hover ul li a {
   padding: 0.35em 1em;
 }
 
+.main {
+  min-height: calc(100vh - 180px);
+}
+
+
 @media screen and (min-width: 33.75em) {
 
   /* 540px */
@@ -1655,6 +1660,7 @@ header.header nav {
     width: 9px;
   }
 
+  
   .post .inner,
   .comments-wrapper #comments.inner {
     max-width: 960px;
@@ -1715,10 +1721,6 @@ header.header nav {
   header.header a.menu-trigger {
     display: none;
   }
-
-
-
-
 
   .main-wrap {
     width: 80vw;

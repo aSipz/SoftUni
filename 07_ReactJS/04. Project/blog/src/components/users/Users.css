@@ -31,6 +31,11 @@
     opacity: 0;
 }
 
+.table td.actions {
+    color: #f08c79;
+    font-size: 2em;
+}
+
 .table th:hover i {
     opacity: 1;
 }
@@ -62,8 +67,8 @@
     position: relative;
 }
 
-.table tbody tr:nth-child(1n) {
-    background: rgba(7, 6, 6, 0.3);
+.table tbody tr:hover {
+    background: rgba(7, 7, 7, 0.1);
 }
 
 .image {

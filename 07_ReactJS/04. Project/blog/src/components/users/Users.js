@@ -1,7 +1,36 @@
+import './Users.css';
+
+import { useEffect, useState } from 'react';
+
 import SearchBar from '../searchBar/SearchBar';
-import './Users.css'
+
+import * as userService from '../../service/user';
+import User from './User';
 
 export default function Users() {
+
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+
+        Promise.all([
+            userService.getUsers(),
+            userService.getAllAuthors()
+        ])
+            .then((result) => {
+
+                const [{ results: allUsers }, { results: allAuthors }] = result;
+
+                // console.log(allUsers.map(user => allAuthors.some(x => x.objectId === user.objectId) ? { ...user, role: 'author'} : user));
+                setUsers(allUsers.map(user => allAuthors.some(x => x.objectId === user.objectId) ? { ...user, role: 'author' } : user));
+                console.log(allUsers);
+                console.log(allAuthors);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
     return (
         <section className="main">
             <article className="post page">
@@ -40,19 +69,11 @@ export default function Users() {
                         </thead>
                         <tbody>
                             {/* Table row component */}
-                            <tr>
-                                <td>
-                                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png" alt="Peter's profile" className="image" />
-                                </td>
-                                <td>Peter</td>
-                                <td>Johnson</td>
-                                <td>peter@abv.bg</td>
-                                <td>0812345678</td>
-                                <td>June 28, 2022</td>
-                                <td className="actions">
-                                    <input type="checkbox" />
-                                </td>
-                            </tr>
+                            {users.map(user =>
+                                <tr key={user.objectId}>
+                                    <User user={user}/>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                     <div className="pagination position">
