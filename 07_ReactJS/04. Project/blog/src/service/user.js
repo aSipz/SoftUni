@@ -44,6 +44,22 @@ export function addUserRole(userId) {
     return put(endpoints.roleUser, data);
 }
 
+export function addAuthorRole(userId) {
+    const data = {
+        users: { __op: "AddRelation", objects: [createPointer('_User', userId)] }
+    };
+
+    return put(endpoints.roleAdmin, data);
+}
+
+export function removeAuthorRole(userId) {
+    const data = {
+        users: { __op: "RemoveRelation", objects: [createPointer('_User', userId)] }
+    };
+
+    return put(endpoints.roleAdmin, data);
+}
+
 export function getUserRole(userId) {
     return get(endpoints.getUserRole(userId));
 }

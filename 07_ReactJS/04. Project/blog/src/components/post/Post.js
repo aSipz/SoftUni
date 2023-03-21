@@ -80,7 +80,7 @@ export default function Post() {
                 .catch(error => {
                     console.log(error);
                     setConfirm(false);
-                })
+                });
 
             setLoading(loading => !loading);
         }
