@@ -11,6 +11,9 @@ import useOverlay from '../../hooks/useOverlay';
 import * as userService from '../../service/user';
 import { userAction } from '../../const/actions';
 import { onChangeHandler } from '../../utils/inputUtils';
+import UsersTableHead from './UsersTableHead';
+
+const searchFields = ['firstName', 'lastName', 'username', 'email'];
 
 export default function Users() {
 
@@ -19,6 +22,7 @@ export default function Users() {
     const [confirm, setConfirm] = useState(false);
     const [selectValue, setSelectValue] = useState({ limit: '5' });
     const [currentPage, setCurrentPage] = useState(1);
+
     const [action, setAction] = useOverlay();
 
     useEffect(() => {
@@ -67,6 +71,15 @@ export default function Users() {
         }
     }, [confirm, users, setAction]);
 
+    const onSearch = (searchObj) => {
+        const { user: search } = searchObj;
+        search
+            ? setUsers(state => state.map(u => Object.entries(u).some(([k, v]) => searchFields.includes(k) && v.includes(search.toString()))
+                ? { ...u, hidden: false }
+                : { ...u, hidden: true }))
+            : setUsers(state => state.map(u => ({ ...u, hidden: false })));
+    }
+
     const onChange = onChangeHandler.bind(null, setSelectValue);
 
     const onConfirm = () => {
@@ -98,21 +111,9 @@ export default function Users() {
         setCurrentPage(p);
     }
 
-    const sortHandler = (sortField) => {
-    
-        if (sortField === 'createdAt') {
-            setUsers(state => [...state].sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt)));
-            
-        } else {
-            setUsers(state => [...state].sort((a, b) => a[sortField].localeCompare(b[sortField])));
-            console.log(users);
-        }
-
-    }
-
     const hasChanges = users.some(u => u.changed);
 
-    const pages = Math.ceil(users.length / Number(selectValue.limit));
+    const pages = Math.ceil(users.filter(u => !u.hidden).length / Number(selectValue.limit));
 
     const indexCheck = (index) => index >= (currentPage - 1) * Number(selectValue.limit) && index < currentPage * Number(selectValue.limit);
 
@@ -127,40 +128,16 @@ export default function Users() {
                 <div className="inner">
                     <h1>Users</h1>
 
-                    <SearchBar searchFor={'user'} />
+                    <SearchBar searchFor={'user'} onSearch={onSearch} />
 
                     <table className="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Image
-                                </th>
-                                <th onClick={sortHandler.bind(null, 'firstName')}>
-                                    First name
-                                    <i className="fa-solid fa-arrow-down active" />
-                                </th>
-                                <th>
-                                    Last name
-                                    <i className="fa-solid fa-arrow-up" />
-                                </th>
-                                <th>
-                                    Username
-                                </th>
-                                <th>
-                                    Email
-                                </th>
-                                <th>
-                                    Joined
-                                </th>
-                                <th>
-                                    Author
-                                </th>
-                            </tr>
-                        </thead>
+
+                        <UsersTableHead sortUsers={setUsers} pageChangeHandler={pageChangeHandler} />
+
                         <tbody>
 
                             {users.map((user, index) =>
-                                indexCheck(index) &&
+                                indexCheck(index) && !user.hidden &&
                                 < tr key={user.objectId}>
                                     <User user={user} changeStatus={setUsers} />
                                 </tr>

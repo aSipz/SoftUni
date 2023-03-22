@@ -75,14 +75,14 @@ export default function Post() {
             postService.deletePost(postId)
                 .then(() => {
                     setAction(userAction.close);
+                    setLoading(loading => !loading);
                     navigate('/posts');
                 })
                 .catch(error => {
                     console.log(error);
                     setConfirm(false);
+                    setLoading(loading => !loading);
                 });
-
-            setLoading(loading => !loading);
         }
     }, [confirm, navigate, postId, setAction]);
 

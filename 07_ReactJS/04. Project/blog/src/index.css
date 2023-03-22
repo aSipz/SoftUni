@@ -664,13 +664,6 @@ h2.home-blog-title:after {
   text-align: left;
 }
 
-.main-archive .post {
-  margin-bottom: 2em;
-}
-
-.main-archive .post {
-  position: relative;
-}
 
 .post-content {
   display: inline-block;
@@ -1567,39 +1560,16 @@ header.header nav ul li:hover ul li a {
   min-height: calc(100vh - 180px);
 }
 
-
-@media screen and (min-width: 33.75em) {
-
-  /* 540px */
-  .related-posts .posts {
-    display: table;
-  }
-
-  .related-posts .related.post {
-    display: table-cell;
-    vertical-align: top;
-    width: 33.33333%;
-    padding: 0 0.5em;
-  }
-
-  footer.footer #footer-text {
-    float: left;
-    text-align: left;
-  }
-
-  footer.footer #btt {
-    float: right;
-    text-align: right;
-    padding-top: 0;
-  }
+header.header nav {
+  display: table-cell;
+  vertical-align: middle;
+  position: relative;
+  left: auto;
+  opacity: 1;
+  padding-right: 1em;
 }
 
 @media screen and (min-width: 40em) {
-
-  /* 640px */
-  .home-sticky {
-    padding-bottom: 0;
-  }
 
   .home-sticky .home-sticky-post {
     width: 33.33333%;
@@ -1610,34 +1580,6 @@ header.header nav ul li:hover ul li a {
     padding: 1.5em 3em;
   }
 
-  .archive-layout {
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding-top: 2em;
-  }
-
-  .archive-layout h4,
-  .archive-layout ul {
-    display: table-cell;
-    vertical-align: top;
-    text-align: left;
-  }
-
-  .archive-layout h4 {
-    width: 10em;
-  }
-
-  .page .post .inner .archive-layout ul {
-    padding-top: 0;
-  }
-}
-
-header.header nav {
-  display: table-cell;
-  vertical-align: middle;
-  position: relative;
-  left: auto;
-  opacity: 1;
-  padding-right: 1em;
 }
 
 @media screen and (min-width: 48em) {
@@ -1660,7 +1602,6 @@ header.header nav {
     width: 9px;
   }
 
-  
   .post .inner,
   .comments-wrapper #comments.inner {
     max-width: 960px;
@@ -1670,47 +1611,6 @@ header.header nav {
 
   .page article.post.has-post-thumbnail .inner {
     margin-top: 0;
-  }
-
-  .page.page-template-t-contact-php article.post .inner {
-    margin-top: 0;
-  }
-
-  .widget-count-2 .widget,
-  .widget-count-2 .mt-about-you-widget,
-  .widget-count-3 .widget,
-  .widget-count-3 .mt-about-you-widget,
-  .widget-count-4 .widget,
-  .widget-count-4 .mt-about-you-widget,
-  .widget-count-5 .widget,
-  .widget-count-5 .mt-about-you-widget,
-  .widget-count-6 .widget,
-  .widget-count-6 .mt-about-you-widget,
-  .widget-count-7 .widget,
-  .widget-count-7 .mt-about-you-widget,
-  .widget-count-8 .widget,
-  .widget-count-8 .mt-about-you-widget {
-    width: 49%;
-    display: inline-block;
-    padding: 1em;
-    vertical-align: top;
-  }
-
-  .widget-count-2 .widget .widget,
-  .widget-count-2 .mt-about-you-widget .widget,
-  .widget-count-3 .widget .widget,
-  .widget-count-3 .mt-about-you-widget .widget,
-  .widget-count-4 .widget .widget,
-  .widget-count-4 .mt-about-you-widget .widget,
-  .widget-count-5 .widget .widget,
-  .widget-count-5 .mt-about-you-widget .widget,
-  .widget-count-6 .widget .widget,
-  .widget-count-6 .mt-about-you-widget .widget,
-  .widget-count-7 .widget .widget,
-  .widget-count-7 .mt-about-you-widget .widget,
-  .widget-count-8 .widget .widget,
-  .widget-count-8 .mt-about-you-widget .widget {
-    width: 100%;
   }
 
   header.header {
@@ -1725,10 +1625,6 @@ header.header nav {
   .main-wrap {
     width: 80vw;
     margin: 0 auto;
-  }
-
-  .main-wrap .main-archive {
-    width: 100%;
   }
 
   .side {
