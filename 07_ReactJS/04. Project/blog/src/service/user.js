@@ -6,6 +6,7 @@ const endpoints = {
     'roleAdmin': '/classes/_Role/vvXf7kKdv5',
     'getUserRole' : (userId) => '/classes/_Role?where=' + encodeObject(filterRelation('users', '_User', userId)),
     'getAllAuthors' : '/classes/_User?where=' + encodeObject({"$relatedTo":{"object":{"__type":"Pointer","className":"_Role","objectId":"vvXf7kKdv5"},"key":"users"}}),
+    'validateSession' : '/parse/users/me'
 }
 
 export function register(userData) {
@@ -66,4 +67,8 @@ export function getUserRole(userId) {
 
 export function getAllAuthors() {
     return get(endpoints.getAllAuthors);
+}
+
+export function validateSession() {
+    return get(endpoints.validateSession);
 }
