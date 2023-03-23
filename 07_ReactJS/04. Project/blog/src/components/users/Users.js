@@ -78,6 +78,8 @@ export default function Users() {
                 ? { ...u, hidden: false }
                 : { ...u, hidden: true }))
             : setUsers(state => state.map(u => ({ ...u, hidden: false })));
+
+        setCurrentPage(1);
     }
 
     const onChange = onChangeHandler.bind(null, setSelectValue);
@@ -136,12 +138,14 @@ export default function Users() {
 
                         <tbody>
 
-                            {users.map((user, index) =>
-                                indexCheck(index) && !user.hidden &&
-                                < tr key={user.objectId}>
-                                    <User user={user} changeStatus={setUsers} />
-                                </tr>
-                            )}
+                            {users
+                                .filter(u => !u.hidden)
+                                .map((user, index) =>
+                                    indexCheck(index) &&
+                                    < tr key={user.objectId}>
+                                        <User user={user} changeStatus={setUsers} />
+                                    </tr>
+                                )}
 
                         </tbody>
                     </table>
