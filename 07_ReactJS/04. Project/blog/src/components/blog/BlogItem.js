@@ -1,6 +1,9 @@
+import { memo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
-export default function BlogItem({ post, onSearch }) {
+export default memo(BlogItem);
+
+function BlogItem({ post, onSearch }) {
     const [searchParams] = useSearchParams();
     
     const authorSearch = Object.assign({}, JSON.parse(searchParams.get('search')), { 'author': post.author.objectId });

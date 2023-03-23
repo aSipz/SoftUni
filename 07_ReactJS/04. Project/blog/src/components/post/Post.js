@@ -14,8 +14,8 @@ import * as postService from '../../service/post';
 import * as commentService from '../../service/comment';
 import * as likeService from '../../service/like';
 
-import { createPointer } from '../../utils/serviceUtils';
 import { userAction } from '../../const/actions';
+import Like from './Like';
 
 const postReducer = (state, action) => {
     switch (action.type) {
@@ -40,7 +40,6 @@ export default function Post() {
     const { postId } = useParams('postId');
     const navigate = useNavigate();
 
-    const [likeDisabled, setLikeDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
     const [confirm, setConfirm] = useState(false);
     const [action, setAction] = useOverlay();
@@ -72,7 +71,11 @@ export default function Post() {
     useEffect(() => {
         if (confirm) {
 
-            postService.deletePost(postId)
+            Promise.all([
+                postService.deletePost(postId),
+                post.likes.forEach(l => likeService.removeLike(l.objectId)),
+                post.comments.forEach(c => commentService.removeComment(c.objectId))
+            ])
                 .then(() => {
                     setAction(userAction.close);
                     setLoading(loading => !loading);
@@ -84,49 +87,7 @@ export default function Post() {
                     setLoading(loading => !loading);
                 });
         }
-    }, [confirm, navigate, postId, setAction]);
-
-    const onLike = async () => {
-
-        setLikeDisabled(state => !state);
-
-        try {
-            const result = await likeService.createLike(postId, user.objectId);
-
-            result.owner = createPointer('_User', user.objectId);
-
-            dispatch({
-                type: 'LIKE',
-                payload: result,
-            });
-        } catch (error) {
-            console.log(error);
-        }
-
-        setLikeDisabled(state => !state);
-
-    }
-
-    const onDislike = async () => {
-        const likeId = post.likes.find(x => x.owner.objectId === user?.objectId).objectId;
-
-        setLikeDisabled(state => !state);
-
-        try {
-            await likeService.removeLike(likeId);
-
-            dispatch({
-                type: 'DISLIKE',
-                payload: {},
-                likeId
-            });
-        } catch (error) {
-            console.log(error);
-        }
-
-        setLikeDisabled(state => !state);
-
-    }
+    }, [confirm, navigate, postId, setAction, post?.comments, post?.likes]);
 
     const onDelete = () => {
         setAction(userAction.confirm);
@@ -134,7 +95,6 @@ export default function Post() {
 
     const isUser = user && user.objectId !== post?.author.objectId;
     const isAuthor = user && user.objectId === post?.author.objectId;
-    const isLiked = post?.likes.some(x => x.owner.objectId === user?.objectId);
 
     const confirmAction = {
         action: () => {
@@ -177,23 +137,12 @@ export default function Post() {
                     </ul>
                     <div className="post-content">
 
-                        {post.text.split('\n').map((el, i) => <p key={i + el.split('').shift()}>{el}</p>)}
+                        {post.text.split('\n').map((el, i) => <p key={i + Math.random()*10000}>{el}</p>)}
 
                     </div>
 
                     {isUser &&
-                        <div className="user-controls">
-                            <button
-                                className="button small blue"
-                                onClick={isLiked ? onDislike : onLike}
-                                disabled={likeDisabled}
-                            >
-                                {isLiked
-                                    ? 'Liked'
-                                    : <>Like<i className="fa-solid fa-thumbs-up" /></>}
-                            </button>
-                            <a href="#respond" className="button small blue">Comment</a>
-                        </div>
+                        <Like dispatch={dispatch} post={post} />
                     }
 
                     {isAuthor &&

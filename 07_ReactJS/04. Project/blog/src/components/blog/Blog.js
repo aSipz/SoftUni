@@ -56,12 +56,18 @@ export default function Blog() {
         window.scrollTo(0, 0);
     }
 
+    useEffect(() => {
+        if (document.body.scrollHeight < document.documentElement.clientHeight && hasMore) {
+            dispatch({ type: 'SCROLL' });
+        }
+    }, [blogControl.posts, hasMore])
+
     const onScroll = useCallback(() => {
         const scrollTop = document.documentElement.scrollTop;
         const scrollHeight = document.documentElement.scrollHeight;
         const clientHeight = document.documentElement.clientHeight;
 
-        if (scrollTop + clientHeight >= scrollHeight && hasMore && !blogControl.loading) {
+        if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1 && hasMore && !blogControl.loading) {
 
             dispatch({ type: 'SCROLL' });
         }
@@ -97,7 +103,7 @@ export default function Blog() {
         return () => window.removeEventListener('scroll', onScroll);
     }, [onScroll]);
 
-    const onSearch = (searchData) => {
+    const onSearch = useCallback((searchData) => {
 
         const hasKeys = Object.keys(searchData).length > 0;
 
@@ -114,7 +120,7 @@ export default function Blog() {
         window.scrollTo({ top: 0, behavior: 'auto' });
 
         setSearchParams(hasKeys ? `?search=${encodeObject(searchData)}` : '');
-    };
+    },[searchParams, setSearchParams]);
 
     const hasAuthorSearch = !!JSON.parse(searchParams.get('search'))?.author;
 

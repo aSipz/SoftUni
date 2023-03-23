@@ -1,6 +1,6 @@
 import './Users.css';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import SearchBar from '../searchBar/SearchBar';
 import User from './User';
@@ -71,18 +71,21 @@ export default function Users() {
         }
     }, [confirm, users, setAction]);
 
-    const onSearch = (searchObj) => {
+    const onSearch = useCallback((searchObj) => {
         const { user: search } = searchObj;
         search
-            ? setUsers(state => state.map(u => Object.entries(u).some(([k, v]) => searchFields.includes(k) && v.includes(search.toString()))
+            ? setUsers(state => state.map(u => Object.entries(u).some(([k, v]) => searchFields.includes(k) && v.toLowerCase().includes(search.toLowerCase()))
                 ? { ...u, hidden: false }
                 : { ...u, hidden: true }))
             : setUsers(state => state.map(u => ({ ...u, hidden: false })));
 
         setCurrentPage(1);
-    }
+    }, [])
 
-    const onChange = onChangeHandler.bind(null, setSelectValue);
+    const onChange = (e) => {
+        onChangeHandler(setSelectValue, e);
+        setCurrentPage(1);
+    }
 
     const onConfirm = () => {
         setAction(userAction.confirm);

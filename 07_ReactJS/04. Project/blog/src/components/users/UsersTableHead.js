@@ -1,14 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function UsersTableHead({ sortUsers, pageChangeHandler }) {
-    const [sortField, setSortField] = useState({
+
+    const defaultSort = useMemo(() => ({
         firstName: '',
         lastName: '',
         username: '',
         email: '',
         createdAt: 'asc',
         sorted: 'createdAt'
-    });
+    }), []);
+
+    const [sortField, setSortField] = useState(defaultSort);
 
     useEffect(() => {
 

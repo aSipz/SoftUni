@@ -105,7 +105,7 @@ export default function EditProfile({ onClose }) {
                 </div>
 
                 <div className='wrapper'>
-                    <label htmlFor="username">Last name:</label>
+                    <label htmlFor="username">Username:</label>
                     <input
                         className={errors.username ? "error" : ""}
                         id='username'
