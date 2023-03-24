@@ -10,7 +10,7 @@ export default memo(SearchBar);
 function SearchBar({ onSearch, searchFor, addSearch }) {
     const [searchParams] = useSearchParams();
 
-    const defaultSearch = useMemo(()=> ({ [searchFor]: '' }), [searchFor]);
+    const defaultSearch = useMemo(() => ({ [searchFor]: '' }), [searchFor]);
 
     const [formValue, setFormValue] = useState(() =>
     (JSON.parse(searchParams.get('search'))?.[searchFor]
@@ -23,7 +23,7 @@ function SearchBar({ onSearch, searchFor, addSearch }) {
             : defaultSearch)
     }, [searchParams, searchFor, defaultSearch]);
 
-    const onChange = onChangeHandler.bind(null, setFormValue);
+    const onChange = onChangeHandler.bind(null, setFormValue, searchFor === 'user' ? onSearch : null);
 
     const onClear = () => {
 

@@ -118,7 +118,7 @@ export default function Users() {
 
     const hasChanges = users.some(u => u.changed);
 
-    const pages = Math.ceil(users.filter(u => !u.hidden).length / Number(selectValue.limit));
+    const pages = Math.max(Math.ceil(users.filter(u => !u.hidden).length / Number(selectValue.limit)), 1);
 
     const indexCheck = (index) => index >= (currentPage - 1) * Number(selectValue.limit) && index < currentPage * Number(selectValue.limit);
 

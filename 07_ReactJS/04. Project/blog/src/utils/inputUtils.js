@@ -1,5 +1,6 @@
-export function onChangeHandler(setter, e) {
-    setter(values => ({ ...values, [e.target.name]: e.target.value }))
+export function onChangeHandler(setter, onChangeSearch, e) {
+    setter(values => ({ ...values, [e.target.name]: e.target.value }));
+    onChangeSearch !== null && onChangeSearch({ [e.target.name]: e.target.value });
 }
 
 export function lengthValidation(setter, length, e) {
