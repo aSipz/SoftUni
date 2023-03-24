@@ -1,4 +1,4 @@
-import { createContext, useEffect } from 'react';
+import { createContext, useCallback, useEffect } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 import * as userService from '../service/user';
@@ -8,21 +8,21 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useLocalStorage('auth', null);
 
-    // useEffect(() => {
-    //     userService.validateSession()
-    //         .then()
-    //         .catch(error => {
-    //             console.log(error.message);
-    //             error.message === 'Invalid session token' && userLogout();
-    //         });
-    // }, [userLogout]);
+    const userLogout = useCallback(() => {
+        setUser(null);
+    }, [setUser]);
+
+    useEffect(() => {
+        user &&
+            userService.validateSession()
+                .then()
+                .catch(error => {
+                    error.message === 'Invalid session token' && userLogout();
+                });
+    }, [userLogout, user]);
 
     function userLogin(userData) {
         setUser(userData);
-    }
-
-    function userLogout() {
-        setUser(null);
     }
 
     return (

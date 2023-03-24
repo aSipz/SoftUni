@@ -24,47 +24,45 @@ const Users = lazy(() => import('./components/users/Users'));
 function App() {
 
     return (
-        <>
-            <AuthProvider>
+        <AuthProvider>
 
-                <Header />
+            <Header />
 
-                <main>
+            <main>
 
-                    <Suspense fallback={<Spinner />}>
-                        <Routes>
+                <Suspense fallback={<Spinner />}>
+                    <Routes>
 
-                            <Route path="/" element={<Home />} />
-                            <Route path="/posts" element={<Blog />} />
-                            <Route path="/authors" element={<AuthorsList />} />
-                            <Route path="/about" element={<></>} />
-                            <Route path="/posts/:postId/details" element={<Post />} />
+                        <Route path="/" element={<Home />} />
+                        <Route path="/posts" element={<Blog />} />
+                        <Route path="/authors" element={<AuthorsList />} />
+                        <Route path="/about" element={<></>} />
+                        <Route path="/posts/:postId/details" element={<Post />} />
 
-                            <Route element={<AuthorGuard />} >
+                        <Route element={<AuthorGuard />} >
 
-                                <Route path="/create" element={<CreatePost />} />
-                                <Route path="/posts/:postId/edit" element={<CreatePost />} />
-                                <Route path="/users" element={<Users />} />
+                            <Route path="/create" element={<CreatePost />} />
+                            <Route path="/posts/:postId/edit" element={<CreatePost />} />
+                            <Route path="/users" element={<Users />} />
 
-                            </Route>
+                        </Route>
 
-                            <Route element={<PrivateGuard />}>
-                                <Route path="/profile" element={<Profile />} />
-                            </Route>
+                        <Route element={<PrivateGuard />}>
+                            <Route path="/profile" element={<Profile />} />
+                        </Route>
 
-                            <Route path="*" element={<Navigate to="/" />} />
+                        <Route path="*" element={<Navigate to="/" />} />
 
-                        </Routes>
-                    </Suspense>
+                    </Routes>
+                </Suspense>
 
-                </main>
+            </main>
 
-                <ScrollBtn />
+            <ScrollBtn />
 
-                <Footer />
+            <Footer />
 
-            </AuthProvider>
-        </>
+        </AuthProvider>
     );
 }
 

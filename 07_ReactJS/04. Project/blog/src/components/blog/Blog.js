@@ -9,8 +9,6 @@ import Skeleton from '../skeleton/Skeleton';
 import * as postService from '../../service/post';
 import { addSearch, encodeObject } from '../../utils/serviceUtils';
 
-const loadingStep = 1;
-
 const blogControlReducer = (state, action) => {
     switch (action.type) {
         case 'SCROLL':
@@ -31,6 +29,10 @@ const blogControlReducer = (state, action) => {
             return state;
     }
 };
+
+const windowEvents = ['scroll', 'resize'];
+
+const loadingStep = 1;
 
 export default function Blog() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -60,14 +62,15 @@ export default function Blog() {
         if (document.body.scrollHeight < document.documentElement.clientHeight && hasMore) {
             dispatch({ type: 'SCROLL' });
         }
-    }, [blogControl.posts, hasMore])
+    }, [blogControl.posts, hasMore]);
 
     const onScroll = useCallback(() => {
         const scrollTop = document.documentElement.scrollTop;
         const scrollHeight = document.documentElement.scrollHeight;
         const clientHeight = document.documentElement.clientHeight;
 
-        if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1 && hasMore && !blogControl.loading) {
+        if ((Math.abs(scrollHeight - clientHeight - scrollTop) < 1 && hasMore && !blogControl.loading)
+            || (document.body.scrollHeight < clientHeight && hasMore)) {
 
             dispatch({ type: 'SCROLL' });
         }
@@ -99,8 +102,8 @@ export default function Blog() {
     }, [skip, searchFor, searchParams]);
 
     useEffect(() => {
-        window.addEventListener('scroll', onScroll);
-        return () => window.removeEventListener('scroll', onScroll);
+        windowEvents.forEach(e => window.addEventListener(e, onScroll));
+        return () => windowEvents.forEach(e => window.removeEventListener(e, onScroll));
     }, [onScroll]);
 
     const onSearch = useCallback((searchData) => {
@@ -120,7 +123,7 @@ export default function Blog() {
         window.scrollTo({ top: 0, behavior: 'auto' });
 
         setSearchParams(hasKeys ? `?search=${encodeObject(searchData)}` : '');
-    },[searchParams, setSearchParams]);
+    }, [searchParams, setSearchParams]);
 
     const hasAuthorSearch = !!JSON.parse(searchParams.get('search'))?.author;
 
