@@ -9,32 +9,14 @@ import CommentsList from './CommentsList';
 import AuthorPreview from './AuthorPreview';
 import Overlay from '../overlay/Overlay';
 import Spinner from '../spinner/Spinner';
+import Like from './Like';
 
 import * as postService from '../../service/post';
 import * as commentService from '../../service/comment';
 import * as likeService from '../../service/like';
 
 import { userAction } from '../../const/actions';
-import Like from './Like';
-
-const postReducer = (state, action) => {
-    switch (action.type) {
-        case 'LOAD_POST':
-            return action.payload;
-        case 'DISLIKE':
-            return { ...state, comments: [...state.comments], likes: state.likes.filter(x => x.objectId !== action.likeId) };
-        case 'LIKE':
-            return { ...state, comments: [...state.comments], likes: [...state.likes, action.payload] };
-        case 'ADD_COMMENT':
-            return { ...state, comments: [...state.comments, action.payload], likes: [...state.likes] };
-        case 'DELETE_COMMENT':
-            return { ...state, comments: state.comments.filter(x => x.objectId !== action.commentId), likes: [...state.likes] };
-        case 'UPDATE_COMMENT':
-            return { ...state, comments: state.comments.map(x => x.objectId !== action.payload.objectId ? x : action.payload), likes: [...state.likes] };
-        default:
-            return state;
-    }
-};
+import { postReducer } from '../../reducers/postReducer';
 
 export default function Post() {
     const { postId } = useParams('postId');

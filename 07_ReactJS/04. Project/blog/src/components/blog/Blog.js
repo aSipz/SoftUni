@@ -8,27 +8,7 @@ import Skeleton from '../skeleton/Skeleton';
 
 import * as postService from '../../service/post';
 import { addSearch, encodeObject } from '../../utils/serviceUtils';
-
-const blogControlReducer = (state, action) => {
-    switch (action.type) {
-        case 'SCROLL':
-            return { ...state, loading: true, skip: state.skip + loadingStep };
-        case 'ERROR':
-            return { ...state, loading: false, error: true };
-        case 'LOAD_POSTS':
-            return {
-                ...state,
-                ...action.payload,
-                posts: [...state.posts, ...action.payload.posts.filter(p => !state.posts.some(e => e.objectId === p.objectId))]
-            };
-        case 'INITIAL_LOAD':
-            return { ...state, ...action.payload }
-        case 'SEARCH':
-            return action.payload;
-        default:
-            return state;
-    }
-};
+import { blogControlReducer } from '../../reducers/blogReducer';
 
 const windowEvents = ['scroll', 'resize'];
 
@@ -60,9 +40,9 @@ export default function Blog() {
 
     useEffect(() => {
         if (document.body.scrollHeight < document.documentElement.clientHeight && hasMore) {
-            dispatch({ type: 'SCROLL' });
+            dispatch({ type: 'SCROLL', payload: { skip: blogControl.skip + loadingStep } });
         }
-    }, [blogControl.posts, hasMore]);
+    }, [blogControl.posts, blogControl.skip, hasMore]);
 
     const onScroll = useCallback(() => {
         const scrollTop = document.documentElement.scrollTop;
@@ -72,10 +52,10 @@ export default function Blog() {
         if ((Math.abs(scrollHeight - clientHeight - scrollTop) < 1 && hasMore && !blogControl.loading)
             || (document.body.scrollHeight < clientHeight && hasMore)) {
 
-            dispatch({ type: 'SCROLL' });
+            dispatch({ type: 'SCROLL', payload: { skip: blogControl.skip + loadingStep } });
         }
 
-    }, [blogControl.loading, hasMore]);
+    }, [blogControl.loading, blogControl.skip, hasMore]);
 
     useEffect(() => {
 
