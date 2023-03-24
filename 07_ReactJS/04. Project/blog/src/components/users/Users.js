@@ -83,7 +83,7 @@ export default function Users() {
     }, [])
 
     const onChange = (e) => {
-        onChangeHandler(setSelectValue, e);
+        onChangeHandler(setSelectValue, null, e);
         setCurrentPage(1);
     }
 
@@ -120,8 +120,6 @@ export default function Users() {
 
     const pages = Math.max(Math.ceil(users.filter(u => !u.hidden).length / Number(selectValue.limit)), 1);
 
-    const indexCheck = (index) => index >= (currentPage - 1) * Number(selectValue.limit) && index < currentPage * Number(selectValue.limit);
-
     return (
         <section className="main">
 
@@ -143,8 +141,8 @@ export default function Users() {
 
                             {users
                                 .filter(u => !u.hidden)
-                                .map((user, index) =>
-                                    indexCheck(index) &&
+                                .slice((currentPage - 1) * Number(selectValue.limit), currentPage * Number(selectValue.limit))
+                                .map(user =>
                                     < tr key={user.objectId}>
                                         <User user={user} changeStatus={setUsers} />
                                     </tr>
