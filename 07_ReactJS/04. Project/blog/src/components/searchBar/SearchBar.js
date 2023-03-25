@@ -69,16 +69,17 @@ function SearchBar({ onSearch, searchFor, addSearch }) {
                         onChange={onChange}
                     />
 
-
                     {formValue[searchFor] &&
                         <button type="button" className="close-btn" onClick={onClear}>
                             <i className="fa-solid fa-xmark" />
                         </button>
                     }
 
-                    <button type='submit' className="btn" title="Search text">
-                        <i className="fa-solid fa-magnifying-glass" />
-                    </button>
+                    {searchFor !== 'user' &&
+                        <button type='submit' className="btn" title="Search text">
+                            <i className="fa-solid fa-magnifying-glass" />
+                        </button>
+                    }
                 </div>
             </form>
 
