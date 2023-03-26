@@ -23,7 +23,7 @@ export default function Login({setAction}) {
 
     const { userLogin } = useContext(AuthContext);
 
-    const onChange = onChangeHandler.bind(null, setFormValues);
+    const onChange = onChangeHandler.bind(null, setFormValues, null);
 
     const lengthValidator = lengthValidation.bind(null, setErrors, 3);
     const emailValidator = emailValidation.bind(null, setErrors);

@@ -26,7 +26,7 @@ export default function EditProfile({ onClose }) {
     const [serverError, setServerError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const onChange = onChangeHandler.bind(null, setFormValues);
+    const onChange = onChangeHandler.bind(null, setFormValues, null);
 
     const lengthValidator = lengthValidation.bind(null, setErrors, 3);
     const emailValidator = emailValidation.bind(null, setErrors);

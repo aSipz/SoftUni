@@ -46,7 +46,7 @@ export default function CreatePost() {
         }
     }, [postId, navigate, user]);
 
-    const onChange = onChangeHandler.bind(null, setFormValues);
+    const onChange = onChangeHandler.bind(null, setFormValues, null);
 
     const titleValidator = lengthValidation.bind(null, setErrors, 5);
     const textValidator = lengthValidation.bind(null, setErrors, 20);

@@ -15,7 +15,7 @@ export default function CommentForm({ setLoading, dispatch, toggleCommentForm, c
     const [formValues, setFormValues] = useState(() => ({ text: comment ? comment.text : '' }));
     const [errors, setErrors] = useState({ text: false });
 
-    const onChange = onChangeHandler.bind(null, setFormValues);
+    const onChange = onChangeHandler.bind(null, setFormValues, null);
 
     const lengthValidator = lengthValidation.bind(null, setErrors, 10);
 
