@@ -76,6 +76,7 @@ export default function UsersTableHead({ sortUsers, pageChangeHandler }) {
             <tr>
                 <th>Image</th>
                 <th
+                    data-testid="firstName"
                     onClick={sortHandler.bind(null, 'firstName')}
                     onMouseEnter={onMouseEnterHandler.bind(null, 'firstName')}
                     onMouseLeave={onMouseLeaveHandler.bind(null, 'firstName')}
@@ -87,6 +88,7 @@ export default function UsersTableHead({ sortUsers, pageChangeHandler }) {
                     </div>
                 </th>
                 <th
+                    data-testid="lastName"
                     onClick={sortHandler.bind(null, 'lastName')}
                     onMouseEnter={onMouseEnterHandler.bind(null, 'lastName')}
                     onMouseLeave={onMouseLeaveHandler.bind(null, 'lastName')}
@@ -98,6 +100,7 @@ export default function UsersTableHead({ sortUsers, pageChangeHandler }) {
                     </div>
                 </th>
                 <th
+                    data-testid="username"
                     onClick={sortHandler.bind(null, 'username')}
                     onMouseEnter={onMouseEnterHandler.bind(null, 'username')}
                     onMouseLeave={onMouseLeaveHandler.bind(null, 'username')}
@@ -109,6 +112,7 @@ export default function UsersTableHead({ sortUsers, pageChangeHandler }) {
                     </div>
                 </th>
                 <th
+                    data-testid="email"
                     onClick={sortHandler.bind(null, 'email')}
                     onMouseEnter={onMouseEnterHandler.bind(null, 'email')}
                     onMouseLeave={onMouseLeaveHandler.bind(null, 'email')}
@@ -120,6 +124,7 @@ export default function UsersTableHead({ sortUsers, pageChangeHandler }) {
                     </div>
                 </th>
                 <th
+                    data-testid="createdAt"
                     onClick={sortHandler.bind(null, 'createdAt')}
                     onMouseEnter={onMouseEnterHandler.bind(null, 'createdAt')}
                     onMouseLeave={onMouseLeaveHandler.bind(null, 'createdAt')}

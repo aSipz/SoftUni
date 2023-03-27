@@ -40,9 +40,6 @@ export default function Header() {
                                 <li className="menu-item">
                                     <NavLink to="/authors">Authors</NavLink>
                                 </li>
-                                <li className="menu-item">
-                                    <NavLink to="/about">About</NavLink>
-                                </li>
 
                                 {isAuthor &&
                                     <li className="menu-item">

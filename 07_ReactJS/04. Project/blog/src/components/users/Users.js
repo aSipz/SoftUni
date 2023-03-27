@@ -33,6 +33,8 @@ export default function Users() {
         ])
             .then((result) => {
 
+                console.log(result);
+
                 const [{ results: allUsers }, { results: allAuthors }] = result;
 
                 setUsers(allUsers.map(user => allAuthors.some(x => x.objectId === user.objectId) ? { ...user, role: 'author' } : user));
@@ -143,9 +145,7 @@ export default function Users() {
                                 .filter(u => !u.hidden)
                                 .slice((currentPage - 1) * Number(selectValue.limit), currentPage * Number(selectValue.limit))
                                 .map(user =>
-                                    < tr key={user.objectId}>
-                                        <User user={user} changeStatus={setUsers} />
-                                    </tr>
+                                    <User key={user.objectId} user={user} changeStatus={setUsers} />
                                 )}
 
                         </tbody>

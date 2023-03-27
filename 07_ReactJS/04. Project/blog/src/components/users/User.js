@@ -5,7 +5,7 @@ export default function User({ user, changeStatus }) {
         changeStatus(state => state.map(u => u.objectId === user.objectId ? { ...user, changed: !user.changed } : u));
     }
     return (
-        <>
+        <tr>
             <td>
                 <img src={user.imageUrl} alt={user.firstName} className="image" />
             </td>
@@ -14,15 +14,15 @@ export default function User({ user, changeStatus }) {
             <td>{user.username}</td>
             <td>{user.email}</td>
             <td>{new Date(user.createdAt).toDateString()}</td>
-            <td className="actions" onClick={onClick}>
+            <td data-testid="actions" className="actions" onClick={onClick}>
                 {isAuthor
                     ? <>
-                        <i className="fa-regular fa-circle-check author" style={user.changed ? { opacity: 0 } : {}}></i>
-                        <i className="fa-regular fa-circle-xmark remove_author" style={user.changed ? { opacity: 1, color: "indianred" } : {}}></i>
+                        <i data-testid="author" className="fa-regular fa-circle-check author" style={user.changed ? { opacity: 0 } : {}}></i>
+                        <i data-testid="remove_author" className="fa-regular fa-circle-xmark remove_author" style={user.changed ? { opacity: 1, color: "indianred" } : {}}></i>
                     </>
-                    : <i className="fa-regular fa-circle-check add_author" style={user.changed ? { opacity: 1, color: "darkseagreen" } : {}}></i>
+                    : <i data-testid="add_author" className="fa-regular fa-circle-check add_author" style={user.changed ? { opacity: 1, color: "darkseagreen" } : {}}></i>
                 }
             </td>
-        </>
+        </tr>
     );
 }

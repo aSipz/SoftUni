@@ -38,7 +38,6 @@ function App() {
                             <Route path="/" element={<Home />} />
                             <Route path="/posts" element={<Blog />} />
                             <Route path="/authors" element={<AuthorsList />} />
-                            <Route path="/about" element={<></>} />
                             <Route path="/posts/:postId/details" element={<Post />} />
 
                             <Route element={<AuthorGuard />} >
