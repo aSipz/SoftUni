@@ -1,4 +1,6 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
 import Users from './Users';
@@ -145,7 +147,8 @@ beforeEach(async () => {
 
     fetchUsers = jest.spyOn(global, "fetch")
         .mockResolvedValueOnce(new Response(JSON.stringify(users)))
-        .mockResolvedValueOnce(new Response(JSON.stringify(authors)));
+        .mockResolvedValueOnce(new Response(JSON.stringify(authors)))
+        .mockResolvedValueOnce(new Response(JSON.stringify({})));
 
 });
 
@@ -221,4 +224,110 @@ it('Should correctly change table pages', async () => {
         expect(screen.getByText('starship')).toBeInTheDocument;
         expect(document.querySelector('p.pages')).toHaveTextContent('1 of 3');
     });
+});
+
+it('Should correctly sort users by first name ascending', async () => {
+    render(<MemoryRouter initialEntries={['/users']}>
+        <Users />
+    </MemoryRouter>
+    );
+
+    await screen.findByText('nai_nik@abv.bg');
+
+    fireEvent.mouseOver(screen.getByTestId('firstName'));
+    fireEvent.click(await screen.findByTestId('firstName'));
+
+    await waitFor(() => {
+        const firstRow = document.querySelectorAll('tr')[1];
+
+        expect(firstRow).toHaveTextContent('starship');
+    });
+
+    fireEvent.click(await screen.findByTestId('firstName'));
+
+    await waitFor(() => {
+        const firstRow = document.querySelectorAll('tr')[1];
+
+        expect(firstRow).toHaveTextContent('Todorov');
+    });
+
+});
+
+it('Should correctly change status of user to author', async () => {
+    render(<MemoryRouter initialEntries={['/users']}>
+        <Users />
+    </MemoryRouter>
+    );
+
+    await screen.findByText('Nikolov');
+
+    const row = document.querySelectorAll('tr')[3];
+    const roleCell = within(row).getByTestId('actions');
+
+    act(() => {
+        userEvent.click(roleCell);
+    });
+
+    expect(await screen.findByText('Confirm')).toBeInTheDocument();
+
+    await act(async () => {
+        userEvent.click(await screen.findByText('Confirm'));
+    });
+
+    expect(await screen.findByText('Change')).toBeInTheDocument();
+
+    await act(async () => {
+        userEvent.click(await screen.findByText('Change'));
+    });
+
+    const element = within(row).getByTestId('author');
+    expect(element).toBeInTheDocument();
+
+});
+
+it('Should correctly change users per page', async () => {
+    render(<MemoryRouter initialEntries={['/users']}>
+        <Users />
+    </MemoryRouter>
+    );
+
+    await screen.findByText('Gaco');
+
+    await act(async () => {
+        userEvent.selectOptions(
+            screen.getByRole('combobox'),
+            [...await screen.findAllByRole('option')][1],
+        );
+    });
+
+    const tableRows = document.querySelectorAll('tr');
+
+    expect(tableRows).toHaveLength(11);
+    expect(document.querySelector('p.pages')).toHaveTextContent('1 of 2');
+    expect(screen.getByText('pep@abv.bg')).toBeInTheDocument();
+
+
+});
+
+it('Should search for user', async () => {
+    render(<MemoryRouter initialEntries={['/users']}>
+        <Users />
+    </MemoryRouter>
+    );
+
+    await screen.findByText('Musk');
+    const input = await screen.findByPlaceholderText('Enter to search for user');
+
+    act(() => {
+        fireEvent.change(input, { target: { value: 'or' } });
+    });
+
+    const tableRows = document.querySelectorAll('tr');
+
+    expect(tableRows).toHaveLength(3);
+    expect(document.querySelector('p.pages')).toHaveTextContent('1 of 1');
+
+    const firstRow = document.querySelectorAll('tr')[1];
+    expect(firstRow).toHaveTextContent('lori@gmail.com');
+
 });
