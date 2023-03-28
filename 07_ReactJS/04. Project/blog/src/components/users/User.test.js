@@ -21,40 +21,40 @@ const user = {
     imageUrl: 'https://dynaimage.cdn.cnn.com/cnn/c_fill,g_auto,w_1200,h_675,ar_16:9/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F230203141341-07-elon-musk-tesla-shareholder-lawsuit-0124.jpg',
 }
 
-it('Should show first name', () => {
+it('Should show first name', async () => {
     render(<table><tbody><User user={user} /></tbody></table>);
 
-    expect(screen.getAllByText('Ivan')).toBeInTheDocument;
+    expect(await screen.findByText('Ivan')).toBeInTheDocument();
 });
 
-it('Should show last name', () => {
+it('Should show last name', async () => {
     render(<table><tbody><User user={user} /></tbody></table>);
 
-    expect(screen.getAllByText('Ivanov')).toBeInTheDocument;
+    expect(await screen.findByText('Ivanov')).toBeInTheDocument();
 });
 
-it('Should show username', () => {
+it('Should show username', async () => {
     render(<table><tbody><User user={user} /></tbody></table>);
 
-    expect(screen.getAllByText('ivo')).toBeInTheDocument;
+    expect(await screen.findByText('ivo')).toBeInTheDocument();
 });
 
-it('Should show join date', () => {
+it('Should show join date', async () => {
     render(<table><tbody><User user={user} /></tbody></table>);
 
-    expect(screen.getAllByText('Tue Mar 21 2023')).toBeInTheDocument;
+    expect(await screen.findByText('Tue Mar 21 2023')).toBeInTheDocument();
 });
 
-it('Should show email', () => {
+it('Should show email', async () => {
     render(<table><tbody><User user={user} /></tbody></table>);
 
-    expect(screen.getAllByText('ivan@abv.bg')).toBeInTheDocument;
+    expect(await screen.findByText('ivan@abv.bg')).toBeInTheDocument();
 });
 
-it('Should show image', () => {
+it('Should show image', async () => {
     render(<table><tbody><User user={user} /></tbody></table>);
 
-    const image = screen.getByAltText('Ivan');
+    const image = await screen.findByAltText('Ivan');
 
     expect(image).toHaveAttribute('src', 'https://dynaimage.cdn.cnn.com/cnn/c_fill,g_auto,w_1200,h_675,ar_16:9/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F230203141341-07-elon-musk-tesla-shareholder-lawsuit-0124.jpg');
 });
@@ -64,7 +64,7 @@ it('Should show correct author status for user', () => {
 
     const element = screen.getByTestId('add_author');
 
-    expect(element).toBeInTheDocument;
+    expect(element).toBeInTheDocument();
     expect(element).toHaveClass('add_author');
 });
 
@@ -74,8 +74,8 @@ it('Should show correct author status for author', () => {
     const visible = screen.getByTestId('author');
     const hidden = screen.getByTestId('remove_author');
 
-    expect(visible).toBeInTheDocument;
-    expect(hidden).toBeInTheDocument;
+    expect(visible).toBeInTheDocument();
+    expect(hidden).toBeInTheDocument();
     expect(visible).toHaveClass('author');
     expect(hidden).toHaveClass('remove_author');
 });

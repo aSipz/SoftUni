@@ -33,8 +33,6 @@ export default function Users() {
         ])
             .then((result) => {
 
-                console.log(result);
-
                 const [{ results: allUsers }, { results: allAuthors }] = result;
 
                 setUsers(allUsers.map(user => allAuthors.some(x => x.objectId === user.objectId) ? { ...user, role: 'author' } : user));
