@@ -16,7 +16,7 @@ export default function Confirm({ setAction, confirmAction }) {
             <div className="actions">
                 <div className="form-actions">
                     <button onClick={() => setAction(userAction.close)}>Cancel</button>
-                    <button className="button red" type="submit" onClick={onDelete}>{confirmAction.users ? 'Change' : 'Delete'}</button>
+                    <button className="button red" onClick={onDelete}>{confirmAction.users ? 'Change' : 'Delete'}</button>
                 </div>
             </div>
         </div>

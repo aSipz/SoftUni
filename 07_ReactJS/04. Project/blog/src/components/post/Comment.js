@@ -28,6 +28,7 @@ export default function Comment({ comment, dispatch, setLoading }) {
                         commentId: comment.objectId
                     });
                     setLoading(false);
+                    setConfirm(false);
                 })
                 .catch(error => {
                     console.log(error);

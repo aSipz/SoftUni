@@ -1341,8 +1341,8 @@ a.button.green,
   color: #b3ce7e;
 }
 
-blockquote .button.green,
-blockquote .button.red {
+blockquote>.button.green,
+blockquote>.button.red {
   padding: 0.5em 1em;
   float: right;
   margin-left: 10px;

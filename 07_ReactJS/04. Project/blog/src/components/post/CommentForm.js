@@ -26,6 +26,11 @@ export default function CommentForm({ setLoading, dispatch, toggleCommentForm, c
             return;
         }
 
+        if (comment?.text && formValues.text === comment.text) {
+            toggleCommentForm();
+            return;
+        }
+
         setLoading(loading => !loading);
 
         try {
@@ -34,27 +39,21 @@ export default function CommentForm({ setLoading, dispatch, toggleCommentForm, c
                 : await commentService.createComment(formValues, postId, user.objectId);
 
             if (comment) {
-                const action = {
+                dispatch({
                     type: 'UPDATE_COMMENT',
                     payload: { ...comment, ...result, text: formValues.text },
-                }
-
-                dispatch(action);
+                });
             } else {
                 result.owner = { ...createPointer('_User', user.objectId), firstName: user.firstName, lastName: user.lastName };
                 result.text = formValues.text;
                 result.updatedAt = result.createdAt;
 
-                const action = {
+                dispatch({
                     type: 'ADD_COMMENT',
                     payload: result,
-                }
-
-                dispatch(action);
+                });
             }
 
-            setFormValues({ text: '' });
-            setErrors({ text: false });
             toggleCommentForm();
         } catch (error) {
             console.log(error);
