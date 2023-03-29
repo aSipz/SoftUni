@@ -143,7 +143,7 @@ const authors = {
 
 let fetchUsers;
 
-beforeEach(async () => {
+beforeEach(() => {
 
     fetchUsers = jest.spyOn(global, "fetch")
         .mockResolvedValueOnce(new Response(JSON.stringify(users)))

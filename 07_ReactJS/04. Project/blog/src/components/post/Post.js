@@ -61,6 +61,7 @@ export default function Post() {
                 .then(() => {
                     setAction(userAction.close);
                     setLoading(loading => !loading);
+                    setConfirm(false);
                     navigate('/posts');
                 })
                 .catch(error => {
@@ -119,7 +120,7 @@ export default function Post() {
                     </ul>
                     <div className="post-content">
 
-                        {post.text.split('\n').map((el, i) => <p key={i + Math.random()*10000}>{el}</p>)}
+                        {post.text.split('\n').map((el, i) => <p key={i + Math.random() * 10000}>{el}</p>)}
 
                     </div>
 

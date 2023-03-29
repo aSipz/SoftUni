@@ -1,5 +1,5 @@
-import { findByRole, findByText, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import * as router from 'react-router'
 import { AuthContext } from '../../contexts/AuthContext';
 import Post from './Post';
 
@@ -251,16 +251,16 @@ const renderWithContext = (user, postId) => {
     return render(
 
         <AuthContext.Provider value={{ user }}>
-            <MemoryRouter initialEntries={[`/posts/${postId}/details`]}>
+            <router.MemoryRouter initialEntries={[`/posts/${postId}/details`]}>
                 <Post />
-            </MemoryRouter>
+            </router.MemoryRouter>
         </AuthContext.Provider>
     );
 }
 
 let fetchPost;
 
-beforeEach(async () => {
+beforeEach(() => {
 
     fetchPost = jest.spyOn(global, "fetch")
         .mockResolvedValueOnce(new Response(JSON.stringify(mockPost)))
@@ -399,5 +399,50 @@ it('Should correctly like and dislike', async () => {
         expect(fetchPost.mock.calls).toHaveLength(5);
     });
 
+});
 
+it('Should delete post, comments and likes on delete click', async () => {
+    jest.spyOn(global, "fetch")
+        .mockResolvedValueOnce(new Response(JSON.stringify({})))
+        .mockResolvedValueOnce(new Response(JSON.stringify({})))
+        .mockResolvedValueOnce(new Response(JSON.stringify({})))
+        .mockResolvedValueOnce(new Response(JSON.stringify({})))
+        .mockResolvedValueOnce(new Response(JSON.stringify({})))
+        .mockResolvedValueOnce(new Response(JSON.stringify({})))
+        .mockResolvedValueOnce(new Response(JSON.stringify({})));
+
+    jest.spyOn(router, 'useParams').mockReturnValue({ postId: [mockPost.objectId] });
+
+    const mockNavigate = jest.fn();
+    jest.spyOn(router, 'useNavigate').mockImplementation(() => mockNavigate);
+
+    renderWithContext(mockAuthor, mockPost.objectId);
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Delete' }));
+
+    await waitFor(() => {
+        const deleteBtn = within(document.querySelector('.confirm-container')).getByText('Delete');
+        fireEvent.click(deleteBtn);
+    });
+
+    await waitFor(() => {
+        expect(fetchPost.mock.calls).toHaveLength(10);
+        expect(mockNavigate).toHaveBeenCalledWith('/posts');
+    });
+});
+
+it('Should correctly navigate to edit page', async () => {
+
+    const mockNavigate = jest.fn();
+
+    jest.spyOn(router, 'useParams').mockReturnValue({ postId: [mockPost.objectId] });
+    jest.spyOn(router, 'useNavigate').mockImplementation(() => mockNavigate);
+
+    renderWithContext(mockAuthor, mockPost.objectId);
+
+    fireEvent.click(await screen.findByRole('link', { name: 'Edit' }));
+
+    await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith(`/posts/${mockPost.objectId}/edit`, { "preventScrollReset": undefined, "relative": undefined, "replace": false, "state": undefined });
+    });
 });
