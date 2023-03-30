@@ -249,7 +249,6 @@ const mockNewComment = {
 
 const renderWithContext = (user, postId) => {
     return render(
-
         <AuthContext.Provider value={{ user }}>
             <router.MemoryRouter initialEntries={[`/posts/${postId}/details`]}>
                 <Post />
@@ -307,11 +306,12 @@ it('Should correctly display post information with author user', async () => {
     expect(image).toHaveAttribute('src', mockPost.imageUrl);
 });
 
-it('Should correctly add new comment and edit it', async () => {
+it('Should correctly add new comment, edit and delete it', async () => {
     const editedComment = 'Edited comment text';
 
     jest.spyOn(global, "fetch")
         .mockResolvedValueOnce(new Response(JSON.stringify(mockNewComment)))
+        .mockResolvedValueOnce(new Response(JSON.stringify({})))
         .mockResolvedValueOnce(new Response(JSON.stringify({})));
 
     renderWithContext(mockUser, mockPost.objectId);
@@ -361,6 +361,22 @@ it('Should correctly add new comment and edit it', async () => {
         expect(screen.queryByRole('button', { name: 'Update' })).not.toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
+    });
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Delete' }));
+
+    await waitFor(() => {
+        const deleteBtn = within(document.querySelector('.confirm-container')).getByText('Delete');
+        fireEvent.click(deleteBtn);
+    });
+
+    await waitFor(() => {
+        expect(screen.getByText(`${mockComments.results.length} Comments`)).toBeInTheDocument();
+        expect(screen.queryByText(editedComment)).not.toBeInTheDocument();
+        expect(screen.queryByText(mockNewComment.text)).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Edit' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
+        expect(fetchPost.mock.calls).toHaveLength(6);
     });
 
 });

@@ -3,13 +3,18 @@ import { Link, NavLink } from 'react-router-dom';
 
 import Overlay from '../overlay/Overlay';
 import useOverlay from '../../hooks/useOverlay';
+import useInterval from '../../hooks/useInterval';
 import { AuthContext } from '../../contexts/AuthContext';
 import { userAction } from '../../const/actions';
 import { searchAuthor } from '../../utils/serviceUtils';
 
+import * as messageService from '../../service/message';
+
 export default function Header() {
     const [action, setAction] = useOverlay();
     const { user } = useContext(AuthContext);
+
+    useInterval(() => messageService.getUnread(user.objectId), 10000);
 
     const isAuthor = user?.roles?.includes('author');
 

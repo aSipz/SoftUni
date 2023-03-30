@@ -120,7 +120,7 @@ export default function Post() {
                     </ul>
                     <div className="post-content">
 
-                        {post.text.split('\n').map((el, i) => <p key={i + Math.random() * 10000}>{el}</p>)}
+                        {post.text.split('\n').map((el, i) => <p key={i + Math.random() * 10000}>{el.trim()}</p>)}
 
                     </div>
 

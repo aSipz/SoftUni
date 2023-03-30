@@ -2,5 +2,7 @@ export const userAction = {
     close: '',
     register: 'register',
     login: 'login',
-    confirm: 'confirm'
+    confirm: 'confirm',
+    sendMsg: 'sendMsg',
+    readMsg: 'readMsg'
 }

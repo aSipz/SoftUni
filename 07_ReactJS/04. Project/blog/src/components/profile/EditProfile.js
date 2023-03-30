@@ -14,7 +14,7 @@ export default function EditProfile({ onClose }) {
         username: user.username,
         email: user.email,
         imageUrl: user.imageUrl,
-        description: user.description,
+        description: user.description ? user.description : '',
     });
     const [errors, setErrors] = useState({
         firstName: false,
@@ -44,6 +44,19 @@ export default function EditProfile({ onClose }) {
             return;
         }
 
+        let hasChanges = false;
+
+        Object.entries(formValues).forEach(([k, v]) => {
+            if (user[k] !== v) {
+                hasChanges = true;
+            }
+        });
+
+        if (!hasChanges) {
+            onClose();
+            return;
+        }
+
         setLoading(loading => !loading);
 
         try {
@@ -57,7 +70,7 @@ export default function EditProfile({ onClose }) {
         setLoading(loading => !loading);
 
     }
-    
+
     return (
         <div className="edit-profile">
 

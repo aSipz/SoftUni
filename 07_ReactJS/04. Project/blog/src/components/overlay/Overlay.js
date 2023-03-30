@@ -2,9 +2,10 @@ import './Overlay.css';
 
 import Login from '../login/Login';
 import Register from '../register/Register';
+import Confirm from '../confirm/Confirm';
+import SendMessage from '../message/SendMessage';
 
 import { userAction } from '../../const/actions';
-import Confirm from '../confirm/Confirm';
 
 export default function Overlay({ action, setAction, confirmAction }) {
 
@@ -18,6 +19,8 @@ export default function Overlay({ action, setAction, confirmAction }) {
                 {action === userAction.login && < Login setAction={setAction} />}
 
                 {action === userAction.confirm && <Confirm setAction={setAction} confirmAction={confirmAction} />}
+
+                {action === userAction.sendMsg && <SendMessage setAction={setAction} confirmAction={confirmAction} />}
 
             </div>
         </div>

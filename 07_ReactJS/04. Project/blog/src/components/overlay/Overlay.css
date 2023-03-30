@@ -33,7 +33,7 @@
   z-index: 30;
 }
 
-.user-container{
+.user-container {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -46,7 +46,7 @@
   align-items: center;
 }
 
-.modal button{
+.modal button {
   color: #b3ce7e;
   border-color: #b3ce7e;
 }
@@ -108,7 +108,7 @@
   border-bottom-right-radius: 1.25rem;
 }
 
-.input-wrapper span.error  {
+.input-wrapper span.error {
   background-color: #f9e1e1;
   border: 2px solid #eec4c4;
 }
@@ -117,13 +117,23 @@
   color: #ee6a6a;
 }
 
-.input-wrapper input.error  {
+.input-wrapper input.error {
   background-color: #f9e1e1;
   border: 2px solid #eec4c4;
   border-left: none;
 }
 
-.input-wrapper input.error:hover {
+.wrapper {
+  padding-bottom: 24px;
+  position: relative;
+}
+
+.wrapper textarea.error {
+  background-color: #f9e1e1;
+}
+
+.input-wrapper input.error:hover,
+.wrapper textarea.error:hover {
   background-color: #f7cdcd;
 }
 
@@ -153,7 +163,8 @@
   align-self: center;
 }
 
-.form-group .form-error {
+.form-group .form-error,
+.wrapper .form-error {
   color: #f08c79;
   min-height: 20px;
   margin: 2px 5px;
@@ -180,7 +191,7 @@ form button.submit {
   align-self: flex-end;
 }
 
-.form-actions div{
+.form-actions div {
   display: flex;
   align-items: baseline;
 }
@@ -194,4 +205,9 @@ form button.submit {
   padding: 0;
   margin: 0 0 0 8px;
   text-transform: none;
+}
+
+.message {
+  width: 70%;
+  margin: 0 auto;
 }
