@@ -1,24 +1,21 @@
 import styles from './Author.module.css';
 
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { searchAuthor } from '../../utils/serviceUtils';
-import { userAction } from '../../const/actions';
+import { AuthContext } from '../../contexts/AuthContext';
 
-export default function Author({ author, setAction, setReceiver }) {
+export default function Author({ author, onSendMsgClick }) {
 
     const navigate = useNavigate();
+
+    const { user } = useContext(AuthContext);
 
     const search = '/posts?search=' + searchAuthor(author.objectId);
 
     const onAuthorClick = () => {
         navigate(search);
-    }
-
-    const onSendMsgClick = (e) => {
-        e.stopPropagation();
-        setAction(userAction.sendMsg);
-        setReceiver(state => ({ ...author }));
     }
 
     return (
@@ -35,11 +32,12 @@ export default function Author({ author, setAction, setReceiver }) {
                         <h3>{author.firstName} {author.lastName}</h3>
                         <p>About: <strong> {author.description}</strong></p>
                         <p>Author since: <strong> {new Date(author.createdAt).toDateString()}</strong></p>
-                        <button className={`button green ${styles['author_btn']}`} title={''} onClick={onSendMsgClick}>Send Message</button>
+                        {user?.objectId !== author.objectId &&
+                            <button className={`button green ${styles['author_btn']}`} title={''} onClick={onSendMsgClick.bind(null, author)}>Send Message</button>
+                        }
                     </div>
 
                 </div>
-
 
             </div>
         </article>

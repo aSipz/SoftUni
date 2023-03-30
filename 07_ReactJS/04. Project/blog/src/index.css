@@ -475,6 +475,21 @@ header.header .user p {
 
 .user i {
   font-size: 2.4em;
+  margin-left: 8px;
+}
+
+.user i.new_msg {
+  color: #b3ce7e;
+  position: relative;
+}
+
+.user i.new_msg p {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-55%, -70%);
+  font-size: 18px;
+  font-family: Lato, Arial, sans-serif;
 }
 
 .user-controls,

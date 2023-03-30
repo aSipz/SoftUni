@@ -3,18 +3,15 @@ import { Link, NavLink } from 'react-router-dom';
 
 import Overlay from '../overlay/Overlay';
 import useOverlay from '../../hooks/useOverlay';
-import useInterval from '../../hooks/useInterval';
 import { AuthContext } from '../../contexts/AuthContext';
 import { userAction } from '../../const/actions';
 import { searchAuthor } from '../../utils/serviceUtils';
-
-import * as messageService from '../../service/message';
+import { MessageContext } from '../../contexts/MessageContext';
 
 export default function Header() {
     const [action, setAction] = useOverlay();
     const { user } = useContext(AuthContext);
-
-    useInterval(() => messageService.getUnread(user.objectId), 10000);
+    const { unreadMsg } = useContext(MessageContext);
 
     const isAuthor = user?.roles?.includes('author');
 
@@ -71,6 +68,17 @@ export default function Header() {
                     <ul>
                         <li className="menu-item">
                             <p>Welcome, {user ? `${user.firstName} ${user.lastName}` : 'guest'}!</p>
+                        </li>
+
+                        <li className="menu-item">
+                            {user &&
+                                <Link to="/messages">
+                                    {unreadMsg === 0
+                                        ? <i className="fa-regular fa-message" />
+                                        : <i className="fa-regular fa-message fa-fade new_msg"><p>{unreadMsg}</p></i>
+                                    }
+                                </Link>
+                            }
                         </li>
 
                         <li className="menu-item">

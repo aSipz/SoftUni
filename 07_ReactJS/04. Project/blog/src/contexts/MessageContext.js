@@ -1,0 +1,46 @@
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import useInterval from '../hooks/useInterval';
+import { AuthContext } from './AuthContext';
+
+import * as messageService from '../service/message';
+
+export const MessageContext = createContext();
+
+export const MessageProvider = ({ children }) => {
+
+    const [unreadMsg, setUnreadMsg] = useState(0);
+    const [initialLoad, setInitialLoad] = useState(true);
+
+    const { user } = useContext(AuthContext);
+
+    const checkForMsg = useCallback(async () => {
+        try {
+            const result = await messageService.getUnread(user.objectId);
+            if (result.count !== unreadMsg) {
+                setUnreadMsg(result.count);
+            }
+            console.log(result);
+        } catch (error) {
+            console.log(error);
+        }
+    }, [user, unreadMsg]);
+
+    useEffect(() => {
+        if (user && initialLoad) {
+            checkForMsg();
+            setInitialLoad(false);
+        }
+    }, [user, checkForMsg, initialLoad]);
+
+    useInterval(checkForMsg, user ? 10000 : null);
+
+    const markReadMessages = useCallback(() => {
+        setUnreadMsg(state => state - 1);
+    }, []);
+
+    return (
+        <MessageContext.Provider value={{ unreadMsg, markReadMessages }}>
+            {children}
+        </MessageContext.Provider>
+    )
+}

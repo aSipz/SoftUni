@@ -20,6 +20,7 @@ export default function CreatePost() {
     const [errors, setErrors] = useState({});
     const [serverError, setServerError] = useState('');
     const [loading, setLoading] = useState(() => postId ? true : false);
+    const [post, setPost] = useState(null);
 
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -29,6 +30,7 @@ export default function CreatePost() {
             postService.getPostById(postId)
                 .then(result => {
                     const { title, text, imageUrl } = result;
+                    setPost(result);
                     setFormValues({ title, text, imageUrl });
                     setErrors({ title: false, text: false, imageUrl: false });
 
@@ -65,6 +67,19 @@ export default function CreatePost() {
                 Object.keys(formValues).forEach(e => Object.hasOwn(errors, e) ? Object.assign(newErrors, { [e]: errors[e] }) : Object.assign(newErrors, { [e]: true }));
                 return newErrors;
             });
+            return;
+        }
+
+        let hasChanges = false;
+
+        Object.entries(formValues).forEach(([k, v]) => {
+            if (post[k] !== v) {
+                hasChanges = true;
+            }
+        });
+
+        if (!hasChanges) {
+            navigate(`/posts/${postId}/details`);
             return;
         }
 

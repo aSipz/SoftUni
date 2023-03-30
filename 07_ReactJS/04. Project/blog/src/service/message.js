@@ -4,7 +4,7 @@ import { createPointer, encodeObject, filterRelation } from '../utils/serviceUti
 const endpoints = {
     'sendMessage': '/classes/Message',
     'getUnreadMessagesByReceiver': (receiverId) => {
-        return '/classes/Message?where=' + encodeObject({ ...filterRelation('receiver', '_User', receiverId), 'read': false }) + '&count=1'
+        return '/classes/Message?where=' + encodeObject({ ...filterRelation('receiver', '_User', receiverId), 'read': false }) + '&limit=0&count=1'
     },
     'getCommentsByPostId': (postId) => '/classes/Comment?where=' + encodeObject(filterRelation('post', 'Post', postId)) + '&include=owner',
     'createPost': '/classes/Post',

@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import Author from './Author';
 import Spinner from '../spinner/Spinner';
 import Overlay from '../overlay/Overlay';
-
 import useOverlay from '../../hooks/useOverlay';
+
+import { userAction } from '../../const/actions';
 import * as userService from '../../service/user';
 
 export default function AuthorsList() {
@@ -27,6 +28,12 @@ export default function AuthorsList() {
 
     }, []);
 
+    const onSendMsgClick = (author, e) => {
+        e.stopPropagation();
+        setAction(userAction.sendMsg);
+        setReceiver({ ...author });
+    }
+
     const confirmAction = {
         action: () => {
             setLoading(state => !state);
@@ -42,7 +49,7 @@ export default function AuthorsList() {
 
             {loading && <Spinner />}
 
-            {authors.map(a => <Author key={a.objectId} author={a} setAction={setAction} setReceiver={setReceiver} />)}
+            {authors.map(a => <Author key={a.objectId} author={a} onSendMsgClick={onSendMsgClick} />)}
 
         </section>
     );
