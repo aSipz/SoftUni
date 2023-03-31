@@ -22,6 +22,7 @@ export default function Users() {
     const [confirm, setConfirm] = useState(false);
     const [selectValue, setSelectValue] = useState({ limit: '5' });
     const [currentPage, setCurrentPage] = useState(1);
+    const [receiver, setReceiver] = useState(null);
 
     const [action, setAction] = useOverlay();
 
@@ -71,6 +72,12 @@ export default function Users() {
         }
     }, [confirm, users, setAction]);
 
+    useEffect(() => {
+        if (!action) {
+            setReceiver(null);
+        }
+    }, [action]);
+
     const onSearch = useCallback((searchObj) => {
         const { user: search } = searchObj;
         search
@@ -80,7 +87,7 @@ export default function Users() {
             : setUsers(state => state.map(u => ({ ...u, hidden: false })));
 
         setCurrentPage(1);
-    }, [])
+    }, []);
 
     const onChange = (e) => {
         onChangeHandler(setSelectValue, null, e);
@@ -98,14 +105,25 @@ export default function Users() {
         }));
     }
 
+    const onSendMsgClick = (receiver, e) => {
+        e.stopPropagation();
+        setAction(userAction.sendMsg);
+        setReceiver({ ...receiver });
+    }
+
     const confirmAction = {
         action: () => {
-            setConfirm(true);
-            setLoading(true);
+            receiver
+                ? setConfirm(state => state)
+                : setConfirm(true);
+            setLoading(state => !state);
         },
-        text: 'Are you sure you want to change the status of the selected users?',
-        users: true
-    }
+        text: receiver
+            ? `Message ${receiver.firstName} ${receiver.lastName}`
+            : 'Are you sure you want to change the status of the selected users?',
+        users: true,
+        receiver
+    };
 
     const pageChangeHandler = (newPage) => {
         const p = newPage < 1
@@ -143,7 +161,7 @@ export default function Users() {
                                 .filter(u => !u.hidden)
                                 .slice((currentPage - 1) * Number(selectValue.limit), currentPage * Number(selectValue.limit))
                                 .map(user =>
-                                    <User key={user.objectId} user={user} changeStatus={setUsers} />
+                                    <User key={user.objectId} account={user} changeStatus={setUsers} onSendMsgClick={onSendMsgClick} />
                                 )}
 
                         </tbody>

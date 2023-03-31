@@ -23,7 +23,7 @@ function SearchBar({ onSearch, searchFor, addSearch }) {
             : defaultSearch)
     }, [searchParams, searchFor, defaultSearch]);
 
-    const onChange = onChangeHandler.bind(null, setFormValue, searchFor === 'user' ? onSearch : null);
+    const onChange = onChangeHandler.bind(null, setFormValue, searchFor !== 'title' ? onSearch : null);
 
     const onClear = () => {
 
@@ -63,7 +63,7 @@ function SearchBar({ onSearch, searchFor, addSearch }) {
                 <div className="search-input-container">
                     <input
                         type="text"
-                        placeholder={`Enter to search for ${searchFor}`}
+                        placeholder={`Enter to search ${searchFor}`}
                         name={searchFor}
                         value={formValue[searchFor]}
                         onChange={onChange}
@@ -75,7 +75,7 @@ function SearchBar({ onSearch, searchFor, addSearch }) {
                         </button>
                     }
 
-                    {searchFor !== 'user' &&
+                    {searchFor === 'title' &&
                         <button type='submit' className="btn" title="Search text">
                             <i className="fa-solid fa-magnifying-glass" />
                         </button>

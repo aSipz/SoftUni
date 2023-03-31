@@ -18,6 +18,7 @@ import Spinner from './components/spinner/Spinner';
 import { AuthProvider } from './contexts/AuthContext';
 import ErrorBoundary from './components/error/ErrorBoundary';
 import { MessageProvider } from './contexts/MessageContext';
+import Messages from './components/message/Messages';
 
 const CreatePost = lazy(() => import('./components/createPost/CreatePost'));
 const Users = lazy(() => import('./components/users/Users'));
@@ -52,7 +53,12 @@ function App() {
 
                             <Route element={<PrivateGuard />}>
                                 <Route path="/profile" element={<Profile />} />
-                                <Route path="/messages" element={<MessageProvider><></></MessageProvider>} />
+                                <Route path="/messages"
+                                    element={
+                                        <MessageProvider>
+                                            <Messages />
+                                        </MessageProvider>
+                                    } />
                             </Route>
 
                             <Route path="*" element={<Navigate to="/" />} />

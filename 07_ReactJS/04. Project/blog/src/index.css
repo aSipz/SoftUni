@@ -1567,7 +1567,7 @@ header.header nav ul li:hover ul li a {
 }
 
 .main {
-  min-height: calc(100vh - 180px);
+  min-height: calc(100vh - 185px);
 }
 
 header.header nav {

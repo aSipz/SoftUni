@@ -1,0 +1,105 @@
+.message-wrapper {
+    display: flex;
+    margin-top: 2em;
+    gap: 6px;
+}
+
+.message-wrapper .tab {
+    flex-grow: 1;
+    font-family: 'Amatic SC', 'Heveltica Neue', Arial, sans-serif;
+    font-size: 1.8em;
+    font-weight: 700;
+    padding-left: 0.5em;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    transition: all 0.25s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.message-wrapper .tab:not(.tab.active):hover {
+    background-color: rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+
+.message-wrapper .tab.active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.message-container {
+    background-color: rgba(0, 0, 0, 0.1);
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5em 1em;
+}
+
+.message-container .message {
+    background-color: #fafbfc;
+    width: 100%;
+    border-radius: 8px;
+    height: 84px;
+    transition: all 0.25s ease-in-out;
+    cursor: pointer;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.message-container .title-container {
+    background-color: #f0f0f0;
+    font-size: 1.8em;
+    margin-top: 0;
+    line-height: 1;
+}
+
+.message-container .message-author {
+    padding: 0 0.3em;
+}
+
+.message-container .unread .title-container {
+    background-color: #cdddac;
+    color: #fafbfc;
+}
+
+.message-container .message-text {
+    padding: 0.2em 0.6em;
+    margin: 0;
+    font-size: 1.3em;
+    line-height: 1.2;
+    text-align: justify;
+}
+
+.message-container .message:hover{
+    box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.2);
+}
+
+.message-container .message:not(:last-child) {
+    margin-bottom: 0.8em;
+}
+
+.message-container .title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.message-container .title-container button {
+    margin: 0;
+    padding: 0.2em;
+    line-height: 1;
+    height: 24px;
+    width: 24px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    opacity: 0;
+    transition: all 0.25s ease-in-out;
+} 
+
+.message-container .message:hover .title-container button {
+    opacity: 1;
+}

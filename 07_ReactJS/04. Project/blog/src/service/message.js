@@ -4,7 +4,22 @@ import { createPointer, encodeObject, filterRelation } from '../utils/serviceUti
 const endpoints = {
     'sendMessage': '/classes/Message',
     'getUnreadMessagesByReceiver': (receiverId) => {
-        return '/classes/Message?where=' + encodeObject({ ...filterRelation('receiver', '_User', receiverId), 'read': false }) + '&limit=0&count=1'
+        return '/classes/Message?where=' + encodeObject({ ...filterRelation('receiver', '_User', receiverId), 'read': false, 'receiverDeleted': false }) + '&limit=0&count=1';
+    },
+    'getNewMessages': (receiverId) => {
+        const newMsg = encodeObject({ ...filterRelation('receiver', '_User', receiverId), 'read': false, 'receiverDeleted': false });
+        return '/classes/Message?where=' + newMsg + '&include=receiver,sender';
+    },
+    'getSendedMessages': (senderId) => {
+        return '/classes/Message?where=' + encodeObject({ ...filterRelation('sender', '_User', senderId), 'senderDeleted': false }) + `&include=receiver`;
+    },
+    'getReceivedMessages': (receiverId) => {
+        return '/classes/Message?where=' + encodeObject({ ...filterRelation('receiver', '_User', receiverId), 'receiverDeleted': false }) + `&include=sender`;
+    },
+    'getRelatedMessages': (userId) => {
+        const sent = { ...filterRelation('sender', '_User', userId), 'senderDeleted': false };
+        const received = { ...filterRelation('receiver', '_User', userId), 'read': false, 'receiverDeleted': false };
+        return '/classes/Message?where=' + encodeObject({ "$or": [sent, received] }) + '&include=receiver,sender';
     },
     'getCommentsByPostId': (postId) => '/classes/Comment?where=' + encodeObject(filterRelation('post', 'Post', postId)) + '&include=owner',
     'createPost': '/classes/Post',
@@ -24,6 +39,22 @@ export function sendMessage(msgData, senderId, receiverId) {
 
 export function getUnread(receiverId) {
     return get(endpoints.getUnreadMessagesByReceiver(receiverId));
+}
+
+export function getNewMessages(receiverId) {
+    return get(endpoints.getNewMessages(receiverId));
+}
+
+export function getSended(senderId) {
+    return get(endpoints.getSendedMessages(senderId));
+}
+
+export function getReceived(receiverId) {
+    return get(endpoints.getReceivedMessages(receiverId));
+}
+
+export function getRelated(userId) {
+    return get(endpoints.getRelatedMessages(userId));
 }
 // export function createPost(postData, authorId) {
 //     const author = createPointer('_User', authorId);

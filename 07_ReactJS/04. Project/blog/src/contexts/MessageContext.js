@@ -32,7 +32,13 @@ export const MessageProvider = ({ children }) => {
         }
     }, [user, checkForMsg, initialLoad]);
 
-    useInterval(checkForMsg, user ? 10000 : null);
+    useEffect(() => {
+        if (!user && !initialLoad) {
+            setInitialLoad(true);
+        }
+    }, [user, initialLoad]);
+
+    useInterval(checkForMsg, user ? 1000000 : null);
 
     const markReadMessages = useCallback(() => {
         setUnreadMsg(state => state - 1);

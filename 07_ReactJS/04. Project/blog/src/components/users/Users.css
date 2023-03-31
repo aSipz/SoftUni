@@ -105,7 +105,7 @@
     background: rgba(250, 250, 250, 0.1);
 }
 
-.table tbody tr:hover{
+.table tbody tr:hover {
     background: rgba(7, 7, 7, 0.1);
 }
 
@@ -118,6 +118,16 @@
     border: 1px solid rgb(147, 145, 145);
     display: flex;
     margin: auto;
+}
+
+.image.message {
+    cursor: pointer;
+}
+
+.image.message:hover {
+    transform: scale(1.1);
+    border-color: #f08c79;
+    transition: all 0.25s ease-in-out;
 }
 
 .pagination {

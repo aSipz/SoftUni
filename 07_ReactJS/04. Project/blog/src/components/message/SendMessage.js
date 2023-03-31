@@ -39,7 +39,6 @@ export default function SendMessage({ setAction, confirmAction }) {
         }
 
         action();
-
     }
 
     return (
