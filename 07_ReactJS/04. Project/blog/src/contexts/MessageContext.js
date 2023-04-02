@@ -41,7 +41,7 @@ export const MessageProvider = ({ children }) => {
     useInterval(checkForMsg, user ? 1000000 : null);
 
     const markReadMessages = useCallback(() => {
-        setUnreadMsg(state => state - 1);
+        setUnreadMsg(state => state - 1 > 0 ? state - 1 : 0);
     }, []);
 
     return (

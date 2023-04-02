@@ -27,8 +27,9 @@ export default function Messages() {
     const [messages, setMessages] = useState([]);
     const [confirm, setConfirm] = useState(false);
     const [confirmText, setConfirmText] = useState('');
-    const [userRead, setUserRead] = useState(false);
-    const [receiver, setReceiver] = useState();
+    const [userRead, setUserRead] = useState(true);
+    const [receiver, setReceiver] = useState(null);
+    const [currentMsg, setCurrentMsg] = useState(null);
 
     const [action, setAction] = useOverlay();
 
@@ -51,6 +52,7 @@ export default function Messages() {
     }, [user.objectId]);
 
     useEffect(() => {
+
         if (!userRead) {
             messageService.getNewMessages(user.objectId)
                 .then((result) => {
@@ -62,23 +64,45 @@ export default function Messages() {
                             .map(m => ({ ...m, 'inbox': true }))
                     ]);
 
-                    setLoading(false);
                 })
                 .catch((error) => {
                     console.log(error);
-                    setLoading(false);
                 });
         } else {
-            setUserRead(false);
+            setUserRead(true);
         }
 
     }, [user.objectId, unreadMsg, userRead]);
 
     useEffect(() => {
-        if (!action) {
-            setReceiver(null);
+        if (confirm) {
+            console.log('deleted');
+            const updateValue = messages.find(m => m.objectId === currentMsg).inbox
+                ? { receiverDeleted: true }
+                : { senderDeleted: true };
+            const unread = !messages.find(m => m.objectId === currentMsg).read;
+
+            messageService.updateMessage(currentMsg, updateValue)
+                .then(() => {
+
+                    setMessages(state => state.filter(m => m.objectId !== currentMsg));
+                    setAction(userAction.close);
+                    setLoading(false);
+                    setConfirm(false);
+                    setCurrentMsg(null);
+                    if (unread) {
+                        markReadMessages();
+                        setUserRead(true);
+                    }
+
+                })
+                .catch(error => {
+                    console.log(error);
+                    setConfirm(false);
+                    setLoading(false);
+                });
         }
-    }, [action]);
+    }, [confirm]);
 
     const onSearch = useCallback((searchObj) => {
         // const { user: search } = searchObj;
@@ -94,13 +118,14 @@ export default function Messages() {
     const onDelete = (messageId, e) => {
         e.stopPropagation();
         setAction(userAction.confirm);
-        setConfirmText('Are you sure you want to delete this message?')
+        setConfirmText('Are you sure you want to delete this message?');
+        setCurrentMsg(messageId);
     }
 
     const confirmAction = {
         action: () => {
             setLoading(state => !state);
-            receiver
+            receiver || currentMsg
                 ? setConfirm(state => !state)
                 : setConfirm(false);
         },

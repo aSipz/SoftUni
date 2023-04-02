@@ -11,7 +11,7 @@ export default function SendMessage({ setAction, confirmAction }) {
     const [errors, setErrors] = useState({});
 
     const { user } = useContext(AuthContext);
-    const { text, receiver, action } = confirmAction;
+    const { text, receiver, action, setReceiver } = confirmAction;
 
     const onChange = onChangeHandler.bind(null, setFormValues, null);
 
@@ -39,6 +39,7 @@ export default function SendMessage({ setAction, confirmAction }) {
         }
 
         action();
+        setReceiver(null);
     }
 
     return (

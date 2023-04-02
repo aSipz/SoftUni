@@ -72,12 +72,6 @@ export default function Users() {
         }
     }, [confirm, users, setAction]);
 
-    useEffect(() => {
-        if (!action) {
-            setReceiver(null);
-        }
-    }, [action]);
-
     const onSearch = useCallback((searchObj) => {
         const { user: search } = searchObj;
         search
@@ -122,7 +116,8 @@ export default function Users() {
             ? `Message ${receiver.firstName} ${receiver.lastName}`
             : 'Are you sure you want to change the status of the selected users?',
         users: true,
-        receiver
+        receiver,
+        setReceiver
     };
 
     const pageChangeHandler = (newPage) => {

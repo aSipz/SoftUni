@@ -8,7 +8,7 @@ const endpoints = {
     },
     'getNewMessages': (receiverId) => {
         const newMsg = encodeObject({ ...filterRelation('receiver', '_User', receiverId), 'read': false, 'receiverDeleted': false });
-        return '/classes/Message?where=' + newMsg + '&include=receiver,sender';
+        return '/classes/Message?where=' + newMsg + '&order=-createdAt&include=receiver,sender';
     },
     'getSendedMessages': (senderId) => {
         return '/classes/Message?where=' + encodeObject({ ...filterRelation('sender', '_User', senderId), 'senderDeleted': false }) + `&include=receiver`;
@@ -19,8 +19,9 @@ const endpoints = {
     'getRelatedMessages': (userId) => {
         const sent = { ...filterRelation('sender', '_User', userId), 'senderDeleted': false };
         const received = { ...filterRelation('receiver', '_User', userId), 'read': false, 'receiverDeleted': false };
-        return '/classes/Message?where=' + encodeObject({ "$or": [sent, received] }) + '&include=receiver,sender';
+        return '/classes/Message?where=' + encodeObject({ "$or": [sent, received] }) + '&order=-createdAt&include=receiver,sender';
     },
+    'message': (messageId) => '/classes/Message/' + messageId,
     'getCommentsByPostId': (postId) => '/classes/Comment?where=' + encodeObject(filterRelation('post', 'Post', postId)) + '&include=owner',
     'createPost': '/classes/Post',
     'recent': '/classes/Post?order=-createdAt&limit=6',
@@ -56,6 +57,11 @@ export function getReceived(receiverId) {
 export function getRelated(userId) {
     return get(endpoints.getRelatedMessages(userId));
 }
+
+export function updateMessage(messageId, messageData) {
+    return put(endpoints.message(messageId), messageData);
+}
+
 // export function createPost(postData, authorId) {
 //     const author = createPointer('_User', authorId);
 //     return post(endpoints.createPost, { ...postData, author });
