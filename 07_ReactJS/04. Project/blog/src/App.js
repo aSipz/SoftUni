@@ -14,15 +14,14 @@ import AuthorGuard from './components/guards/AuthorGuard';
 import ScrollBtn from './components/scroll/ScrollBtn';
 import AuthorsList from './components/authors/AuthorsList';
 import Spinner from './components/spinner/Spinner';
+import ErrorBoundary from './components/error/ErrorBoundary';
+import Messages from './components/message/Messages';
 
 import { AuthProvider } from './contexts/AuthContext';
-import ErrorBoundary from './components/error/ErrorBoundary';
 import { MessageProvider } from './contexts/MessageContext';
-import Messages from './components/message/Messages';
 
 const CreatePost = lazy(() => import('./components/createPost/CreatePost'));
 const Users = lazy(() => import('./components/users/Users'));
-
 
 function App() {
 
@@ -31,42 +30,38 @@ function App() {
             <AuthProvider>
                 <MessageProvider>
                     <Header />
+
+
+                    <main>
+
+                        <Suspense fallback={<Spinner />}>
+                            <Routes>
+
+                                <Route path="/" element={<Home />} />
+                                <Route path="/posts" element={<Blog />} />
+                                <Route path="/authors" element={<AuthorsList />} />
+                                <Route path="/posts/:postId/details" element={<Post />} />
+
+                                <Route element={<AuthorGuard />} >
+
+                                    <Route path="/create" element={<CreatePost />} />
+                                    <Route path="/posts/:postId/edit" element={<CreatePost />} />
+                                    <Route path="/users" element={<Users />} />
+
+                                </Route>
+
+                                <Route element={<PrivateGuard />}>
+                                    <Route path="/profile" element={<Profile />} />
+                                    <Route path="/messages" element={<Messages />} />
+                                </Route>
+
+                                <Route path="*" element={<Navigate to="/" />} />
+
+                            </Routes>
+                        </Suspense>
+
+                    </main>
                 </MessageProvider>
-
-                <main>
-
-                    <Suspense fallback={<Spinner />}>
-                        <Routes>
-
-                            <Route path="/" element={<Home />} />
-                            <Route path="/posts" element={<Blog />} />
-                            <Route path="/authors" element={<AuthorsList />} />
-                            <Route path="/posts/:postId/details" element={<Post />} />
-
-                            <Route element={<AuthorGuard />} >
-
-                                <Route path="/create" element={<CreatePost />} />
-                                <Route path="/posts/:postId/edit" element={<CreatePost />} />
-                                <Route path="/users" element={<Users />} />
-
-                            </Route>
-
-                            <Route element={<PrivateGuard />}>
-                                <Route path="/profile" element={<Profile />} />
-                                <Route path="/messages"
-                                    element={
-                                        <MessageProvider>
-                                            <Messages />
-                                        </MessageProvider>
-                                    } />
-                            </Route>
-
-                            <Route path="*" element={<Navigate to="/" />} />
-
-                        </Routes>
-                    </Suspense>
-
-                </main>
 
                 <ScrollBtn />
 

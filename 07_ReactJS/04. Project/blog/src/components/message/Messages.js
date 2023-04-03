@@ -1,21 +1,19 @@
 import './Messages.css';
 
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import SearchBar from '../searchBar/SearchBar';
 import Spinner from '../spinner/Spinner';
 import Overlay from '../overlay/Overlay';
 import useOverlay from '../../hooks/useOverlay';
 
-import * as userService from '../../service/user';
 import * as messageService from '../../service/message';
 import { userAction } from '../../const/actions';
-import { onChangeHandler } from '../../utils/inputUtils';
 import { AuthContext } from '../../contexts/AuthContext';
 import { MessageContext } from '../../contexts/MessageContext';
 import Message from './Message';
 
-const searchFields = ['firstName', 'lastName', 'username', 'email'];
+const searchFields = ['message', 'senderName', 'receiverName'];
 
 export default function Messages() {
 
@@ -27,22 +25,27 @@ export default function Messages() {
     const [messages, setMessages] = useState([]);
     const [confirm, setConfirm] = useState(false);
     const [confirmText, setConfirmText] = useState('');
-    const [userRead, setUserRead] = useState(true);
     const [receiver, setReceiver] = useState(null);
     const [currentMsg, setCurrentMsg] = useState(null);
+    const [waitForMsg, setWaitForMsg] = useState(false);
 
     const [action, setAction] = useOverlay();
 
-
     const { user } = useContext(AuthContext);
     const { unreadMsg, markReadMessages } = useContext(MessageContext);
+
+    const previousValues = useRef(unreadMsg);
 
     useEffect(() => {
         messageService.getRelated(user.objectId)
             .then((result) => {
 
-                setMessages(result.results.map(m => m.receiver.objectId === user.objectId ? { ...m, 'inbox': true } : m));
+                setMessages(result.results
+                    .map(m => m.receiver.objectId === user.objectId
+                        ? { ...m, 'inbox': true, 'senderName': m.sender.firstName + ' ' + m.sender.lastName, 'receiverName': m.receiver.firstName + ' ' + m.receiver.lastName }
+                        : { ...m, 'senderName': m.sender.firstName + ' ' + m.sender.lastName, 'receiverName': m.receiver.firstName + ' ' + m.receiver.lastName }));
 
+                // setWaitForMsg(true);
                 setLoading(false);
             })
             .catch((error) => {
@@ -53,34 +56,48 @@ export default function Messages() {
 
     useEffect(() => {
 
-        if (!userRead) {
+        if (waitForMsg
+            && previousValues.current.unreadMsg !== unreadMsg) {
+            console.log('new messages');
             messageService.getNewMessages(user.objectId)
                 .then((result) => {
 
                     setMessages(state => [
-                        ...state,
                         ...result.results
                             .filter(m => !state.some(e => e.objectId === m.objectId))
-                            .map(m => ({ ...m, 'inbox': true }))
+                            .map(m => ({
+                                ...m,
+                                'inbox': true,
+                                'senderName': m.sender.firstName + ' ' + m.sender.lastName,
+                                'receiverName': m.receiver.firstName + ' ' + m.receiver.lastName
+                            })),
+                        ...state
                     ]);
+
+                    previousValues.current = unreadMsg;
 
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-        } else {
-            setUserRead(true);
+        }
+        // }
+
+        if (!waitForMsg) {
+            console.log('set wait');
+            setWaitForMsg(true);
         }
 
-    }, [user.objectId, unreadMsg, userRead]);
+    }, [user.objectId, unreadMsg, waitForMsg]);
 
     useEffect(() => {
+
         if (confirm) {
-            console.log('deleted');
-            const updateValue = messages.find(m => m.objectId === currentMsg).inbox
+            const msg = messages.find(m => m.objectId === currentMsg);
+            const updateValue = msg.inbox
                 ? { receiverDeleted: true }
                 : { senderDeleted: true };
-            const unread = !messages.find(m => m.objectId === currentMsg).read;
+            const unread = msg.read === false && msg.receiver.objectId === user.objectId;
 
             messageService.updateMessage(currentMsg, updateValue)
                 .then(() => {
@@ -91,8 +108,9 @@ export default function Messages() {
                     setConfirm(false);
                     setCurrentMsg(null);
                     if (unread) {
+                        console.log('unread');
                         markReadMessages();
-                        setUserRead(true);
+                        // setWaitForMsg(false);
                     }
 
                 })
@@ -102,17 +120,16 @@ export default function Messages() {
                     setLoading(false);
                 });
         }
-    }, [confirm]);
+    }, [confirm, currentMsg, markReadMessages, messages, setAction, user.objectId]);
 
     const onSearch = useCallback((searchObj) => {
-        // const { user: search } = searchObj;
-        // search
-        //     ? setUsers(state => state.map(u => Object.entries(u).some(([k, v]) => searchFields.includes(k) && v.toLowerCase().includes(search.toLowerCase()))
-        //         ? { ...u, hidden: false }
-        //         : { ...u, hidden: true }))
-        //     : setUsers(state => state.map(u => ({ ...u, hidden: false })));
+        const { messages: search } = searchObj;
+        search
+            ? setMessages(state => state.map(m => Object.entries(m).some(([k, v]) => searchFields.includes(k) && v.toLowerCase().includes(search.toLowerCase()))
+                ? { ...m, hidden: false }
+                : { ...m, hidden: true }))
+            : setMessages(state => state.map(m => ({ ...m, hidden: false })));
 
-        // setCurrentPage(1);
     }, []);
 
     const onDelete = (messageId, e) => {
@@ -122,15 +139,42 @@ export default function Messages() {
         setCurrentMsg(messageId);
     }
 
+    const onView = (message) => {
+        setAction(userAction.readMsg);
+        if (message.inbox) {
+
+            try {
+                messageService.updateMessage(message.objectId, { read: true })
+            } catch (error) {
+                console.log(error);
+                return;
+            }
+
+            markReadMessages();
+            setConfirmText(`Message from: ${message.senderName}`);
+            setReceiver(message.sender);
+            message.read = true;
+            setMessages(state => [...state]);
+        } else {
+            setConfirmText(`Message to: ${message.receiverName}`);
+        }
+
+        setCurrentMsg(message);
+    }
+
     const confirmAction = {
         action: () => {
             setLoading(state => !state);
-            receiver || currentMsg
+            !receiver
                 ? setConfirm(state => !state)
                 : setConfirm(false);
         },
         text: confirmText,
-        receiver
+        receiver,
+        setReceiver,
+        currentMsg,
+        setConfirmText,
+        setMessages
     };
 
     const onTabClick = (tabName) => {
@@ -169,8 +213,8 @@ export default function Messages() {
                     </div>
                     <div className="message-container">
                         {messages
-                            .filter(m => activeTab.received ? m.inbox : !m.inbox)
-                            .map(m => <Message key={m.objectId} message={m} deleteHandler={onDelete} />)
+                            .filter(m => activeTab.received ? m.inbox && !m.hidden : !m.inbox && !m.hidden)
+                            .map(m => <Message key={m.objectId} message={m} deleteHandler={onDelete} viewHandler={onView} />)
                         }
                     </div>
 

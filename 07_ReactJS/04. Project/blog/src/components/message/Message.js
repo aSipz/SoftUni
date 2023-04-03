@@ -1,11 +1,9 @@
-export default function Message({ message, deleteHandler }) {
-    const sender = message.sender.firstName + ' ' + message.sender.lastName;
-    const receiver = message.receiver.firstName + ' ' + message.receiver.lastName;
+export default function Message({ message, deleteHandler, viewHandler }) {
     return (
-        <article className={`message ${message.read || !message.inbox ? '' : 'unread'}`} onClick={deleteHandler.bind(null, message.objectId)}>
+        <article className={`message ${message.read || !message.inbox ? '' : 'unread'}`} onClick={viewHandler.bind(null, message)}>
             <div className="title-container">
-                <h3 className="message-author">{message.inbox ? `From: ${sender}` : `To: ${receiver}`}</h3>
-                <button className="btn red close">
+                <h3 className="message-author">{message.inbox ? `From: ${message.senderName}` : `To: ${message.receiverName}`}</h3>
+                <button className="btn red close" onClick={deleteHandler.bind(null, message.objectId)}>
                     <i className="fa-solid fa-xmark"></i>
                 </button>
             </div>

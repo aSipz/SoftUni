@@ -11,7 +11,7 @@ export default function SendMessage({ setAction, confirmAction }) {
     const [errors, setErrors] = useState({});
 
     const { user } = useContext(AuthContext);
-    const { text, receiver, action, setReceiver } = confirmAction;
+    const { text, receiver, action, setReceiver, setMessages } = confirmAction;
 
     const onChange = onChangeHandler.bind(null, setFormValues, null);
 
@@ -32,7 +32,21 @@ export default function SendMessage({ setAction, confirmAction }) {
         action();
 
         try {
-            await messageService.sendMessage(formValues, user.objectId, receiver.objectId);
+            const result = await messageService.sendMessage(formValues, user.objectId, receiver.objectId);
+
+            if (setMessages) {
+                setMessages(state => [
+                    {
+                        ...result,
+                        sender: user,
+                        receiver,
+                        message: [formValues.message],
+                        'senderName': user.firstName + ' ' + user.lastName,
+                        'receiverName': receiver.firstName + ' ' + receiver.lastName
+                    },
+                    ...state
+                ]);
+            }
             setAction(userAction.default);
         } catch (error) {
             console.log(error);

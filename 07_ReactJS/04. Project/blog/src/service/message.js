@@ -18,7 +18,7 @@ const endpoints = {
     },
     'getRelatedMessages': (userId) => {
         const sent = { ...filterRelation('sender', '_User', userId), 'senderDeleted': false };
-        const received = { ...filterRelation('receiver', '_User', userId), 'read': false, 'receiverDeleted': false };
+        const received = { ...filterRelation('receiver', '_User', userId), 'receiverDeleted': false };
         return '/classes/Message?where=' + encodeObject({ "$or": [sent, received] }) + '&order=-createdAt&include=receiver,sender';
     },
     'message': (messageId) => '/classes/Message/' + messageId,

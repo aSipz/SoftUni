@@ -45,11 +45,11 @@
     background-color: #fafbfc;
     width: 100%;
     border-radius: 8px;
-    height: 84px;
+    height: 90px;
     transition: all 0.25s ease-in-out;
     cursor: pointer;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -75,7 +75,7 @@
     padding: 0.2em 0.6em;
     margin: 0;
     font-size: 1.3em;
-    line-height: 1.2;
+    line-height: 1.3;
     text-align: justify;
 }
 
@@ -110,4 +110,16 @@
 
 .message-container .message:hover .title-container button {
     opacity: 1;
+}
+
+.user-container .message::-webkit-scrollbar {
+    display: none;
+}
+
+.user-container .message {
+    max-height: calc(70vh - 200px);
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    text-align: justify;
 }
