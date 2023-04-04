@@ -6,12 +6,13 @@ import SearchBar from '../searchBar/SearchBar';
 import Spinner from '../spinner/Spinner';
 import Overlay from '../overlay/Overlay';
 import useOverlay from '../../hooks/useOverlay';
+import Message from './Message';
+import Error from '../error/Error';
 
-import * as messageService from '../../service/message';
-import { userAction } from '../../const/actions';
 import { AuthContext } from '../../contexts/AuthContext';
 import { MessageContext } from '../../contexts/MessageContext';
-import Message from './Message';
+import { userAction } from '../../const/actions';
+import * as messageService from '../../service/message';
 
 const searchFields = ['message', 'senderName', 'receiverName'];
 
@@ -27,25 +28,29 @@ export default function Messages() {
     const [confirmText, setConfirmText] = useState('');
     const [receiver, setReceiver] = useState(null);
     const [currentMsg, setCurrentMsg] = useState(null);
-    const [waitForMsg, setWaitForMsg] = useState(false);
 
     const [action, setAction] = useOverlay();
 
     const { user } = useContext(AuthContext);
     const { unreadMsg, markReadMessages } = useContext(MessageContext);
 
-    const previousValues = useRef(unreadMsg);
+    const previousValue = useRef(unreadMsg);
 
     useEffect(() => {
         messageService.getRelated(user.objectId)
             .then((result) => {
 
                 setMessages(result.results
-                    .map(m => m.receiver.objectId === user.objectId
-                        ? { ...m, 'inbox': true, 'senderName': m.sender.firstName + ' ' + m.sender.lastName, 'receiverName': m.receiver.firstName + ' ' + m.receiver.lastName }
-                        : { ...m, 'senderName': m.sender.firstName + ' ' + m.sender.lastName, 'receiverName': m.receiver.firstName + ' ' + m.receiver.lastName }));
+                    .map(m => {
+                        const userInfo = {
+                            'senderName': m.sender.firstName + ' ' + m.sender.lastName,
+                            'receiverName': m.receiver.firstName + ' ' + m.receiver.lastName
+                        };
+                        return m.receiver.objectId === user.objectId
+                            ? { ...m, 'inbox': true, ...userInfo }
+                            : { ...m, ...userInfo }
+                    }));
 
-                // setWaitForMsg(true);
                 setLoading(false);
             })
             .catch((error) => {
@@ -56,9 +61,7 @@ export default function Messages() {
 
     useEffect(() => {
 
-        if (waitForMsg
-            && previousValues.current.unreadMsg !== unreadMsg) {
-            console.log('new messages');
+        if (previousValue.current !== unreadMsg) {
             messageService.getNewMessages(user.objectId)
                 .then((result) => {
 
@@ -74,21 +77,15 @@ export default function Messages() {
                         ...state
                     ]);
 
-                    previousValues.current = unreadMsg;
+                    previousValue.current = unreadMsg;
 
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         }
-        // }
 
-        if (!waitForMsg) {
-            console.log('set wait');
-            setWaitForMsg(true);
-        }
-
-    }, [user.objectId, unreadMsg, waitForMsg]);
+    }, [user.objectId, unreadMsg]);
 
     useEffect(() => {
 
@@ -107,10 +104,10 @@ export default function Messages() {
                     setLoading(false);
                     setConfirm(false);
                     setCurrentMsg(null);
+
                     if (unread) {
-                        console.log('unread');
                         markReadMessages();
-                        // setWaitForMsg(false);
+                        previousValue.current = unreadMsg - 1;
                     }
 
                 })
@@ -120,14 +117,16 @@ export default function Messages() {
                     setLoading(false);
                 });
         }
-    }, [confirm, currentMsg, markReadMessages, messages, setAction, user.objectId]);
+    }, [confirm, currentMsg, markReadMessages, messages, setAction, user.objectId, unreadMsg]);
 
     const onSearch = useCallback((searchObj) => {
         const { messages: search } = searchObj;
         search
-            ? setMessages(state => state.map(m => Object.entries(m).some(([k, v]) => searchFields.includes(k) && v.toLowerCase().includes(search.toLowerCase()))
-                ? { ...m, hidden: false }
-                : { ...m, hidden: true }))
+            ? setMessages(state => state
+                .map(m => Object.entries(m)
+                    .some(([k, v]) => searchFields.includes(k) && v.toLowerCase().includes(search.toLowerCase()))
+                    ? { ...m, hidden: false }
+                    : { ...m, hidden: true }))
             : setMessages(state => state.map(m => ({ ...m, hidden: false })));
 
     }, []);
@@ -141,25 +140,37 @@ export default function Messages() {
 
     const onView = (message) => {
         setAction(userAction.readMsg);
+
         if (message.inbox) {
 
-            try {
-                messageService.updateMessage(message.objectId, { read: true })
-            } catch (error) {
-                console.log(error);
-                return;
+            if (!message.read) {
+                try {
+                    messageService.updateMessage(message.objectId, { read: true })
+                } catch (error) {
+                    console.log(error);
+                    return;
+                }
+                markReadMessages();
+                previousValue.current = unreadMsg - 1;
+                message.read = true;
+                setMessages(state => [...state]);
             }
 
-            markReadMessages();
             setConfirmText(`Message from: ${message.senderName}`);
             setReceiver(message.sender);
-            message.read = true;
-            setMessages(state => [...state]);
+
         } else {
             setConfirmText(`Message to: ${message.receiverName}`);
         }
 
         setCurrentMsg(message);
+    }
+
+    const onTabClick = (tabName) => {
+        if (activeTab[tabName]) {
+            return;
+        }
+        setActiveTab(state => ({ 'received': !state.received, 'sent': !state.sent }));
     }
 
     const confirmAction = {
@@ -177,12 +188,8 @@ export default function Messages() {
         setMessages
     };
 
-    const onTabClick = (tabName) => {
-        if (activeTab[tabName]) {
-            return;
-        }
-        setActiveTab(state => ({ 'received': !state.received, 'sent': !state.sent }));
-    }
+    const messagesToShow = messages
+        .filter(m => activeTab.received ? m.inbox && !m.hidden : !m.inbox && !m.hidden);
 
     return (
         <section className="main">
@@ -212,11 +219,12 @@ export default function Messages() {
                         </div>
                     </div>
                     <div className="message-container">
-                        {messages
-                            .filter(m => activeTab.received ? m.inbox && !m.hidden : !m.inbox && !m.hidden)
-                            .map(m => <Message key={m.objectId} message={m} deleteHandler={onDelete} viewHandler={onView} />)
+                        {messagesToShow.length > 0
+                            ? messagesToShow.map(m => <Message key={m.objectId} message={m} deleteHandler={onDelete} viewHandler={onView} />)
+                            : !loading && <Error error={'No messages!'} />
                         }
                     </div>
+                    <div className="overflow_boundary"></div>
 
                 </div>
             </article>

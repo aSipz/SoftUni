@@ -10,6 +10,7 @@ export default function User({ account, changeStatus, onSendMsgClick }) {
     const onClick = () => {
         changeStatus(state => state.map(u => u.objectId === account.objectId ? { ...account, changed: !account.changed } : u));
     }
+    
     return (
         <tr>
             {user.objectId === account.objectId

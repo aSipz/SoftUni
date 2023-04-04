@@ -4,6 +4,7 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
 import Users from './Users';
+import { AuthContext } from '../../contexts/AuthContext';
 
 const users = {
     results: [
@@ -141,6 +142,25 @@ const authors = {
     ]
 };
 
+const author = {
+    firstName: 'Ivan',
+    lastName: 'Ivanov',
+    username: 'ivo',
+    email: 'ivan@abv.bg',
+    createdAt: '2023-03-21T11:55:00.424Z',
+    imageUrl: 'https://dynaimage.cdn.cnn.com/cnn/c_fill,g_auto,w_1200,h_675,ar_16:9/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F230203141341-07-elon-musk-tesla-shareholder-lawsuit-0124.jpg',
+    role: 'author'
+};
+
+const componentWithContext = () => {
+    render(<MemoryRouter initialEntries={['/users']}>
+        <AuthContext.Provider value={{ user: author }}>
+            <Users />
+        </AuthContext.Provider >
+    </MemoryRouter>
+    );
+}
+
 let fetchUsers;
 
 beforeEach(() => {
@@ -153,10 +173,7 @@ beforeEach(() => {
 });
 
 it('Should correctly display first five results', async () => {
-    render(<MemoryRouter initialEntries={['/users']}>
-        <Users />
-    </MemoryRouter>
-    );
+    componentWithContext();
 
     expect(fetchUsers).toHaveBeenCalledTimes(2);
     expect(await screen.findByText('Ivan')).toBeInTheDocument;
@@ -169,10 +186,7 @@ it('Should correctly display first five results', async () => {
 });
 
 it('Should show control buttons on user change status', async () => {
-    render(<MemoryRouter initialEntries={['/users']}>
-        <Users />
-    </MemoryRouter>
-    );
+    componentWithContext();
 
     fireEvent.click([...await screen.findAllByTestId('actions')][0]);
 
@@ -182,10 +196,7 @@ it('Should show control buttons on user change status', async () => {
 });
 
 it('Should hide control buttons on cancel click', async () => {
-    render(<MemoryRouter initialEntries={['/users']}>
-        <Users />
-    </MemoryRouter>
-    );
+    componentWithContext();
 
     fireEvent.click([...await screen.findAllByTestId('actions')][0]);
     fireEvent.click(await screen.findByText('Cancel'));
@@ -197,10 +208,7 @@ it('Should hide control buttons on cancel click', async () => {
 });
 
 it('Should correctly change table pages', async () => {
-    render(<MemoryRouter initialEntries={['/users']}>
-        <Users />
-    </MemoryRouter>
-    );
+    componentWithContext();
 
     await screen.findByText('Ivan');
 
@@ -227,10 +235,7 @@ it('Should correctly change table pages', async () => {
 });
 
 it('Should correctly sort users by first name ascending', async () => {
-    render(<MemoryRouter initialEntries={['/users']}>
-        <Users />
-    </MemoryRouter>
-    );
+    componentWithContext();
 
     await screen.findByText('nai_nik@abv.bg');
 
@@ -254,10 +259,7 @@ it('Should correctly sort users by first name ascending', async () => {
 });
 
 it('Should correctly change status of user to author', async () => {
-    render(<MemoryRouter initialEntries={['/users']}>
-        <Users />
-    </MemoryRouter>
-    );
+    componentWithContext();
 
     await screen.findByText('Nikolov');
 
@@ -286,10 +288,7 @@ it('Should correctly change status of user to author', async () => {
 });
 
 it('Should correctly change users per page', async () => {
-    render(<MemoryRouter initialEntries={['/users']}>
-        <Users />
-    </MemoryRouter>
-    );
+    componentWithContext();
 
     await screen.findByText('Gaco');
 
@@ -310,13 +309,10 @@ it('Should correctly change users per page', async () => {
 });
 
 it('Should search for user', async () => {
-    render(<MemoryRouter initialEntries={['/users']}>
-        <Users />
-    </MemoryRouter>
-    );
+    componentWithContext();
 
     await screen.findByText('Musk');
-    const input = await screen.findByPlaceholderText('Enter to search for user');
+    const input = await screen.findByPlaceholderText('Enter to search user');
 
     act(() => {
         fireEvent.change(input, { target: { value: 'or' } });

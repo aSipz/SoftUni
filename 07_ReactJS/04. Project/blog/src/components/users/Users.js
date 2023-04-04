@@ -75,9 +75,11 @@ export default function Users() {
     const onSearch = useCallback((searchObj) => {
         const { user: search } = searchObj;
         search
-            ? setUsers(state => state.map(u => Object.entries(u).some(([k, v]) => searchFields.includes(k) && v.toLowerCase().includes(search.toLowerCase()))
-                ? { ...u, hidden: false }
-                : { ...u, hidden: true }))
+            ? setUsers(state => state
+                .map(u => Object.entries(u)
+                    .some(([k, v]) => searchFields.includes(k) && v.toLowerCase().includes(search.toLowerCase()))
+                    ? { ...u, hidden: false }
+                    : { ...u, hidden: true }))
             : setUsers(state => state.map(u => ({ ...u, hidden: false })));
 
         setCurrentPage(1);

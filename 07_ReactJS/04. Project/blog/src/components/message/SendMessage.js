@@ -23,7 +23,9 @@ export default function SendMessage({ setAction, confirmAction }) {
         if (Object.values(errors).length < Object.values(formValues).length || Object.values(errors).some(x => x)) {
             setErrors(errors => {
                 const newErrors = {};
-                Object.keys(formValues).forEach(e => Object.hasOwn(errors, e) ? Object.assign(newErrors, { [e]: errors[e] }) : Object.assign(newErrors, { [e]: true }));
+                Object.keys(formValues).forEach(e => Object.hasOwn(errors, e)
+                    ? Object.assign(newErrors, { [e]: errors[e] })
+                    : Object.assign(newErrors, { [e]: true }));
                 return newErrors;
             });
             return;
@@ -40,7 +42,7 @@ export default function SendMessage({ setAction, confirmAction }) {
                         ...result,
                         sender: user,
                         receiver,
-                        message: [formValues.message],
+                        message: formValues.message,
                         'senderName': user.firstName + ' ' + user.lastName,
                         'receiverName': receiver.firstName + ' ' + receiver.lastName
                     },

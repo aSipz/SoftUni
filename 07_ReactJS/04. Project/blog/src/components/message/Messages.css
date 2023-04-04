@@ -27,13 +27,18 @@
 
 .message-container {
     background-color: rgba(0, 0, 0, 0.1);
-    max-height: 56vh;
+    max-height: 52vh;
     display: flex;
     flex-direction: column;
-    padding: 1.5em 1em;
+    padding: 1.5em 1em 0em;
     overflow-y: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
+}
+
+.overflow_boundary {
+    background-color: rgba(0, 0, 0, 0.1);
+    height: 1.5em;
 }
 
 .message-container::-webkit-scrollbar {
