@@ -19,7 +19,6 @@ export const MessageProvider = ({ children }) => {
             if (result.count !== unreadMsg) {
                 setUnreadMsg(result.count);
             }
-            console.log(result);
         } catch (error) {
             console.log(error);
         }

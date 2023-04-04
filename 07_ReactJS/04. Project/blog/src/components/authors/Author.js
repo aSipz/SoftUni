@@ -32,7 +32,7 @@ export default function Author({ author, onSendMsgClick }) {
                         <h3>{author.firstName} {author.lastName}</h3>
                         <p>About: <strong> {author.description}</strong></p>
                         <p>Author since: <strong> {new Date(author.createdAt).toDateString()}</strong></p>
-                        {user?.objectId !== author.objectId &&
+                        {user && user.objectId !== author.objectId &&
                             <button className={`button green ${styles['author_btn']}`} title={''} onClick={onSendMsgClick.bind(null, author)}>Send Message</button>
                         }
                     </div>
