@@ -1,83 +1,57 @@
 # React Blog
 
-The app: [React Blog](https://react-blog-e33eb.web.app/)
-GitHub Resources: [React Blog](https://github.com/aSipz/SoftUni/tree/main/07_ReactJS/04.%20Project/blog)
+[The app](https://react-blog-e33eb.web.app/)
 
-<!-- # Getting Started with Create React App
+[GitHub Resources](https://github.com/aSipz/SoftUni/tree/main/07_ReactJS/04.%20Project/blog)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). -->
+[Screenshots](https://github.com/aSipz/SoftUni/tree/main/07_ReactJS/04.%20Project/screenshots)
 
 ## Overview
 
 This is an application for managing a free access blog. The app allows visitors to browse posts and authors. 
+
 A visitor can register, which allows him to comment and like posts and send and receive messages. A registered user can edit or delete his comments or dislike already liked post. All users can edit their info in the profile.
+
 Authors can create, edit or delete their posts at any time. An author has access to a list of all registered users and can change their status between regular users or authors. Also can send messages to any registered user.
 
 ![Home screen for visitor](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/01_home_guest.png)
 
-<!-- ## Available Scripts
+## Functionality
 
-In the project directory, you can run:
+In the application, you can:
 
-### `npm start`
+### Login
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+![Login](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/06_login.png)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Register
 
-### `npm test`
+![Register](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/07_register.png)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Browse posts
 
-### `npm run build`
+![Browse](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/02_blog_guest.png)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Registered users can comment and like posts.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+![Comment](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/10_post_user.png)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Send messages to the authors
 
-### `npm run eject`
+![Message author](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/20_send_message.png)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### View and edit your profile
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![View profile](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/11_profile_user.png)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+![Edit profile](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/12_edit_profile_user.png)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Create, edit and delete posts
 
-## Learn More
+![Create post](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/15_create_post_author.png)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![Edit post](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/17_edit_post_author.png)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Manage users
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify) -->
+![Manage users](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/18_users_author.png)
