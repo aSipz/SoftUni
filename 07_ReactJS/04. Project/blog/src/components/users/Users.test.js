@@ -168,6 +168,7 @@ beforeEach(() => {
     fetchUsers = jest.spyOn(global, "fetch")
         .mockResolvedValueOnce(new Response(JSON.stringify(users)))
         .mockResolvedValueOnce(new Response(JSON.stringify(authors)))
+        .mockResolvedValueOnce(new Response(JSON.stringify({})))
         .mockResolvedValueOnce(new Response(JSON.stringify({})));
 
 });

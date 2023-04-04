@@ -1,14 +1,16 @@
 import './Users.css';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 import SearchBar from '../searchBar/SearchBar';
 import User from './User';
 import Spinner from '../spinner/Spinner';
 import Overlay from '../overlay/Overlay';
 import useOverlay from '../../hooks/useOverlay';
+import { AuthContext } from '../../contexts/AuthContext';
 
 import * as userService from '../../service/user';
+import * as messageService from '../../service/message';
 import { userAction } from '../../const/actions';
 import { onChangeHandler } from '../../utils/inputUtils';
 import UsersTableHead from './UsersTableHead';
@@ -23,6 +25,8 @@ export default function Users() {
     const [selectValue, setSelectValue] = useState({ limit: '5' });
     const [currentPage, setCurrentPage] = useState(1);
     const [receiver, setReceiver] = useState(null);
+
+    const { user } = useContext(AuthContext);
 
     const [action, setAction] = useOverlay();
 
@@ -51,10 +55,18 @@ export default function Users() {
 
             const addAuthor = users.filter(u => u.changed && !u.role);
             const removeAuthor = users.filter(u => u.changed && u.role === 'author');
+            const addAuthorMsg = { message: 'You have become an author!\nPlease rejoin for changes to take effect.' };
+            const removeAuthorMsg = { message: 'You are no longer an author!\nPlease rejoin for changes to take effect.' };
 
             Promise.all([
-                addAuthor.forEach(u => userService.addAuthorRole(u.objectId)),
-                removeAuthor.forEach(u => userService.removeAuthorRole(u.objectId))
+                addAuthor.forEach(u => {
+                    userService.addAuthorRole(u.objectId);
+                    messageService.sendMessage(addAuthorMsg, user.objectId, u.objectId);
+                }),
+                removeAuthor.forEach(u => {
+                    userService.removeAuthorRole(u.objectId);
+                    messageService.sendMessage(removeAuthorMsg, user.objectId, u.objectId);
+                })
             ])
                 .then(() => {
                     setUsers(state => state.map(u => u.changed ? { ...u, changed: false, role: u.role === 'author' ? '' : 'author' } : u));
@@ -70,7 +82,7 @@ export default function Users() {
                 });
 
         }
-    }, [confirm, users, setAction]);
+    }, [confirm, users, setAction, user.objectId]);
 
     const onSearch = useCallback((searchObj) => {
         const { user: search } = searchObj;
@@ -91,6 +103,7 @@ export default function Users() {
     }
 
     const onConfirm = () => {
+        setReceiver(null);
         setAction(userAction.confirm);
     }
 
