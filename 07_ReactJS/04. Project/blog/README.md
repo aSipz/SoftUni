@@ -1,8 +1,21 @@
-# Getting Started with Create React App
+# React Blog
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The app: [React Blog](https://react-blog-e33eb.web.app/)
+GitHub Resources: [React Blog](https://github.com/aSipz/SoftUni/tree/main/07_ReactJS/04.%20Project/blog)
 
-## Available Scripts
+<!-- # Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). -->
+
+## Overview
+
+This is an application for managing a free access blog. The app allows visitors to browse posts and authors. 
+A visitor can register, which allows him to comment and like posts and send and receive messages. A registered user can edit or delete his comments or dislike already liked post. All users can edit their info in the profile.
+Authors can create, edit or delete their posts at any time. An author has access to a list of all registered users and can change their status between regular users or authors. Also can send messages to any registered user.
+
+![Home screen for visitor](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/01_home_guest.png)
+
+<!-- ## Available Scripts
 
 In the project directory, you can run:
 
@@ -67,4 +80,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 ### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify) -->
