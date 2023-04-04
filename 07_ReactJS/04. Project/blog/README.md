@@ -10,9 +10,9 @@
 
 This is an application for managing a free access blog. The app allows visitors to browse posts and authors. 
 
-A visitor can register, which allows him to comment and like posts and send and receive messages. A registered user can edit or delete his comments or dislike already liked post. All users can edit their info in the profile.
+A visitor can register, which allows him to comment and like posts, send and receive messages. A registered user can edit or delete his comments or dislike already liked post. All users can edit their profile info.
 
-Authors can create, edit or delete their posts at any time. An author has access to a list of all registered users and can change their status between regular users or authors. Also can send messages to any registered user.
+Authors can create, edit or delete their posts at any time. An author has access to a list of all registered users and can change any user status between regular user or author. Also can send messages to any registered user.
 
 ![Home screen for visitor](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/01_home_guest.png)
 
