@@ -1623,6 +1623,7 @@ header.header nav {
     max-width: 960px;
     margin: 0 auto;
     display: block;
+    padding-top: 16px;
   }
 
   .author-bio {
