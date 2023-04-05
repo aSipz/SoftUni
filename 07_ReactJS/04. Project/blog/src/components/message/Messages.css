@@ -128,3 +128,10 @@
     -ms-overflow-style: none;
     text-align: justify;
 }
+
+@media screen and (max-width: 480px) {
+    .message {
+        width: 90%;
+    }
+
+}

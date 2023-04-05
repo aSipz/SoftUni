@@ -210,3 +210,70 @@ form button.submit {
   width: 70%;
   margin: 0 auto;
 }
+
+@media screen and (max-width: 480px) {
+
+  .modal button.close {
+    display: none;
+  }
+
+  .modal .headers {
+    margin-bottom: 6px;
+  }
+
+  .form-actions {
+    margin-top: 16px;
+  }
+
+  .form-actions button {
+    margin-bottom: 0;
+  }
+
+  .modal {
+    width: 80vw;
+    max-height: 90vh;
+  }
+
+  .login .form-actions,
+  .register .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    margin-top: 28px;
+  }
+
+  .login .form-actions button,
+  .register .form-actions button {
+    align-self: stretch;
+    margin-bottom: 12px;
+  }
+
+  .login .form-actions div,
+  .register .form-actions div {
+    justify-content: space-between;
+    font-size: 1.2em;
+    align-items: center;
+  }
+
+  .login .form-actions div button,
+  .register .form-actions div button {
+    font-size: 1.4em;
+  }
+
+  .register .form-row {
+    flex-direction: column;
+    margin-top: 0;
+  }
+
+  .register .form-row:first-of-type {
+    margin-top: 8px;
+  }
+
+  .register .form-row .form-group {
+    width: 100%;
+    margin-bottom: 28px;
+  }
+
+  .register .form-group.long-line {
+    margin-top: 0;
+  }
+}

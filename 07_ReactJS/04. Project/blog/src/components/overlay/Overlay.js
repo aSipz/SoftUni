@@ -12,7 +12,7 @@ export default function Overlay({ action, setAction, confirmAction }) {
 
     const closeHandler = () => {
         setAction(userAction.close);
-        if (confirmAction.setReceiver) {
+        if (confirmAction?.setReceiver) {
             confirmAction.setReceiver(null);
         }
 

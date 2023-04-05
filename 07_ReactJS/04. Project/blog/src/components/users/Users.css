@@ -193,3 +193,120 @@
 .limits .limit:focus {
     outline: none;
 }
+
+@media screen and (max-width: 480px) {
+
+    .table,
+    .table thead,
+    .table tbody,
+    .table th,
+    .table td,
+    .table tr {
+        display: block;
+    }
+
+    .table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .table{
+        border-top: unset;
+    }
+
+    .table tbody tr td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        display: flex;
+        align-items: center;
+        font-size: 1.2em;
+        height: 36px;
+        
+    }
+
+
+    .table tbody tr td:first-of-type {
+        padding: 0;
+        height: 70px;
+        border-top: 1px solid #a3a3a3;
+        border-bottom: 1px solid #a3a3a3;
+    }
+
+    .table tbody tr td .image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .table td:before {
+        position: absolute;
+        left: 6px;
+        text-align: left;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        align-self: center;
+    }
+
+    .table tbody tr {
+        height: auto;
+        margin: 0;
+    }
+
+    td:nth-of-type(2):before {
+        content: "First Name";
+    }
+
+    td:nth-of-type(3):before {
+        content: "Last Name";
+    }
+
+    td:nth-of-type(4):before {
+        content: "Username";
+    }
+
+    td:nth-of-type(5):before {
+        content: "Email";
+    }
+
+    td:nth-of-type(6):before {
+        content: "Joined";
+    }
+
+    td:nth-of-type(7):before {
+        content: "Author";
+        font-size: 0.6em;
+        color: #737171;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+        font-size: 1.4em;
+        height: auto;
+    }
+
+    .pagination .pages {
+        margin-left: auto;
+    }
+
+    .pagination .actions {
+        margin: 0 auto;
+    }
+
+    .pagination .actions button {
+        font-size: 1.4em;
+    }
+
+    .pagination .save_changes {
+        flex-basis: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .pagination .save_changes button {
+        font-size: 1.5em;
+        margin: 0;
+    }
+
+}

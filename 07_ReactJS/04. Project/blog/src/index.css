@@ -559,7 +559,7 @@ footer.footer {
 
 h2.home-sticky-title,
 h2.home-blog-title {
-  margin-bottom: 1em;
+  margin-bottom: 0.8em;
   text-align: center;
 }
 
@@ -1467,12 +1467,18 @@ textarea {
 
 .home-sticky .post-image,
 .related .post-image {
-  padding: 1em 1em;
+  padding: 2em 1em 0.5em;
 }
 
 .home-sticky .post-image img,
 .related .post-image img {
   border-radius: 2000px;
+}
+
+h3.entry-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
 }
 
 .hero img {
@@ -1587,7 +1593,7 @@ header.header nav {
   }
 
   .inner {
-    padding: 1.5em 3em;
+    padding: 0 3em;
   }
 
 }
@@ -1655,5 +1661,46 @@ header.header nav {
 
   .sidebar-switch .main-wrap {
     float: right;
+  }
+}
+
+@media screen and (max-width: 480px) {
+
+  header.header .logo {
+    width: 48px;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 12px;
+  }
+
+  header.header nav ul li {
+    margin: 0;
+  }
+
+  header.header nav {
+    padding-right: 0;
+  }
+
+  .user ul {
+    margin-left: 0;
+  }
+
+  header.header .header-wrap .user li:first-child {
+    display: none;
+  }
+
+  .hero .hero-inner {
+    justify-content: center;
+  }
+
+  .hero .hero-inner .inner {
+    align-self: first baseline;
+    margin-top: 100px;
+  }
+
+  .post-content p{
+    text-align: justify;
   }
 }

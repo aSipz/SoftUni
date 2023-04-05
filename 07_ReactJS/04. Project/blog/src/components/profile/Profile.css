@@ -16,7 +16,7 @@
   margin-bottom: 24px;
 }
 
-.edit-profile input.error  {
+.edit-profile input.error {
   background-color: #f9e1e1;
   color: #fc4343;
 }
@@ -101,4 +101,36 @@
 
 .user-details p {
   margin-bottom: 4px;
+}
+
+
+@media screen and (max-width: 480px) {
+
+  .content {
+    flex-direction: column;
+  }
+
+  .image-container {
+    margin-right: 0;
+  }
+
+  .user-details {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .content .profile-control {
+    margin-top: 16px;
+  }
+
+  .content .profile-control .delete {
+    padding: 1em 2.5em;
+    line-height: 1.2;
+    font-size: 2rem;
+    align-self: stretch;
+  }
+
+  .edit-profile .wrapper {
+    padding-bottom: 0;
+  }
 }
