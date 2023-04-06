@@ -100,7 +100,7 @@ export default function Post() {
 
             <article className="post has-post-thumbnail">
                 <span className="post-image details">
-                    <img src={post.imageUrl} alt="post" />
+                    <img src={post.picture.url} alt="post" />
                 </span>
                 <div className="inner">
                     <h1 className="entry-title">{post.title}</h1>

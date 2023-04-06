@@ -25,7 +25,7 @@ export default function Author({ author, onSendMsgClick }) {
 
                 <div className={`content ${styles['author_content']}`}>
                     <div className="image-container">
-                        <img src={author.imageUrl} alt="avatar" className="image" />
+                        <img src={author.picture.url} alt="avatar" className="image" />
 
                     </div>
                     <div className="user-details">

@@ -37,7 +37,7 @@ export const MessageProvider = ({ children }) => {
         }
     }, [user, initialLoad]);
 
-    useInterval(checkForMsg, user ? 10000 : null);
+    useInterval(checkForMsg, user ? 1000000 : null);
 
     const markReadMessages = useCallback(() => {
         setUnreadMsg(state => state > 1 ? state - 1 : 0);

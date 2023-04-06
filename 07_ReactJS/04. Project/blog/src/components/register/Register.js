@@ -4,10 +4,10 @@ import Spinner from '../spinner/Spinner';
 import { AuthContext } from '../../contexts/AuthContext';
 
 import { userAction } from '../../const/actions';
-import { onChangeHandler, lengthValidation, emailValidation, urlValidation, repassValidation } from '../../utils/inputUtils';
+import { onChangeHandler, lengthValidation, emailValidation, repassValidation } from '../../utils/inputUtils';
 import * as userService from '../../service/user';
 
-export default function Login({setAction}) {
+export default function Login({ setAction }) {
     const [formValues, setFormValues] = useState({
         firstName: '',
         lastName: '',
@@ -15,7 +15,6 @@ export default function Login({setAction}) {
         email: '',
         password: '',
         repass: '',
-        imageUrl: '',
     });
     const [errors, setErrors] = useState({});
     const [serverError, setServerError] = useState('');
@@ -27,7 +26,6 @@ export default function Login({setAction}) {
 
     const lengthValidator = lengthValidation.bind(null, setErrors, 3);
     const emailValidator = emailValidation.bind(null, setErrors);
-    const urlValidator = urlValidation.bind(null, setErrors);
     const repassValidator = repassValidation.bind(null, setErrors, formValues.password, formValues.repass);
 
     const onLoginClick = () => {
@@ -206,26 +204,6 @@ export default function Login({setAction}) {
                             </p>
                         }
                     </div>
-                </div>
-
-                <div className="form-group long-line">
-                    <div className="input-wrapper">
-                        <span className={errors.imageUrl ? "error" : ""}><i className="fa-solid fa-image-portrait"></i></span>
-                        <input
-                            className={errors.imageUrl ? "error" : ""}
-                            name="imageUrl"
-                            type="text"
-                            placeholder="Image Url"
-                            value={formValues.imageUrl}
-                            onChange={onChange}
-                            onBlur={urlValidator}
-                        />
-                    </div>
-                    {errors.imageUrl &&
-                        <p className="form-error">
-                            ImageUrl is not valid!
-                        </p>
-                    }
                 </div>
 
                 <div className="form-actions">

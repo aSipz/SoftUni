@@ -5,6 +5,7 @@
 
 .create-post .wrapper {
     position: relative;
+    padding-bottom: 0;
 }
 
 .create-post label {
@@ -35,9 +36,40 @@
     margin: 0;
 }
 
+.image-upload .form-error {
+    bottom: 48px;
+}
+
+.image-upload {
+    position: relative;
+}
+
+.image-upload div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.image-upload button {
+    display: block;
+    padding: 0.5em 1.2em;
+    font-size: 1.2em;
+    margin: 6px 0;
+}
+
+.image-upload .button:disabled,
+.image-upload .button.red:disabled {
+  border-color: #585f66 !important;
+  color: #585f66 !important;
+  cursor: not-allowed;
+}
+
+.image-upload .upload {
+    margin: 6px auto;
+}
+
 @media screen and (max-width: 480px) {
 
     .create-post .wrapper {
         padding-bottom: 0;
     }
-  }
+}

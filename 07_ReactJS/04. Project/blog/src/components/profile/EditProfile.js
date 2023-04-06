@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 
 import Spinner from '../spinner/Spinner';
-import { onChangeHandler, lengthValidation, emailValidation, urlValidation } from '../../utils/inputUtils';
+import { onChangeHandler, lengthValidation, emailValidation } from '../../utils/inputUtils';
 import * as userService from '../../service/user';
 
 export default function EditProfile({ onClose }) {
@@ -13,7 +13,6 @@ export default function EditProfile({ onClose }) {
         lastName: user.lastName,
         username: user.username,
         email: user.email,
-        imageUrl: user.imageUrl,
         description: user.description ? user.description : '',
     });
     const [errors, setErrors] = useState({
@@ -21,7 +20,6 @@ export default function EditProfile({ onClose }) {
         lastName: false,
         username: false,
         email: false,
-        imageUrl: false,
     });
     const [serverError, setServerError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -30,7 +28,6 @@ export default function EditProfile({ onClose }) {
 
     const lengthValidator = lengthValidation.bind(null, setErrors, 3);
     const emailValidator = emailValidation.bind(null, setErrors);
-    const urlValidator = urlValidation.bind(null, setErrors);
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -149,24 +146,6 @@ export default function EditProfile({ onClose }) {
                     {errors.email &&
                         <p className="form-error">
                             Email is not valid!
-                        </p>
-                    }
-                </div>
-
-                <div className='wrapper'>
-                    <label htmlFor="imageUrl">Profile picture URL:</label>
-                    <input
-                        className={errors.imageUrl ? "error" : ""}
-                        id='imageUrl'
-                        name="imageUrl"
-                        type="text"
-                        value={formValues.imageUrl}
-                        onChange={onChange}
-                        onBlur={urlValidator}
-                    />
-                    {errors.imageUrl &&
-                        <p className="form-error">
-                            ImageUrl is not valid!
                         </p>
                     }
                 </div>

@@ -1,13 +1,14 @@
 import './CreatePost.css';
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Spinner from '../spinner/Spinner';
 import { AuthContext } from "../../contexts/AuthContext";
 
-import { onChangeHandler, lengthValidation, urlValidation } from '../../utils/inputUtils';
+import { onChangeHandler, lengthValidation } from '../../utils/inputUtils';
 import * as postService from '../../service/post';
+import { fileUpload } from '../../service/api';
 
 export default function CreatePost() {
     const { postId } = useParams();
@@ -15,12 +16,16 @@ export default function CreatePost() {
     const [formValues, setFormValues] = useState({
         title: '',
         text: '',
-        imageUrl: '',
+        picture: null
     });
     const [errors, setErrors] = useState({});
     const [serverError, setServerError] = useState('');
     const [loading, setLoading] = useState(() => postId ? true : false);
     const [post, setPost] = useState(null);
+
+    const [file, setFile] = useState();
+    const [disabled, setDisabled] = useState(false);
+    const inputRef = useRef(null);
 
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -29,10 +34,10 @@ export default function CreatePost() {
         if (postId) {
             postService.getPostById(postId)
                 .then(result => {
-                    const { title, text, imageUrl } = result;
+                    const { title, text, picture } = result;
                     setPost(result);
-                    setFormValues({ title, text, imageUrl });
-                    setErrors({ title: false, text: false, imageUrl: false });
+                    setFormValues({ title, text, picture });
+                    setErrors({ title: false, text: false, picture: false });
 
                     if (user.objectId !== result.author.objectId) {
                         navigate('/', { replace: true });
@@ -45,6 +50,15 @@ export default function CreatePost() {
                 });
 
             setLoading(false);
+        } else {
+            setPost(null);
+            setFormValues({
+                title: '',
+                text: '',
+                picture: null
+            });
+            setFile(null);
+            setErrors({ title: false, text: false, picture: false });
         }
     }, [postId, navigate, user]);
 
@@ -52,7 +66,41 @@ export default function CreatePost() {
 
     const titleValidator = lengthValidation.bind(null, setErrors, 5);
     const textValidator = lengthValidation.bind(null, setErrors, 20);
-    const urlValidator = urlValidation.bind(null, setErrors);
+
+    const handleFileChange = (e) => {
+
+        if (e.target.files) {
+            setFile(e.target.files[0]);
+            setErrors(state => ({ ...state, 'picture': false }));
+            e.target.value = null;
+        }
+    }
+
+    const handleClick = () => {
+        inputRef.current?.click();
+    }
+
+    const onCancelUpload = () => {
+        setFile(null);
+    }
+
+    const handleFileUpload = async () => {
+        if (!file) {
+            return;
+        }
+        setDisabled(true);
+        document.body.style.setProperty('cursor', 'wait');
+        try {
+            const result = await fileUpload(file.type, `/parse/files/${file.name}`, file);
+            setFormValues(state => ({ ...state, 'picture': { ...result, '__type': 'File' } }));
+            setErrors(state => ({ ...state, 'picture': false }));
+        } catch (error) {
+            console.log(error);
+        }
+        document.body.style.setProperty('cursor', 'auto');
+        setFile(null);
+        setDisabled(false);
+    }
 
     const onCancel = () => {
         navigate('/');
@@ -61,10 +109,17 @@ export default function CreatePost() {
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        if (Object.values(errors).length < Object.values(formValues).length || Object.values(errors).some(x => x)) {
+        if (Object.values(errors).length < Object.values(formValues).length
+            || Object.values(errors).some(x => x)
+            || (!post?.picture && !formValues.picture)) {
             setErrors(errors => {
                 const newErrors = {};
-                Object.keys(formValues).forEach(e => Object.hasOwn(errors, e) ? Object.assign(newErrors, { [e]: errors[e] }) : Object.assign(newErrors, { [e]: true }));
+                Object.keys(formValues).forEach(e => Object.hasOwn(errors, e)
+                    ? Object.assign(newErrors, { [e]: errors[e] })
+                    : Object.assign(newErrors, { [e]: true }));
+                if (!post?.picture && !formValues.picture) {
+                    newErrors.picture = true;
+                }
                 return newErrors;
             });
             return;
@@ -72,13 +127,13 @@ export default function CreatePost() {
 
         let hasChanges = false;
 
-        Object.entries(formValues).forEach(([k, v]) => {
+        post && Object.entries(formValues).forEach(([k, v]) => {
             if (post[k] !== v) {
                 hasChanges = true;
             }
         });
 
-        if (!hasChanges) {
+        if (!hasChanges && post?.picture?.url === formValues.picture?.url) {
             navigate(`/posts/${postId}/details`);
             return;
         }
@@ -112,6 +167,44 @@ export default function CreatePost() {
                         </div>
 
                         <form onSubmit={onSubmit}>
+
+                            <div className="image-upload">
+                                <input
+                                    accept="image/jpeg, image/png"
+                                    type="file"
+                                    ref={inputRef}
+                                    hidden
+                                    onChange={handleFileChange}
+                                />
+                                <p>Post cover preview:</p>
+
+                                {formValues.picture && <img src={formValues.picture.url} alt="post-cover" className="image" />}
+
+                                <div>
+                                    {file &&
+                                        <button type='button' className='button red' onClick={onCancelUpload} disabled={disabled}>Cancel</button>
+                                    }
+
+                                    <button type='button' className='button upload' onClick={handleClick} disabled={disabled}>
+                                        {file
+                                            ? `${file.name} selected`
+                                            : formValues.picture
+                                                ? 'Change picture'
+                                                : 'Upload picture'
+                                        }
+                                    </button>
+                                    {file &&
+                                        <button type='button' className='button green' onClick={handleFileUpload} disabled={disabled}>Upload picture</button>
+                                    }
+                                </div>
+
+                                {errors.picture &&
+                                    <p className="form-error">
+                                        Post cover image is required!
+                                    </p>
+                                }
+                            </div>
+
                             <div className='wrapper'>
                                 <label htmlFor="title">Title:</label>
                                 <input
@@ -126,24 +219,6 @@ export default function CreatePost() {
                                 {errors.title &&
                                     <p className="form-error">
                                         Title should be at least 5 characters long!
-                                    </p>
-                                }
-                            </div>
-
-                            <div className='wrapper'>
-                                <label htmlFor="imageUrl">Post cover URL:</label>
-                                <input
-                                    className={errors.imageUrl ? "error" : ""}
-                                    id='imageUrl'
-                                    name="imageUrl"
-                                    type="text"
-                                    value={formValues.imageUrl}
-                                    onChange={onChange}
-                                    onBlur={urlValidator}
-                                />
-                                {errors.imageUrl &&
-                                    <p className="form-error">
-                                        ImageUrl is not valid!
                                     </p>
                                 }
                             </div>
@@ -179,6 +254,7 @@ export default function CreatePost() {
                             </div>
 
                         </form>
+
                     </div>
                 </div>
             </article>

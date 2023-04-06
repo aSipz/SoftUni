@@ -15,7 +15,3 @@ export function emailValidation(setter, e) {
     const emailPattern = /^(?:\w+\.)*\w+@\w+(?:\.\w+)+$/;
     setter(errors => ({ ...errors, [e.target.name]: !emailPattern.test(e.target.value) }));
 }
-
-export function urlValidation(setter, e) {
-    setter(errors => ({ ...errors, [e.target.name]: !(e.target.value.startsWith('https://') || e.target.value.startsWith('http://')) }));
-}

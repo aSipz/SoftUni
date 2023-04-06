@@ -15,10 +15,10 @@ export default function User({ account, changeStatus, onSendMsgClick }) {
         <tr>
             {user.objectId === account.objectId
                 ? <td>
-                    <img src={account.imageUrl} alt={account.firstName} className="image" />
+                    <img src={account.picture.url} alt={account.firstName} className="image" />
                 </td>
                 : <td title="Send message" onClick={onSendMsgClick.bind(null, account)}>
-                    <img src={account.imageUrl} alt={account.firstName} className="image message" />
+                    <img src={account.picture.url} alt={account.firstName} className="image message" />
                 </td>}
             <td>{account.firstName}</td>
             <td>{account.lastName}</td>

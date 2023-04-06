@@ -2,7 +2,7 @@ const host = 'https://parseapi.back4app.com';
 const appId = 'KO7uRRDLVlasFYYkMmW7DccDMIgDZWfambF6oCUe';
 const apiKey = 'x6o62QKFMi6tR0DvrvHDLwkwdJB9Uvu6O4tzLhST';
 
-async function request(method, url = '/', data) {
+async function request(method, contentType, url = '/', data) {
     const options = {
         method,
         headers: {
@@ -11,9 +11,14 @@ async function request(method, url = '/', data) {
         }
     };
 
-    if (data !== undefined) {
+    if (data !== undefined && contentType === 'application/json') {
         options.headers['Content-Type'] = 'application/json';
         options.body = JSON.stringify(data);
+    }
+
+    if (contentType !== 'application/json') {
+        options.headers['Content-Type'] = contentType;
+        options.body = data;
     }
 
     const auth = localStorage.getItem('auth');
@@ -44,7 +49,9 @@ async function request(method, url = '/', data) {
     }
 }
 
-export const get = request.bind(null, 'get');
-export const post = request.bind(null, 'post');
-export const put = request.bind(null, 'put');
-export const del = request.bind(null, 'delete');
+export const get = request.bind(null, 'get', 'application/json');
+export const post = request.bind(null, 'post', 'application/json');
+export const put = request.bind(null, 'put', 'application/json');
+export const del = request.bind(null, 'delete', 'application/json');
+
+export const fileUpload = request.bind(null, 'post');

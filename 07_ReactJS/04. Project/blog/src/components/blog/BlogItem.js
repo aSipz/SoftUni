@@ -12,7 +12,7 @@ function BlogItem({ post, onSearch }) {
         <article className="post format-image has-post-thumbnail post_format-post-format-image">
             <span className="post-image">
                 <Link to={`/posts/${post.objectId}/details`} title={post.title}>
-                    <img width="920" height="620" src={post.imageUrl} className="attachment-desktop size-desktop" alt="post" />
+                    <img width="920" height="620" src={post.picture.url} className="attachment-desktop size-desktop" alt="post" />
                 </Link>
             </span>
             <div className="inner">

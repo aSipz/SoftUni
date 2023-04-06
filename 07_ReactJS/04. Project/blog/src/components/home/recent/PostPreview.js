@@ -5,7 +5,7 @@ export default function PostPreview({ post }) {
         <article className="home-sticky-post post has-post-thumbnail sticky">
             <span className="post-image recent">
                 <Link to={`/posts/${post.objectId}/details`}>
-                    <img src={post.imageUrl} className="attachment-sticky size-sticky" alt="post" />
+                    <img src={post.picture.url} className="attachment-sticky size-sticky" alt="post" />
                 </Link>
             </span>
             <div className="inner">

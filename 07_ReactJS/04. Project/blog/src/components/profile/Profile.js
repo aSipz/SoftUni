@@ -1,6 +1,6 @@
 import './Profile.css';
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import EditProfile from './EditProfile';
@@ -12,16 +12,22 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { userAction } from '../../const/actions';
 
 import * as userService from '../../service/user';
+import { fileUpload } from '../../service/api';
 
 export default function Profile() {
     const [edit, setEdit] = useState(false);
     const [loading, setLoading] = useState(false);
     const [confirm, setConfirm] = useState(false);
+
+    const [file, setFile] = useState();
+    const [disabled, setDisabled] = useState(false);
+    const inputRef = useRef(null);
+
     const [action, setAction] = useOverlay();
 
     const navigate = useNavigate();
 
-    const { user, userLogout } = useContext(AuthContext);
+    const { user, userLogout, userLogin } = useContext(AuthContext);
 
     useEffect(() => {
         if (confirm) {
@@ -41,6 +47,42 @@ export default function Profile() {
 
         }
     }, [confirm, navigate, setAction, user, userLogout]);
+
+    const handleFileChange = (e) => {
+
+        if (e.target.files) {
+            setFile(e.target.files[0]);
+            e.target.value = null;
+        }
+    }
+
+    const handleClick = () => {
+        inputRef.current?.click();
+    }
+
+    const handleCancel = () => {
+        setFile(null);
+    }
+
+    const handleFileUpload = async () => {
+        if (!file) {
+            return;
+        }
+        setDisabled(true);
+        document.body.style.setProperty('cursor', 'wait');
+        try {
+            const result = await fileUpload(file.type, `/parse/files/${file.name}`, file);
+            const res = await userService.updateUser(user.objectId, { 'picture': { ...result, '__type': 'File' } });
+            user.picture.url = result.url;
+            user.updatedAt = res;
+            userLogin(user);
+        } catch (error) {
+            console.log(error);
+        }
+        document.body.style.setProperty('cursor', 'auto');
+        setFile(null);
+        setDisabled(false);
+    }
 
     const onLogout = async () => {
 
@@ -93,7 +135,21 @@ export default function Profile() {
 
                             <div className="content">
                                 <div className="image-container">
-                                    <img src={user.imageUrl} alt="avatar" className="image" />
+                                    <img src={user.picture.url} alt="avatar" className="image" />
+                                    <input
+                                        accept="image/jpeg, image/png"
+                                        type="file"
+                                        ref={inputRef}
+                                        hidden
+                                        onChange={handleFileChange}
+                                    />
+                                    {file &&
+                                        <div>
+                                            <button className='button green' onClick={handleFileUpload} disabled={disabled}>Upload picture</button>
+                                            <button className='button red' onClick={handleCancel} disabled={disabled}>Cancel</button>
+                                        </div>
+                                    }
+                                    <button className='button' onClick={handleClick} disabled={disabled}>{file ? `${file.name} selected` : 'Change picture'}</button>
                                 </div>
                                 <div className="user-details">
                                     <p>First Name: <strong> {user.firstName} </strong></p>
@@ -102,7 +158,7 @@ export default function Profile() {
                                     <p>Email: <strong> {user.email}</strong></p>
                                     <p>About me: <strong> {user.description}</strong></p>
                                     <p>Joined: <strong> {new Date(user.createdAt).toUTCString()}</strong></p>
-                                    {user.createdAt !== user.updatedAt && <p>Last updated: <strong> {new Date(user.updatedAt).toUTCString()}</strong></p>}
+                                    {user.createdAt !== user.updatedAt && user.updatedAt && <p>Last updated: <strong> {new Date(user.updatedAt).toUTCString()}</strong></p>}
                                 </div>
 
                                 <div className="profile-control">
