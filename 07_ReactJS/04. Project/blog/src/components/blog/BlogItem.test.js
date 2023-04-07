@@ -6,7 +6,7 @@ const mockPost = {
     "objectId": "Sk4aW5mmFj",
     "title": "Graceful building opinions",
     "text": "Delightful remarkably mr on announcing themselves entreaties favourable.",
-    "imageUrl": "https://images.unsplash.com/photo-1618336215696-6673cf4549ae?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1503&q=80",
+    "picture": { "url": "https://images.unsplash.com/photo-1618336215696-6673cf4549ae?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1503&q=80" },
     "author": {
         "objectId": "crqTEkdvaf",
         "firstName": "Gaco",

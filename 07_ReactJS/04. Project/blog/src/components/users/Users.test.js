@@ -14,7 +14,7 @@ const users = {
             "lastName": "Guy",
             "username": "admin",
             "email": "admin@abv.bg",
-            "imageUrl": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400",
+            "picture": { "url": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400" },
             "createdAt": "2023-03-09T10:31:23.813Z"
         },
         {
@@ -23,7 +23,7 @@ const users = {
             "lastName": "Bacov",
             "username": "gaconi",
             "email": "gaco@abv.bg",
-            "imageUrl": "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
+            "picture": { "url": "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg" },
             "createdAt": "2023-03-10T13:03:14.317Z"
         },
         {
@@ -32,7 +32,7 @@ const users = {
             "lastName": "Nikolov",
             "username": "naiNik",
             "email": "nai_nik@abv.bg",
-            "imageUrl": "https://i.redd.it/8fqzw8yxpkp11.jpg",
+            "picture": { "url": "https://i.redd.it/8fqzw8yxpkp11.jpg" },
             "createdAt": "2023-03-13T20:28:11.736Z"
         },
         {
@@ -41,7 +41,7 @@ const users = {
             "lastName": "Musk",
             "username": "starship",
             "email": "musk@gmail.com",
-            "imageUrl": "https://dynaimage.cdn.cnn.com/cnn/c_fill,g_auto,w_1200,h_675,ar_16:9/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F230203141341-07-elon-musk-tesla-shareholder-lawsuit-0124.jpg",
+            "picture": { "url": "https://dynaimage.cdn.cnn.com/cnn/c_fill,g_auto,w_1200,h_675,ar_16:9/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F230203141341-07-elon-musk-tesla-shareholder-lawsuit-0124.jpg" },
             "createdAt": "2023-03-14T15:03:18.587Z"
         },
         {
@@ -50,7 +50,7 @@ const users = {
             "lastName": "Ivanov",
             "username": "ivcho",
             "email": "ivan@abv.bg",
-            "imageUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmFuZG9tJTIwcGVvcGxlfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
+            "picture": { "url": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmFuZG9tJTIwcGVvcGxlfGVufDB8fDB8fA%3D%3D&w=1000&q=80" },
             "createdAt": "2023-03-21T11:55:00.424Z"
         },
         {
@@ -59,7 +59,7 @@ const users = {
             "lastName": "Nikolov",
             "username": "nik",
             "email": "nik@gmail.com",
-            "imageUrl": "https://b1688923.smushcdn.com/1688923/wp-content/uploads/2022/05/Melbourne-Corporate-Headshots-Julia-Nance-Portraits9.jpg?lossy=1&strip=1&webp=1",
+            "picture": { "url": "https://b1688923.smushcdn.com/1688923/wp-content/uploads/2022/05/Melbourne-Corporate-Headshots-Julia-Nance-Portraits9.jpg?lossy=1&strip=1&webp=1" },
             "createdAt": "2023-03-21T11:58:45.251Z"
         },
         {
@@ -68,7 +68,7 @@ const users = {
             "lastName": "Todorova",
             "username": "lori",
             "email": "lori@gmail.com",
-            "imageUrl": "https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "picture": { "url": "https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
             "createdAt": "2023-03-21T13:00:59.429Z"
         },
         {
@@ -77,7 +77,7 @@ const users = {
             "lastName": "Petrova",
             "username": "kat",
             "email": "k.pet@abv.bg",
-            "imageUrl": "https://images.pexels.com/photos/1102341/pexels-photo-1102341.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "picture": { "url": "https://images.pexels.com/photos/1102341/pexels-photo-1102341.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
             "createdAt": "2023-03-21T13:02:17.762Z"
         },
         {
@@ -86,7 +86,7 @@ const users = {
             "lastName": "Todorov",
             "username": "toshi",
             "email": "tosho@abv.bg",
-            "imageUrl": "https://www.photographers.ch/wp/wp-content/uploads/2016/01/PW_151015_001-farbe.jpg",
+            "picture": { "url": "https://www.photographers.ch/wp/wp-content/uploads/2016/01/PW_151015_001-farbe.jpg" },
             "createdAt": "2023-03-21T14:23:39.306Z"
         },
         {
@@ -95,7 +95,7 @@ const users = {
             "lastName": "Petrov",
             "username": "pepi",
             "email": "pep@abv.bg",
-            "imageUrl": "https://t3.ftcdn.net/jpg/02/22/85/16/360_F_222851624_jfoMGbJxwRi5AWGdPgXKSABMnzCQo9RN.jpg",
+            "picture": { "url": "https://t3.ftcdn.net/jpg/02/22/85/16/360_F_222851624_jfoMGbJxwRi5AWGdPgXKSABMnzCQo9RN.jpg" },
             "createdAt": "2023-03-21T14:25:20.234Z"
         },
         {
@@ -104,7 +104,7 @@ const users = {
             "lastName": "Zaprianova",
             "username": "marcheto",
             "email": "mari@abv.bg",
-            "imageUrl": "https://images.pexels.com/photos/1855582/pexels-photo-1855582.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "picture": { "url": "https://images.pexels.com/photos/1855582/pexels-photo-1855582.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
             "createdAt": "2023-03-21T15:11:15.506Z"
         }
     ]
@@ -118,7 +118,7 @@ const authors = {
             "lastName": "Ivanov",
             "username": "ivcho",
             "email": "ivan@abv.bg",
-            "imageUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmFuZG9tJTIwcGVvcGxlfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
+            "picture": { "url": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmFuZG9tJTIwcGVvcGxlfGVufDB8fDB8fA%3D%3D&w=1000&q=80" },
             "createdAt": "2023-03-21T11:55:00.424Z"
         },
         {
@@ -127,7 +127,7 @@ const authors = {
             "lastName": "Guy",
             "username": "admin",
             "email": "admin@abv.bg",
-            "imageUrl": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400",
+            "picture": { "url": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400" },
             "createdAt": "2023-03-09T10:31:23.813Z"
         },
         {
@@ -136,7 +136,7 @@ const authors = {
             "lastName": "Bacov",
             "username": "gaconi",
             "email": "gaco@abv.bg",
-            "imageUrl": "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
+            "picture": { "url": "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg" },
             "createdAt": "2023-03-10T13:03:14.317Z"
         }
     ]
@@ -148,7 +148,7 @@ const author = {
     username: 'ivo',
     email: 'ivan@abv.bg',
     createdAt: '2023-03-21T11:55:00.424Z',
-    imageUrl: 'https://dynaimage.cdn.cnn.com/cnn/c_fill,g_auto,w_1200,h_675,ar_16:9/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F230203141341-07-elon-musk-tesla-shareholder-lawsuit-0124.jpg',
+    picture: { url: 'https://dynaimage.cdn.cnn.com/cnn/c_fill,g_auto,w_1200,h_675,ar_16:9/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F230203141341-07-elon-musk-tesla-shareholder-lawsuit-0124.jpg' },
     role: 'author'
 };
 

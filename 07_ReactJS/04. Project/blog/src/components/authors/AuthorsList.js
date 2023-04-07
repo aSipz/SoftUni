@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import Author from './Author';
 import Spinner from '../spinner/Spinner';
 import Overlay from '../overlay/Overlay';
 import useOverlay from '../../hooks/useOverlay';
+import { AuthContext } from '../../contexts/AuthContext';
 
 import { userAction } from '../../const/actions';
 import * as userService from '../../service/user';
@@ -14,6 +15,8 @@ export default function AuthorsList() {
     const [receiver, setReceiver] = useState();
     const [action, setAction] = useOverlay();
 
+    const { userLogout } = useContext(AuthContext);
+
     useEffect(() => {
 
         userService.getAllAuthors()
@@ -23,10 +26,13 @@ export default function AuthorsList() {
             })
             .catch(error => {
                 console.log(error);
+                if (error.message === 'Invalid session token') {
+                    userLogout();
+                };
                 setLoading(false);
             });
 
-    }, []);
+    }, [userLogout]);
 
     const onSendMsgClick = (author, e) => {
         e.stopPropagation();

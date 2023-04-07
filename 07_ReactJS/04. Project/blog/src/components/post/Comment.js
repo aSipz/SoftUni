@@ -15,6 +15,8 @@ export default function Comment({ comment, dispatch, setLoading }) {
     const [edit, setEdit] = useState(false);
     const [action, setAction] = useOverlay();
 
+    const { userLogout } = useContext(AuthContext);
+
     useEffect(() => {
         if (confirm) {
 
@@ -34,9 +36,12 @@ export default function Comment({ comment, dispatch, setLoading }) {
                     console.log(error);
                     setConfirm(false);
                     setLoading(false);
+                    if (error.message === 'Invalid session token') {
+                        userLogout();
+                    };
                 });
         }
-    }, [confirm, dispatch, setLoading, setAction, comment]);
+    }, [confirm, dispatch, setLoading, setAction, comment, userLogout]);
 
     const isOwner = user?.objectId === comment.owner.objectId;
 

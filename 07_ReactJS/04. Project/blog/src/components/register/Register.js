@@ -4,7 +4,7 @@ import Spinner from '../spinner/Spinner';
 import { AuthContext } from '../../contexts/AuthContext';
 
 import { userAction } from '../../const/actions';
-import { onChangeHandler, lengthValidation, emailValidation, repassValidation } from '../../utils/inputUtils';
+import { onChangeHandler, lengthValidation, emailValidation, repassValidation, onFocusHandler } from '../../utils/inputUtils';
 import * as userService from '../../service/user';
 
 export default function Login({ setAction }) {
@@ -23,6 +23,7 @@ export default function Login({ setAction }) {
     const { userLogin } = useContext(AuthContext);
 
     const onChange = onChangeHandler.bind(null, setFormValues, null);
+    const onFocus = onFocusHandler.bind(null, setErrors);
 
     const lengthValidator = lengthValidation.bind(null, setErrors, 3);
     const emailValidator = emailValidation.bind(null, setErrors);
@@ -95,6 +96,7 @@ export default function Login({ setAction }) {
                                 value={formValues.firstName}
                                 onChange={onChange}
                                 onBlur={lengthValidator}
+                                onFocus={onFocus}
                             />
                         </div>
                         {errors.firstName &&
@@ -114,6 +116,7 @@ export default function Login({ setAction }) {
                                 value={formValues.lastName}
                                 onChange={onChange}
                                 onBlur={lengthValidator}
+                                onFocus={onFocus}
                             />
                         </div>
                         {errors.lastName &&
@@ -136,6 +139,7 @@ export default function Login({ setAction }) {
                                 value={formValues.username}
                                 onChange={onChange}
                                 onBlur={lengthValidator}
+                                onFocus={onFocus}
                             />
                         </div>
                         {errors.username &&
@@ -155,6 +159,7 @@ export default function Login({ setAction }) {
                                 value={formValues.email}
                                 onChange={onChange}
                                 onBlur={emailValidator}
+                                onFocus={onFocus}
                             />
                         </div>
                         {errors.email &&
@@ -177,6 +182,7 @@ export default function Login({ setAction }) {
                                 value={formValues.password}
                                 onChange={onChange}
                                 onBlur={lengthValidator}
+                                onFocus={onFocus}
                             />
                         </div>
                         {errors.password &&
@@ -196,6 +202,7 @@ export default function Login({ setAction }) {
                                 value={formValues.repass}
                                 onChange={onChange}
                                 onBlur={repassValidator}
+                                onFocus={onFocus}
                             />
                         </div>
                         {errors.repass &&

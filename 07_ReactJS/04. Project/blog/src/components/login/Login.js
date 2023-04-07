@@ -4,7 +4,7 @@ import Spinner from '../spinner/Spinner';
 import { AuthContext } from '../../contexts/AuthContext';
 
 import { userAction } from '../../const/actions';
-import { onChangeHandler, lengthValidation, emailValidation } from '../../utils/inputUtils';
+import { onChangeHandler, lengthValidation, emailValidation, onFocusHandler } from '../../utils/inputUtils';
 import * as userService from '../../service/user';
 
 export default function Login({ setAction }) {
@@ -16,9 +16,10 @@ export default function Login({ setAction }) {
     const [serverError, setServerError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { userLogin } = useContext(AuthContext);
+    const { userLogin, userLogout } = useContext(AuthContext);
 
     const onChange = onChangeHandler.bind(null, setFormValues, null);
+    const onFocus = onFocusHandler.bind(null, setErrors);
 
     const lengthValidator = lengthValidation.bind(null, setErrors, 3);
     const emailValidator = emailValidation.bind(null, setErrors);
@@ -50,6 +51,9 @@ export default function Login({ setAction }) {
             setAction(userAction.default);
         } catch (error) {
             setServerError(error.message);
+            if (error.message === 'Invalid session token') {
+                userLogout();
+            };
         }
 
         setLoading(loading => !loading);
@@ -88,6 +92,7 @@ export default function Login({ setAction }) {
                             value={formValues.email}
                             onChange={onChange}
                             onBlur={emailValidator}
+                            onFocus={onFocus}
                         />
                     </div>
                     {errors.email &&
@@ -110,6 +115,7 @@ export default function Login({ setAction }) {
                             value={formValues.password}
                             onChange={onChange}
                             onBlur={lengthValidator}
+                            onFocus={onFocus}
                         />
                     </div>
                     {errors.password &&

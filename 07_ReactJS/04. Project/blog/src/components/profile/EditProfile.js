@@ -2,11 +2,11 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 
 import Spinner from '../spinner/Spinner';
-import { onChangeHandler, lengthValidation, emailValidation } from '../../utils/inputUtils';
+import { onChangeHandler, lengthValidation, emailValidation, onFocusHandler } from '../../utils/inputUtils';
 import * as userService from '../../service/user';
 
 export default function EditProfile({ onClose }) {
-    const { user, userLogin } = useContext(AuthContext);
+    const { user, userLogin, userLogout } = useContext(AuthContext);
 
     const [formValues, setFormValues] = useState({
         firstName: user.firstName,
@@ -25,6 +25,7 @@ export default function EditProfile({ onClose }) {
     const [loading, setLoading] = useState(false);
 
     const onChange = onChangeHandler.bind(null, setFormValues, null);
+    const onFocus = onFocusHandler.bind(null, setErrors);
 
     const lengthValidator = lengthValidation.bind(null, setErrors, 3);
     const emailValidator = emailValidation.bind(null, setErrors);
@@ -62,6 +63,9 @@ export default function EditProfile({ onClose }) {
             onClose();
         } catch (error) {
             setServerError(error.message);
+            if (error.message === 'Invalid session token') {
+                userLogout();
+            };
         }
 
         setLoading(loading => !loading);
@@ -88,6 +92,7 @@ export default function EditProfile({ onClose }) {
                         value={formValues.firstName}
                         onChange={onChange}
                         onBlur={lengthValidator}
+                        onFocus={onFocus}
                     />
                     {errors.firstName &&
                         <p className="form-error">
@@ -106,6 +111,7 @@ export default function EditProfile({ onClose }) {
                         value={formValues.lastName}
                         onChange={onChange}
                         onBlur={lengthValidator}
+                        onFocus={onFocus}
                     />
                     {errors.lastName &&
                         <p className="form-error">
@@ -124,6 +130,7 @@ export default function EditProfile({ onClose }) {
                         value={formValues.username}
                         onChange={onChange}
                         onBlur={lengthValidator}
+                        onFocus={onFocus}
                     />
                     {errors.username &&
                         <p className="form-error">
@@ -142,6 +149,7 @@ export default function EditProfile({ onClose }) {
                         value={formValues.email}
                         onChange={onChange}
                         onBlur={emailValidator}
+                        onFocus={onFocus}
                     />
                     {errors.email &&
                         <p className="form-error">
@@ -160,6 +168,7 @@ export default function EditProfile({ onClose }) {
                         type="text"
                         value={formValues.description}
                         onChange={onChange}
+                        onFocus={onFocus}
                     />
                 </div>
 

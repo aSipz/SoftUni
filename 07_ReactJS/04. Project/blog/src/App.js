@@ -31,7 +31,6 @@ function App() {
                 <MessageProvider>
                     <Header />
 
-
                     <main>
 
                         <Suspense fallback={<Spinner />}>

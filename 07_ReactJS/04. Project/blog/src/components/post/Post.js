@@ -28,7 +28,7 @@ export default function Post() {
 
     const [post, dispatch] = useReducer(postReducer, null);
 
-    const { user } = useContext(AuthContext);
+    const { user, userLogout } = useContext(AuthContext);
 
     useEffect(() => {
         Promise.all([
@@ -47,8 +47,11 @@ export default function Post() {
             })
             .catch(error => {
                 console.log(error);
+                if (error.message === 'Invalid session token') {
+                    userLogout();
+                };
             });
-    }, [postId]);
+    }, [postId, userLogout]);
 
     useEffect(() => {
         if (confirm) {
@@ -68,9 +71,12 @@ export default function Post() {
                     console.log(error);
                     setConfirm(false);
                     setLoading(loading => !loading);
+                    if (error.message === 'Invalid session token') {
+                        userLogout();
+                    };
                 });
         }
-    }, [confirm, navigate, postId, setAction, post?.comments, post?.likes]);
+    }, [confirm, navigate, postId, setAction, post?.comments, post?.likes, userLogout]);
 
     const onDelete = () => {
         setAction(userAction.confirm);

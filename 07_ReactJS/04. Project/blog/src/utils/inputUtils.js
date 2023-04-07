@@ -15,3 +15,7 @@ export function emailValidation(setter, e) {
     const emailPattern = /^(?:\w+\.)*\w+@\w+(?:\.\w+)+$/;
     setter(errors => ({ ...errors, [e.target.name]: !emailPattern.test(e.target.value) }));
 }
+
+export function onFocusHandler(setter, e) {
+    setter(errors => ({ ...errors, [e.target.name]: false }));
+}

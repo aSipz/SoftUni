@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer } from 'react';
+import { useCallback, useContext, useEffect, useReducer } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import SearchBar from '../searchBar/SearchBar';
@@ -9,6 +9,7 @@ import Skeleton from '../skeleton/Skeleton';
 import * as postService from '../../service/post';
 import { addSearch, encodeObject } from '../../utils/serviceUtils';
 import { blogControlReducer } from '../../reducers/blogReducer';
+import { AuthContext } from '../../contexts/AuthContext';
 
 const windowEvents = ['scroll', 'resize'];
 
@@ -25,6 +26,8 @@ export default function Blog() {
         error: false,
         hadQuery: false
     });
+
+    const { userLogout } = useContext(AuthContext);
 
     const hasMore = blogControl.skip + loadingStep < blogControl.count;
 
@@ -76,10 +79,12 @@ export default function Blog() {
             })
             .catch((error) => {
                 console.log(error);
-                dispatch({ type: 'ERROR' });
+                if (error.message === 'Invalid session token') {
+                    userLogout();
+                };
             });
 
-    }, [skip, searchFor, searchParams]);
+    }, [skip, searchFor, searchParams, userLogout]);
 
     useEffect(() => {
         windowEvents.forEach(e => window.addEventListener(e, onScroll));

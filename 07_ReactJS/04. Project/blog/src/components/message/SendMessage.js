@@ -10,7 +10,7 @@ export default function SendMessage({ setAction, confirmAction }) {
     const [formValues, setFormValues] = useState({ message: '' });
     const [errors, setErrors] = useState({});
 
-    const { user } = useContext(AuthContext);
+    const { user, userLogout } = useContext(AuthContext);
     const { text, receiver, action, setReceiver, setMessages } = confirmAction;
 
     const onChange = onChangeHandler.bind(null, setFormValues, null);
@@ -52,6 +52,9 @@ export default function SendMessage({ setAction, confirmAction }) {
             setAction(userAction.default);
         } catch (error) {
             console.log(error);
+            if (error.message === 'Invalid session token') {
+                userLogout();
+            };
         }
 
         action();

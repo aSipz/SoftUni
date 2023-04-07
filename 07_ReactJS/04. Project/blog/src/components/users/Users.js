@@ -26,7 +26,7 @@ export default function Users() {
     const [currentPage, setCurrentPage] = useState(1);
     const [receiver, setReceiver] = useState(null);
 
-    const { user } = useContext(AuthContext);
+    const { user, userLogout } = useContext(AuthContext);
 
     const [action, setAction] = useOverlay();
 
@@ -47,8 +47,11 @@ export default function Users() {
             .catch((error) => {
                 console.log(error);
                 setLoading(false);
+                if (error.message === 'Invalid session token') {
+                    userLogout();
+                };
             });
-    }, []);
+    }, [userLogout]);
 
     useEffect(() => {
         if (confirm) {
@@ -79,10 +82,13 @@ export default function Users() {
                     setConfirm(false);
                     setAction(userAction.close);
                     setLoading(false);
+                    if (error.message === 'Invalid session token') {
+                        userLogout();
+                    };
                 });
 
         }
-    }, [confirm, users, setAction, user.objectId]);
+    }, [confirm, users, setAction, user.objectId, userLogout]);
 
     const onSearch = useCallback((searchObj) => {
         const { user: search } = searchObj;

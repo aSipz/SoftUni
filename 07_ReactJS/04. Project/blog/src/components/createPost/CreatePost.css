@@ -36,8 +36,17 @@
     margin: 0;
 }
 
+.image-upload p:first-of-type {
+    margin-bottom: 1em;
+}
+
 .image-upload .form-error {
     bottom: 48px;
+}
+
+.image-upload img {
+    display: block;
+    margin: 0 auto 24px;
 }
 
 .image-upload {
@@ -58,9 +67,9 @@
 
 .image-upload .button:disabled,
 .image-upload .button.red:disabled {
-  border-color: #585f66 !important;
-  color: #585f66 !important;
-  cursor: not-allowed;
+    border-color: #585f66 !important;
+    color: #585f66 !important;
+    cursor: not-allowed;
 }
 
 .image-upload .upload {

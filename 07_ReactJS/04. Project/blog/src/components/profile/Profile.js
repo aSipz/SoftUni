@@ -1,12 +1,13 @@
 import './Profile.css';
 
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import EditProfile from './EditProfile';
 import Overlay from '../overlay/Overlay';
 import Spinner from '../spinner/Spinner';
 import useOverlay from '../../hooks/useOverlay';
+import useFileUpload from '../../hooks/useFileUpload';
 
 import { AuthContext } from '../../contexts/AuthContext';
 import { userAction } from '../../const/actions';
@@ -19,9 +20,16 @@ export default function Profile() {
     const [loading, setLoading] = useState(false);
     const [confirm, setConfirm] = useState(false);
 
-    const [file, setFile] = useState();
-    const [disabled, setDisabled] = useState(false);
-    const inputRef = useRef(null);
+    const [
+        file,
+        inputRef,
+        disabled,
+        handleClick,
+        onCancelUpload,
+        handleFileChange,
+        handleFileUpload,
+        fileDataURL
+    ] = useFileUpload(changeProfilePic);
 
     const [action, setAction] = useOverlay();
 
@@ -43,45 +51,27 @@ export default function Profile() {
                     console.log(error);
                     setConfirm(false);
                     setLoading(false);
+                    if (error.message === 'Invalid session token') {
+                        userLogout();
+                    };
                 });
 
         }
     }, [confirm, navigate, setAction, user, userLogout]);
 
-    const handleFileChange = (e) => {
-
-        if (e.target.files) {
-            setFile(e.target.files[0]);
-            e.target.value = null;
-        }
-    }
-
-    const handleClick = () => {
-        inputRef.current?.click();
-    }
-
-    const handleCancel = () => {
-        setFile(null);
-    }
-
-    const handleFileUpload = async () => {
-        if (!file) {
-            return;
-        }
-        setDisabled(true);
-        document.body.style.setProperty('cursor', 'wait');
+    async function changeProfilePic() {
         try {
             const result = await fileUpload(file.type, `/parse/files/${file.name}`, file);
             const res = await userService.updateUser(user.objectId, { 'picture': { ...result, '__type': 'File' } });
             user.picture.url = result.url;
-            user.updatedAt = res;
+            user.updatedAt = res.updatedAt;
             userLogin(user);
         } catch (error) {
             console.log(error);
+            if (error.message === 'Invalid session token') {
+                userLogout();
+            };
         }
-        document.body.style.setProperty('cursor', 'auto');
-        setFile(null);
-        setDisabled(false);
     }
 
     const onLogout = async () => {
@@ -135,7 +125,11 @@ export default function Profile() {
 
                             <div className="content">
                                 <div className="image-container">
-                                    <img src={user.picture.url} alt="avatar" className="image" />
+                                    {fileDataURL
+                                        ? <img src={fileDataURL} alt="post-cover" className="image" />
+                                        : <img src={user.picture.url} alt="avatar" className="image" />
+                                    }
+
                                     <input
                                         accept="image/jpeg, image/png"
                                         type="file"
@@ -145,8 +139,8 @@ export default function Profile() {
                                     />
                                     {file &&
                                         <div>
-                                            <button className='button green' onClick={handleFileUpload} disabled={disabled}>Upload picture</button>
-                                            <button className='button red' onClick={handleCancel} disabled={disabled}>Cancel</button>
+                                            <button className='button green' onClick={handleFileUpload} disabled={disabled}>Update picture</button>
+                                            <button className='button red' onClick={onCancelUpload} disabled={disabled}>Cancel</button>
                                         </div>
                                     }
                                     <button className='button' onClick={handleClick} disabled={disabled}>{file ? `${file.name} selected` : 'Change picture'}</button>

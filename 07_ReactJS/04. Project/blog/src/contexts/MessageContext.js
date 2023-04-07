@@ -10,8 +10,9 @@ export const MessageProvider = ({ children }) => {
 
     const [unreadMsg, setUnreadMsg] = useState(0);
     const [initialLoad, setInitialLoad] = useState(true);
+    const [delay, setDelay] = useState(10000);
 
-    const { user } = useContext(AuthContext);
+    const { user, userLogout } = useContext(AuthContext);
 
     const checkForMsg = useCallback(async () => {
         try {
@@ -21,8 +22,18 @@ export const MessageProvider = ({ children }) => {
             }
         } catch (error) {
             console.log(error);
+            if (error.message === 'Invalid session token') {
+                userLogout();
+            };
         }
-    }, [user, unreadMsg]);
+    }, [user, unreadMsg, userLogout]);
+
+    useEffect(() => {
+        window.addEventListener("visibilitychange", onVisibilityChange);
+        return () => {
+            window.removeEventListener("visibilitychange", onVisibilityChange);
+        };
+    }, []);
 
     useEffect(() => {
         if (user && initialLoad) {
@@ -37,11 +48,19 @@ export const MessageProvider = ({ children }) => {
         }
     }, [user, initialLoad]);
 
-    useInterval(checkForMsg, user ? 1000000 : null);
+    useInterval(checkForMsg, user ? delay : null);
 
     const markReadMessages = useCallback(() => {
         setUnreadMsg(state => state > 1 ? state - 1 : 0);
     }, []);
+
+    function onVisibilityChange() {
+        if (document.visibilityState === "hidden") {
+            setDelay(120000);
+        } else {
+            setDelay(10000);
+        }
+    }
 
     return (
         <MessageContext.Provider value={{ unreadMsg, markReadMessages }}>

@@ -12,7 +12,7 @@ export default function Like({ dispatch, post }) {
 
     const { postId } = useParams('postId');
 
-    const { user } = useContext(AuthContext);
+    const { user, userLogout } = useContext(AuthContext);
 
     const onLike = async () => {
 
@@ -29,6 +29,9 @@ export default function Like({ dispatch, post }) {
             });
         } catch (error) {
             console.log(error);
+            if (error.message === 'Invalid session token') {
+                userLogout();
+            };
         }
 
         setLikeDisabled(state => !state);
@@ -50,6 +53,9 @@ export default function Like({ dispatch, post }) {
             });
         } catch (error) {
             console.log(error);
+            if (error.message === 'Invalid session token') {
+                userLogout();
+            };
         }
 
         setLikeDisabled(state => !state);

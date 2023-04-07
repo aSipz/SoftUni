@@ -9,7 +9,7 @@ const mockAuthor = {
     "lastName": "Bacov",
     "username": "gaconi",
     "email": "gaco@abv.bg",
-    "imageUrl": "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
+    "picture": { "url": "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg" },
     "createdAt": "2023-03-10T13:03:14.317Z",
     "updatedAt": "2023-03-24T12:39:41.557Z",
     "description": "Far quitting dwelling graceful the likewise received building. An fact so to that show am shed sold cold. Unaffected remarkably get yet introduced excellence terminated led. Result either design saw she esteem and. On ashamed no inhabit ferrars it ye besides resolve. Own judgment directly few trifling. Elderly as pursuit at regular do parlors. Rank what has into fond she.",

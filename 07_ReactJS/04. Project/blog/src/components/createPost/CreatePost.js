@@ -1,12 +1,13 @@
 import './CreatePost.css';
 
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Spinner from '../spinner/Spinner';
+import useFileUpload from '../../hooks/useFileUpload';
 import { AuthContext } from "../../contexts/AuthContext";
 
-import { onChangeHandler, lengthValidation } from '../../utils/inputUtils';
+import { onChangeHandler, lengthValidation, onFocusHandler } from '../../utils/inputUtils';
 import * as postService from '../../service/post';
 import { fileUpload } from '../../service/api';
 
@@ -23,11 +24,18 @@ export default function CreatePost() {
     const [loading, setLoading] = useState(() => postId ? true : false);
     const [post, setPost] = useState(null);
 
-    const [file, setFile] = useState();
-    const [disabled, setDisabled] = useState(false);
-    const inputRef = useRef(null);
+    const [
+        file,
+        inputRef,
+        disabled,
+        handleClick,
+        onCancelUpload,
+        handleFileChange,
+        handleFileUpload,
+        fileDataURL
+    ] = useFileUpload(changePostCover, removeFileError);
 
-    const { user } = useContext(AuthContext);
+    const { user, userLogout } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -46,60 +54,48 @@ export default function CreatePost() {
                 })
                 .catch(error => {
                     console.log(error);
+                    if (error.message === 'Invalid session token') {
+                        userLogout();
+                    };
                     navigate('/');
                 });
 
             setLoading(false);
-        } else {
+        }
+
+        if (!postId) {
             setPost(null);
             setFormValues({
                 title: '',
                 text: '',
                 picture: null
             });
-            setFile(null);
-            setErrors({ title: false, text: false, picture: false });
+            onCancelUpload()
+            setErrors({});
         }
-    }, [postId, navigate, user]);
+    }, [postId, navigate, user, onCancelUpload, userLogout]);
 
     const onChange = onChangeHandler.bind(null, setFormValues, null);
+    const onFocus = onFocusHandler.bind(null, setErrors);
 
     const titleValidator = lengthValidation.bind(null, setErrors, 5);
     const textValidator = lengthValidation.bind(null, setErrors, 20);
 
-    const handleFileChange = (e) => {
-
-        if (e.target.files) {
-            setFile(e.target.files[0]);
-            setErrors(state => ({ ...state, 'picture': false }));
-            e.target.value = null;
-        }
+    function removeFileError() {
+        setErrors(state => ({ ...state, 'picture': false }));
     }
 
-    const handleClick = () => {
-        inputRef.current?.click();
-    }
-
-    const onCancelUpload = () => {
-        setFile(null);
-    }
-
-    const handleFileUpload = async () => {
-        if (!file) {
-            return;
-        }
-        setDisabled(true);
-        document.body.style.setProperty('cursor', 'wait');
+    async function changePostCover() {
         try {
             const result = await fileUpload(file.type, `/parse/files/${file.name}`, file);
             setFormValues(state => ({ ...state, 'picture': { ...result, '__type': 'File' } }));
-            setErrors(state => ({ ...state, 'picture': false }));
+            removeFileError();
         } catch (error) {
             console.log(error);
+            if (error.message === 'Invalid session token') {
+                userLogout();
+            };
         }
-        document.body.style.setProperty('cursor', 'auto');
-        setFile(null);
-        setDisabled(false);
     }
 
     const onCancel = () => {
@@ -148,6 +144,9 @@ export default function CreatePost() {
             navigate(`/posts/${postId ? postId : result.objectId}/details`);
         } catch (error) {
             console.log(error.message);
+            if (error.message === 'Invalid session token') {
+                userLogout();
+            };
             setServerError(error.message);
         };
 
@@ -178,7 +177,12 @@ export default function CreatePost() {
                                 />
                                 <p>Post cover preview:</p>
 
-                                {formValues.picture && <img src={formValues.picture.url} alt="post-cover" className="image" />}
+                                {fileDataURL
+                                    ? <img src={fileDataURL} alt="post-cover" className="image" />
+                                    : formValues.picture
+                                        ? <img src={formValues.picture.url} alt="post-cover" className="image" />
+                                        : null
+                                }
 
                                 <div>
                                     {file &&
@@ -215,6 +219,7 @@ export default function CreatePost() {
                                     value={formValues.title}
                                     onChange={onChange}
                                     onBlur={titleValidator}
+                                    onFocus={onFocus}
                                 />
                                 {errors.title &&
                                     <p className="form-error">
@@ -235,6 +240,7 @@ export default function CreatePost() {
                                     value={formValues.text}
                                     onChange={onChange}
                                     onBlur={textValidator}
+                                    onFocus={onFocus}
                                 />
                                 {errors.text &&
                                     <p className="form-error">

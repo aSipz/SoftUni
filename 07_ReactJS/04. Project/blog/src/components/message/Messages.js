@@ -31,7 +31,7 @@ export default function Messages() {
 
     const [action, setAction] = useOverlay();
 
-    const { user } = useContext(AuthContext);
+    const { user, userLogout } = useContext(AuthContext);
     const { unreadMsg, markReadMessages } = useContext(MessageContext);
 
     const previousValue = useRef(unreadMsg);
@@ -56,8 +56,11 @@ export default function Messages() {
             .catch((error) => {
                 console.log(error);
                 setLoading(false);
+                if (error.message === 'Invalid session token') {
+                    userLogout();
+                };
             });
-    }, [user.objectId]);
+    }, [user.objectId, userLogout]);
 
     useEffect(() => {
 
@@ -82,10 +85,13 @@ export default function Messages() {
                 })
                 .catch((error) => {
                     console.log(error);
+                    if (error.message === 'Invalid session token') {
+                        userLogout();
+                    };
                 });
         }
 
-    }, [user.objectId, unreadMsg]);
+    }, [user.objectId, unreadMsg, userLogout]);
 
     useEffect(() => {
 
@@ -115,9 +121,12 @@ export default function Messages() {
                     console.log(error);
                     setConfirm(false);
                     setLoading(false);
+                    if (error.message === 'Invalid session token') {
+                        userLogout();
+                    };
                 });
         }
-    }, [confirm, currentMsg, markReadMessages, messages, setAction, user.objectId, unreadMsg]);
+    }, [confirm, currentMsg, markReadMessages, messages, setAction, user.objectId, unreadMsg, userLogout]);
 
     const onSearch = useCallback((searchObj) => {
         const { messages: search } = searchObj;
@@ -148,6 +157,9 @@ export default function Messages() {
                     messageService.updateMessage(message.objectId, { read: true })
                 } catch (error) {
                     console.log(error);
+                    if (error.message === 'Invalid session token') {
+                        userLogout();
+                    };
                     return;
                 }
                 markReadMessages();

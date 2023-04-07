@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { AuthContext } from '../../contexts/AuthContext';
 
-import { lengthValidation, onChangeHandler } from '../../utils/inputUtils';
+import { lengthValidation, onChangeHandler, onFocusHandler } from '../../utils/inputUtils';
 import { createPointer } from '../../utils/serviceUtils';
 
 import * as commentService from '../../service/comment';
@@ -11,11 +11,12 @@ import * as commentService from '../../service/comment';
 export default function CommentForm({ setLoading, dispatch, toggleCommentForm, comment }) {
     const { postId } = useParams('postId');
 
-    const { user } = useContext(AuthContext);
+    const { user, userLogout } = useContext(AuthContext);
     const [formValues, setFormValues] = useState(() => ({ text: comment ? comment.text : '' }));
     const [errors, setErrors] = useState({ text: false });
 
     const onChange = onChangeHandler.bind(null, setFormValues, null);
+    const onFocus = onFocusHandler.bind(null, setErrors);
 
     const lengthValidator = lengthValidation.bind(null, setErrors, 10);
 
@@ -57,6 +58,9 @@ export default function CommentForm({ setLoading, dispatch, toggleCommentForm, c
             toggleCommentForm();
         } catch (error) {
             console.log(error);
+            if (error.message === 'Invalid session token') {
+                userLogout();
+            };
         }
 
         setLoading(loading => !loading);
@@ -76,6 +80,7 @@ export default function CommentForm({ setLoading, dispatch, toggleCommentForm, c
                 value={formValues.text}
                 onChange={onChange}
                 onBlur={lengthValidator}
+                onFocus={onFocus}
             />
 
             <div>

@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import PostPreview from './PostPreview';
 import Spinner from '../../spinner/Spinner';
+import { AuthContext } from '../../../contexts/AuthContext';
 
 import * as postService from '../../../service/post';
 import Error from '../../error/Error';
 
 export default function Recent() {
     const [posts, setPosts] = useState(null);
+
+    const { userLogout} = useContext(AuthContext);
 
     useEffect(() => {
         postService.getRecent()
@@ -17,8 +20,11 @@ export default function Recent() {
             .catch((error) => {
                 console.log(error);
                 setPosts('error');
+                if (error.message === 'Invalid session token') {
+                    userLogout();
+                };
             });
-    }, []);
+    }, [userLogout]);
 
     return (
         <div className="home-sticky" id="content">
