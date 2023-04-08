@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useReducer } from 'react';
+import { useCallback, useContext, useEffect, useReducer, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import SearchBar from '../searchBar/SearchBar';
@@ -33,9 +33,11 @@ export default function Blog() {
 
     const searchFor = addSearch(searchParams.get('search'));
 
-    const skip = !searchFor && blogControl.hadQuery ? 0 : blogControl.skip;
+    const previousSearch = useRef(searchFor);
 
-    const scrollToTop = !searchFor && blogControl.hadQuery;
+    const skip = (!searchFor && blogControl.hadQuery) || previousSearch.current !== searchFor ? 0 : blogControl.skip;
+
+    const scrollToTop = (!searchFor && blogControl.hadQuery) || previousSearch.current !== searchFor;
 
     if (scrollToTop) {
         window.scrollTo(0, 0);
@@ -75,6 +77,7 @@ export default function Blog() {
                         skip
                     }
                 });
+                previousSearch.current = searchFor;
 
             })
             .catch((error) => {
