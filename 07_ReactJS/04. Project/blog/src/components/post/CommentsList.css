@@ -1,6 +1,10 @@
-.comment-respondlabel {
+.comment-respond label {
     font-size: 1.2em;
     margin-bottom: 15px;
+  }
+
+  .comment-respond {
+    padding-bottom: 1em;
   }
   
   .comment-respond input {
@@ -34,3 +38,15 @@
     margin: 0;
     text-align: center;
   }
+
+  @media screen and (max-width: 480px) {
+
+    blockquote {
+      display: flex;
+      flex-direction: column;
+    }
+
+    blockquote>.button.green {
+      margin-top: 8px;
+    }
+  } 

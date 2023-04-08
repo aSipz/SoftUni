@@ -48,6 +48,12 @@ Registered users can comment and like posts.
 
 ### Create, edit and delete posts
 
+Authors can create, edit and delete post.
+You can test authors functionality with already initialized author:
+
+email: admin@abv.bg
+pass: 123
+
 ![Create post](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/15_create_post_author.png)
 
 ![Edit post](https://github.com/aSipz/SoftUni/blob/main/07_ReactJS/04.%20Project/screenshots/17_edit_post_author.png)

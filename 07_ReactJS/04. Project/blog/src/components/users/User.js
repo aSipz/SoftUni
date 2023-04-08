@@ -10,7 +10,7 @@ export default function User({ account, changeStatus, onSendMsgClick }) {
     const onClick = () => {
         changeStatus(state => state.map(u => u.objectId === account.objectId ? { ...account, changed: !account.changed } : u));
     }
-    
+
     return (
         <tr>
             {user.objectId === account.objectId
@@ -25,13 +25,15 @@ export default function User({ account, changeStatus, onSendMsgClick }) {
             <td>{account.username}</td>
             <td>{account.email}</td>
             <td>{new Date(account.createdAt).toDateString()}</td>
-            <td data-testid="actions" className="actions" onClick={onClick}>
-                {isAuthor
-                    ? <>
-                        <i data-testid="author" className="fa-regular fa-circle-check author" style={account.changed ? { opacity: 0 } : {}}></i>
-                        <i data-testid="remove_author" className="fa-regular fa-circle-xmark remove_author" style={account.changed ? { opacity: 1, color: "indianred" } : {}}></i>
-                    </>
-                    : <i data-testid="add_author" className="fa-regular fa-circle-check add_author" style={account.changed ? { opacity: 1, color: "darkseagreen" } : {}}></i>
+            <td data-testid="actions" className="actions" onClick={account.objectId !== user.objectId ? onClick : undefined}>
+                {account.objectId !== user.objectId
+                    ? isAuthor
+                        ? <>
+                            <i data-testid="author" className="fa-regular fa-circle-check author" style={account.changed ? { opacity: 0 } : {}}></i>
+                            <i data-testid="remove_author" className="fa-regular fa-circle-xmark remove_author" style={account.changed ? { opacity: 1, color: "indianred" } : {}}></i>
+                        </>
+                        : <i data-testid="add_author" className="fa-regular fa-circle-check add_author" style={account.changed ? { opacity: 1, color: "darkseagreen" } : {}}></i>
+                    : <i data-testid="author" className="fa-regular fa-circle-check author" style={{ opacity: 1 }}></i>
                 }
             </td>
         </tr>
