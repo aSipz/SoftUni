@@ -43,7 +43,7 @@ export default function Comment({ comment, dispatch, setLoading }) {
         }
     }, [confirm, dispatch, setLoading, setAction, comment, userLogout]);
 
-    const isOwner = user?.objectId === comment.owner.objectId;
+    const isOwner = user?.objectId === comment.owner?.objectId;
 
     const toggleCommentForm = () => {
         setEdit(state => !state);
@@ -67,7 +67,7 @@ export default function Comment({ comment, dispatch, setLoading }) {
 
                 {action && <Overlay action={action} setAction={setAction} confirmAction={confirmAction} />}
 
-                <p>{comment.text}<cite>{comment.owner.firstName} {comment.owner.lastName}</cite></p>
+                <p>{comment.text}<cite>{comment.owner ? `${comment.owner.firstName} ${comment.owner.lastName}` : 'deleted user'}</cite></p>
                 <span>{comment.createdAt !== comment.updatedAt ?
                     `Edited: ${new Date(comment.updatedAt).toUTCString()}`
                     : new Date(comment.createdAt).toUTCString()}</span>

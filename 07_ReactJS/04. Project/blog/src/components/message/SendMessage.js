@@ -58,7 +58,7 @@ export default function SendMessage({ setAction, confirmAction }) {
         }
 
         action();
-        setReceiver(null);
+        setReceiver && setReceiver(null);
     }
 
     return (

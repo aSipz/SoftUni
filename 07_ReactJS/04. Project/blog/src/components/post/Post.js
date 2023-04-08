@@ -82,8 +82,8 @@ export default function Post() {
         setAction(userAction.confirm);
     }
 
-    const isUser = user && user.objectId !== post?.author.objectId;
-    const isAuthor = user && user.objectId === post?.author.objectId;
+    const isUser = user && user.objectId !== post?.author?.objectId;
+    const isAuthor = user && user.objectId === post?.author?.objectId;
 
     const confirmAction = {
         action: () => {
@@ -121,7 +121,7 @@ export default function Post() {
                             <span>{post.likes.length} Like{post.likes.length !== 1 && 's'}</span>
                         </li>
                         <li className="author-m post-tags">
-                            <a href="#author">By {post.author.firstName} {post.author.lastName}</a>
+                            <a href="#author">By {post.author? `${post.author.firstName} ${post.author.lastName}` : 'deleted user'}</a>
                         </li>
                     </ul>
                     <div className="post-content">

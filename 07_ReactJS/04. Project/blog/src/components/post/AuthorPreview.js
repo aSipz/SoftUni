@@ -3,6 +3,14 @@ import { Link } from 'react-router-dom';
 import { searchAuthor } from '../../utils/serviceUtils';
 
 export default function AuthorPreview({ author }) {
+    if (!author) {
+        return (
+            <article id="author" className="author-wrap">
+                <p>Deleted user</p>
+            </article>
+        )
+    }
+
     const search = '/posts?search=' + searchAuthor(author.objectId);
 
     return (

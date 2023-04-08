@@ -178,9 +178,9 @@ export default function CreatePost() {
                                 <p>Post cover preview:</p>
 
                                 {fileDataURL
-                                    ? <img src={fileDataURL} alt="post-cover" className="image" />
+                                    ? <img src={fileDataURL} alt="post-cover" className="post-cover-image" />
                                     : formValues.picture
-                                        ? <img src={formValues.picture.url} alt="post-cover" className="image" />
+                                        ? <img src={formValues.picture.url} alt="post-cover" className="post-cover-image" />
                                         : null
                                 }
 

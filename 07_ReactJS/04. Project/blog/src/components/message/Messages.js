@@ -43,10 +43,10 @@ export default function Messages() {
                 setMessages(result.results
                     .map(m => {
                         const userInfo = {
-                            'senderName': m.sender.firstName + ' ' + m.sender.lastName,
-                            'receiverName': m.receiver.firstName + ' ' + m.receiver.lastName
+                            'senderName': m.sender ? m.sender.firstName + ' ' + m.sender.lastName : 'deleted user',
+                            'receiverName': m.receiver ? m.receiver.firstName + ' ' + m.receiver.lastName : 'deleted user'
                         };
-                        return m.receiver.objectId === user.objectId
+                        return m.receiver?.objectId === user.objectId
                             ? { ...m, 'inbox': true, ...userInfo }
                             : { ...m, ...userInfo }
                     }));
@@ -100,7 +100,7 @@ export default function Messages() {
             const updateValue = msg.inbox
                 ? { receiverDeleted: true }
                 : { senderDeleted: true };
-            const unread = msg.read === false && msg.receiver.objectId === user.objectId;
+            const unread = msg.read === false && msg.receiver?.objectId === user.objectId;
 
             messageService.updateMessage(currentMsg, updateValue)
                 .then(() => {

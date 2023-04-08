@@ -6,7 +6,7 @@ export default memo(BlogItem);
 function BlogItem({ post, onSearch }) {
     const [searchParams] = useSearchParams();
 
-    const authorSearch = Object.assign({}, JSON.parse(searchParams.get('search')), { 'author': post.author.objectId });
+    const authorSearch = Object.assign({}, JSON.parse(searchParams.get('search')), { 'author': post.author ? post.author.objectId : 'deleted user' });
 
     return (
         <article className="post format-image has-post-thumbnail post_format-post-format-image">
@@ -25,9 +25,9 @@ function BlogItem({ post, onSearch }) {
                     </li>
                     <li className="author-m post-tags">
                         <button
-                            title={`Posts by ${post.author.firstName} ${post.author.lastName}`}
-                            onClick={onSearch.bind(null, authorSearch)}>
-                            By {post.author.firstName} {post.author.lastName}
+                            title={post.author ? `Posts by ${post.author.firstName} ${post.author.lastName}` : 'deleted user'}
+                            onClick={post.author ? onSearch.bind(null, authorSearch) : undefined}>
+                            {post.author ? `By ${post.author.firstName} ${post.author.lastName}` : 'By deleted user'}
                         </button>
                     </li>
                 </ul>
