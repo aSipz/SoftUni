@@ -7,8 +7,8 @@ exports.getCreateCube = (req, res) => {
 
 exports.postCreateCube = async (req, res) => {
     try {
-        await Cube.create(req.body);
-        res.redirect('/');
+        const savedCube = await Cube.create(req.body);
+        res.redirect(`/details/${savedCube._id}`);
     } catch (error) {
         console.log(error);
     }
@@ -19,12 +19,9 @@ exports.getDetailsCube = async (req, res) => {
     const { cubeId } = req.params;
 
     try {
-        const [cube, accessories] = await Promise.all([
-            Cube.findById(cubeId),
-            Accessory.find().lean()
-        ]);
-        console.log(accessories);
-        res.render('details', { cube, accessories });
+        const cube = await Cube.findById(cubeId).populate('accessories').lean();
+        console.log(cube);
+        res.render('details', cube);
     } catch (error) {
         res.redirect('/not-found');
     }
