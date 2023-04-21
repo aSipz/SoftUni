@@ -1,5 +1,4 @@
 const Cube = require('../models/Cube');
-const Accessory = require('../models/Accessory');
 
 exports.getCreateCube = (req, res) => {
     res.render('cubes/create');
