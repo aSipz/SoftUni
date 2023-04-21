@@ -13,19 +13,24 @@ const createAccessory = async (req, res) => {
         res.redirect('/');
     } catch (error) {
         console.log(error);
+        res.redirect('/not-found');
     }
 };
 
 const attachAccessoryPage = async (req, res) => {
 
     try {
-        const [cube, accessories] = await Promise.all([
-            Cube.findById(req.params.cubeId).lean(),
-            Accessory.find().lean()
-        ]);
+        const cube = await Cube
+            .findById(req.params.cubeId)
+            .lean();
+        const accessories = await Accessory
+            .find({ _id: { $nin: cube.accessories } })
+            .select('name')
+            .lean();
         res.render('attachAccessory', { cube, accessories });
     } catch (error) {
         console.log(error);
+        res.redirect('/not-found');
     }
 };
 
@@ -37,16 +42,19 @@ const attachAccessory = async (req, res) => {
             Accessory.findById(accessoryId)
         ]);
 
-        cube.accessories.push(accessoryId);
-        accessory.cubes.push(cube._id);
-        await Promise.all([
-            cube.save(),
-            accessory.save()
-        ]);
+        if (!cube.accessories.includes(accessoryId) && !accessory.cubes.includes(cube._id)) {
+            cube.accessories.push(accessoryId);
+            accessory.cubes.push(cube._id);
+            await Promise.all([
+                cube.save(),
+                accessory.save()
+            ]);
+        }
 
         res.redirect(`/details/${cube._id}`);
     } catch (error) {
         console.log(error);
+        res.redirect('/not-found');
     }
 };
 

@@ -11,6 +11,7 @@ exports.postCreateCube = async (req, res) => {
         res.redirect(`/details/${savedCube._id}`);
     } catch (error) {
         console.log(error);
+        res.redirect('/not-found');
     }
 
 };
@@ -20,10 +21,10 @@ exports.getDetailsCube = async (req, res) => {
 
     try {
         const cube = await Cube.findById(cubeId).populate('accessories').lean();
-        console.log(cube);
         res.render('details', cube);
     } catch (error) {
+        console.log(error);
         res.redirect('/not-found');
     }
 
-}
+};
