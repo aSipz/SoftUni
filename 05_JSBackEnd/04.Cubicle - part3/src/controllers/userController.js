@@ -1,17 +1,24 @@
 const router = require('express').Router();
-const bcrypt = require('bcrypt');
 
-const User = require('../models/User');
-const jwt = require('../auth/token');
-
-const saltRounds = 3;
+const userManager = require('../managers/userManager');
 
 const getLoginPage = (req, res) => {
     res.render('user/login');
 };
 
-const postLogin = (req, res) => {
+const postLogin = async (req, res) => {
+    const { username, password } = req.body;
 
+    try {
+
+        const token = await userManager.login(username, password);
+
+        res.cookie('auth', token, { httpOnly: true });
+        res.redirect('/');
+    } catch (error) {
+        console.log(error);
+        return res.redirect('/404');
+    }
 };
 
 const getRegisterPage = (req, res) => {
@@ -27,24 +34,19 @@ const postRegister = async (req, res) => {
     }
 
     try {
-        const users = await User.find().select('username');
-        const exists = users.some(u => u.username == username);
+        const sameUserExists = await userManager.getUserByUsername(username);
 
-        if (exists) {
-            throw new Error('Username already taken');
+        if (sameUserExists) {
+            throw new Error("This username is taken!");
         }
 
-        const salt = await bcrypt.genSalt(saltRounds);
-        const hash = await bcrypt.hash(password, salt);
+        const token = await userManager.register(username, password);
 
-        await User.create({ username, password: hash });
-
-        const token = jwt.encodeToken({ username });
-
-        res.cookie('token', token, { httpOnly: true });
+        res.cookie('auth', token, { httpOnly: true });
         res.redirect('/');
     } catch (error) {
         console.log(error);
+        return res.redirect('/404');
     }
 
 };

@@ -1,19 +1,22 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 
-const router = require('./routes');
+const routes = require('./routes');
 const initDB = require('./database/db');
 
 const config = require('./config/config');
 const setupViewEngine = require('./config/viewEngine');
 
+const authMiddleware = require('./middlewares/authMiddleware');
+
 const app = express();
 setupViewEngine(app);
 
 app.use(express.static('./src/public'));
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(router);
+app.use(express.urlencoded({ extended: false }));
+app.use(authMiddleware.authentication);
+app.use(routes);
 
 initDB()
     .then(() => {
