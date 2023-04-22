@@ -51,7 +51,7 @@ const attachAccessory = async (req, res) => {
             ]);
         }
 
-        res.redirect(`/details/${cube._id}`);
+        res.redirect(`/cubes/${cube._id}/details`);
     } catch (error) {
         console.log(error);
         res.redirect('/not-found');

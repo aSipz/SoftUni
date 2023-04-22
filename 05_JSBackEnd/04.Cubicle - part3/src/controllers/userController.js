@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 const userManager = require('../managers/userManager');
+const { privateGuard, guestGuard } = require('../middlewares/authMiddleware');
 
 const getLoginPage = (req, res) => {
     res.render('user/login');
@@ -52,16 +53,17 @@ const postRegister = async (req, res) => {
 };
 
 const logout = (req, res) => {
-
+    res.clearCookie('auth');
+    res.redirect('/');
 };
 
-router.get('/login', getLoginPage);
-router.post('/login', postLogin);
+router.get('/login', guestGuard, getLoginPage);
+router.post('/login', guestGuard, postLogin);
 
-router.get('/register', getRegisterPage);
-router.post('/register', postRegister);
+router.get('/register', guestGuard, getRegisterPage);
+router.post('/register', guestGuard, postRegister);
 
-router.get('/logout', logout);
+router.get('/logout', privateGuard, logout);
 
 
 module.exports = router;

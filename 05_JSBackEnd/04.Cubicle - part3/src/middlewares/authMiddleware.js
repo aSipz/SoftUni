@@ -17,9 +17,18 @@ exports.authentication = async (req, res, next) => {
     next();
 };
 
-exports.isAuthenticated = (req, res, next) => {
+exports.privateGuard = (req, res, next) => {
 
     if (!req.user) {
+        return res.redirect('/login');
+    }
+
+    next();
+};
+
+exports.guestGuard = (req, res, next) => {
+
+    if (req.user) {
         return res.redirect('/');
     }
 
