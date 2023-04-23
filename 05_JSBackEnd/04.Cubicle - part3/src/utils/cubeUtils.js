@@ -1,6 +1,6 @@
 function generateDifficultyLevel(currentLevel) {
     const options = [
-        { key: 1, value: 'Very Eas', selected: false },
+        { key: 1, value: 'Very Easy', selected: false },
         { key: 2, value: 'Easy', selected: false },
         { key: 3, value: 'Medium(Standard 3x3)', selected: false },
         { key: 4, value: 'Intermediate', selected: false },

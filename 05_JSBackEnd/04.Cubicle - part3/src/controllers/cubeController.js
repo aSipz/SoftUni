@@ -42,6 +42,9 @@ exports.getEditCube = async (req, res) => {
 
     try {
         const cube = await cubeManager.getCubeById(cubeId).lean();
+        if (cube.creatorId != user._id) {
+            throw new Error('You have no rights for this operation!')
+        }
         cube.difficultyLevel = generateDifficultyLevel(cube.difficultyLevel);
         res.render('cubes/edit', cube);
     } catch (error) {
@@ -50,7 +53,20 @@ exports.getEditCube = async (req, res) => {
     }
 };
 
-exports.postEditCube = (req, res) => {
+exports.postEditCube = async (req, res) => {
+    const { name, description, difficultyLevel, imageUrl } = req.body;
+    const { cubeId } = req.params;
+    const user = req.user;
+
+    try {
+        await cubeManager.updateCube(cubeId, { name, description, difficultyLevel, imageUrl });
+        res.redirect(`/cubes/${cubeId}/details`);
+    } catch (error) {
+        console.log(error);
+        res.redirect('/not-found');
+    }
+
+
     // res.render('cubes/edit');
 };
 
@@ -60,10 +76,18 @@ exports.getDeleteCube = async (req, res) => {
 
     try {
         const cube = await cubeManager.getCubeById(cubeId).lean();
+        if (cube.creatorId != user._id) {
+            throw new Error('You have no rights for this operation!')
+        }
         cube.difficultyLevel = generateDifficultyLevel(cube.difficultyLevel);
         res.render('cubes/delete', cube);
     } catch (error) {
         console.log(error);
         res.redirect('/not-found');
     }
+};
+
+exports.postDeleteCube = async (req, res) => {
+    const { cubeId } = req.params;
+    const user = req.user;
 };

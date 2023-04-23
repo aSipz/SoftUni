@@ -16,6 +16,7 @@ router.post('/cubes/create', privateGuard, cubeController.postCreateCube);
 router.get('/cubes/:cubeId/edit', privateGuard, cubeController.getEditCube);
 router.post('/cubes/:cubeId/edit', privateGuard, cubeController.postEditCube);
 router.get('/cubes/:cubeId/delete', privateGuard, cubeController.getDeleteCube);
+router.post('/cubes/:cubeId/delete', privateGuard, cubeController.postDeleteCube);
 
 router.get('/cubes/:cubeId/details', cubeController.getDetailsCube);
 
