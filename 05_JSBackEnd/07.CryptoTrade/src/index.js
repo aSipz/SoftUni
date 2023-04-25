@@ -11,7 +11,7 @@ const { authentication } = require('./middlewares/authMiddleware');
 const app = express();
 setupViewEngine(app);
 
-app.use('/static', express.static('./src/static'));
+app.use(express.static('./src/static'));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(authentication);
