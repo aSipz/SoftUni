@@ -4,6 +4,8 @@ exports.getCryptoById = cryptoId => Crypto.findById(cryptoId);
 
 exports.getCrypto = () => Crypto.find();
 
+exports.getThree = () => Crypto.find().sort('-price').limit(3);
+
 exports.createCrypto = cryptoData => Crypto.create(cryptoData);
 
 exports.updateCrypto = (cryptoId, cryptoData) => Crypto.findByIdAndUpdate(cryptoId, cryptoData, { runValidators: true });

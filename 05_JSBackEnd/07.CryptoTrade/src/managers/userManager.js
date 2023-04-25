@@ -9,7 +9,7 @@ exports.register = async (username, email, password) => {
 
     const newUser = await User.create({ username, email, password });;
 
-    return token = jwt.encodeToken({ username, _id: newUser._id });
+    return token = jwt.encodeToken({ email, username, _id: newUser._id });
 };
 
 exports.login = async (email, password) => {
