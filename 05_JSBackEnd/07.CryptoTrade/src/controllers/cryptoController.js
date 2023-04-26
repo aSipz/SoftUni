@@ -67,7 +67,7 @@ const getDetailsPage = async (req, res) => {
         crypto.isOwner = crypto.owner == user?._id;
         crypto.bought = crypto.buy
             .map(id => id.toString())
-            .includes(user._id);
+            .includes(user?._id);
 
         res.render('crypto/details', crypto);
     } catch (error) {
