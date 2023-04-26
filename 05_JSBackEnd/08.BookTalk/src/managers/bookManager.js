@@ -23,4 +23,6 @@ exports.wishBook = async (bookId, wisherId) => {
 
     currentBook.wishes.push(wisherId);
     await currentBook.save();
+
+    // Book.findByIdAndUpdate(bookId, { $push: { wishes: wisherId } });
 };

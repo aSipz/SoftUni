@@ -33,10 +33,11 @@ const postRegister = async (req, res) => {
     const { username, email, password, repeatPassword } = req.body;
 
     try {
-        const sameUserExists = await userManager.getUserByEmail(email);
+        // const sameUserExists = await userManager.getUserByEmail(email);
+        const sameUserExists = await userManager.checkIfExist(email, username);
 
         if (sameUserExists) {
-            throw new Error("This username is already taken!");
+            throw new Error("This username or email is already taken!");
         }
 
         if (password != repeatPassword) {

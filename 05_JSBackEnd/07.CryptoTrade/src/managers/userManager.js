@@ -5,6 +5,8 @@ const jwt = require('../utils/jwt');
 
 exports.getUserByEmail = (email) => User.findOne({ email });
 
+exports.checkIfExist = (email, username) => User.findOne({ $or: [{ email }, { username }] });
+
 exports.register = async (username, email, password) => {
 
     const newUser = await User.create({ username, email, password });;

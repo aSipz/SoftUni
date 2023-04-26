@@ -21,6 +21,8 @@ exports.buyCrypto = async (cryptoId, buyerId) => {
 
     currentCrypto.buy.push(buyerId);
     await currentCrypto.save();
+
+    // Crypto.findByIdAndUpdate(cryptoId, { $push: { buy: buyerId } });
 };
 
 exports.searchCrypto = (search, paymentMethod) => {
