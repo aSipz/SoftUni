@@ -95,3 +95,60 @@ SELECT
 FROM
     `employees`
 ORDER BY `salary` DESC , `first_name` , `last_name` DESC , `middle_name` , `employee_id`;
+
+CREATE VIEW `v_employees_salaries` AS
+    SELECT 
+        `first_name`, `last_name`, `salary`
+    FROM
+        `employees`;
+        
+SELECT 
+    *
+FROM
+    `v_employees_salaries`;
+    
+CREATE VIEW `v_employees_job_titles` AS
+    SELECT 
+        CONCAT_WS(' ',
+                `first_name`,
+                `middle_name`,
+                `last_name`),
+        `job_title`
+    FROM
+        `employees`;
+        
+SELECT 
+    *
+FROM
+    `v_employees_job_titles`;
+    
+SELECT DISTINCT
+    `job_title`
+FROM
+    `employees`
+ORDER BY `job_title`;
+
+SELECT 
+    *
+FROM
+    `projects`
+ORDER BY `start_date` , `name` , `project_id`
+LIMIT 10;
+
+SELECT 
+    `first_name`, `last_name`, `hire_date`
+FROM
+    `employees`
+ORDER BY `hire_date` DESC
+LIMIT 7;
+
+UPDATE `employees` 
+SET 
+    `salary` = `salary` * 1.12
+WHERE
+    `department_id` IN (1 , 2, 4, 11);
+    
+SELECT 
+    `salary`
+FROM
+    `employees`;
