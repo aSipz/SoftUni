@@ -1,0 +1,62 @@
+<main>
+    {{#if isUser}}
+
+    <h1 class="text-center">Courses</h1>
+    <section>
+        <a href="/courses/create" class="btn btn-warning ">Create Course</a>
+        <form class="search float-right">
+            <label>Search: </label>
+            <input type="text" name="search" value="{{search}}">
+            <input type="submit" class="btn btn-primary" value="Search">
+        </form>
+    </section>
+
+    {{#if courses}}
+    <div class="container mt-3">
+        <div class="row ">
+            <div class="card-deck d-flex justify-content-center">
+                {{#each courses}}
+                {{> userCourse}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#unless courses}}
+    <h3 class="text-center">No courses...</h3>
+    {{/unless}}
+    {{else}}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Tutorials</h1>
+            <p class="lead">Start Self-Learning Today: Be the best Developer in the company</p>
+        </div>
+    </div>
+
+    <div>
+        <h1 class="text-center">Top Courses</h1>
+        <div class="container mt-3">
+            {{#if courses}}
+            <div class="row d-flex justify-content-center">
+
+                <div class="card-deck">
+
+                    {{#each courses}}
+                    {{> guestCourse}}
+                    {{/each}}
+
+                </div>
+
+            </div>
+            {{/if}}
+
+            {{#unless courses}}
+            <h4 class="text-center">No courses...</h4>
+            {{/unless}}
+
+        </div>
+    </div>
+
+    {{/if}}
+</main>
