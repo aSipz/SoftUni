@@ -41,7 +41,7 @@ function solve() {
   function clickHandler(e) {
     e.preventDefault();
     if (inputsArray.some(i => !i.value.trim())
-      || Number(inputsArray.find(e => e.id == 'original-cost').value) > Number(inputsArray.find(e => e.id == 'selling-price').value)) {
+      || Number(inputsArray.find(e => e.id == 'car-year').value) > Number(inputsArray.find(e => e.id == 'selling-price').value)) {
       return;
     }
 
