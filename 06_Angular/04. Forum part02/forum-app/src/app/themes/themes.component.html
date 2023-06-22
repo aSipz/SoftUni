@@ -1,5 +1,9 @@
 <div class="container">
+
+    
     <main>
+        <app-welcome-msg *ngIf="!isLoggedIn"></app-welcome-msg>
+        
         <div class="theme-title">
 
             <app-theme-list></app-theme-list>

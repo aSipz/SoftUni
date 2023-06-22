@@ -2,15 +2,16 @@ import { Component } from '@angular/core';
 import { UserService } from '../user/user.service';
 
 @Component({
-  selector: 'app-themes',
-  templateUrl: './themes.component.html',
-  styleUrls: ['./themes.component.css']
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
-export class ThemesComponent {
+export class HomeComponent {
 
   get isLoggedIn() {
     return this.userService.isLoggedIn;
   }
 
   constructor(private userService: UserService) { }
+
 }

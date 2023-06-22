@@ -1,18 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
 import { LoaderComponent } from './loader/loader.component';
+import { WelcomeMsgComponent } from './welcome-msg/welcome-msg.component';
 
 
 
 @NgModule({
   declarations: [
-    LoaderComponent
+    LoaderComponent,
+    WelcomeMsgComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   exports: [
-    LoaderComponent
+    LoaderComponent,
+    WelcomeMsgComponent
   ]
 })
 export class SharedModule { }

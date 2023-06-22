@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { ApiService } from '../api.service';
-import { ITheme } from '../interfaces/theme';
+import { ApiService } from '../../api.service';
+import { ITheme } from '../../shared/interfaces';
+import { UserService } from 'src/app/user/user.service';
 
 @Component({
   selector: 'app-theme-list',
@@ -12,7 +13,14 @@ export class ThemeListComponent {
   themes: ITheme[] | null = null;
   errorFetchingData = false;
 
-  constructor(private apiService: ApiService) {
+  get isLoggedIn() {
+    return this.userService.isLoggedIn;
+  }
+
+  constructor(
+    private apiService: ApiService,
+    private userService: UserService
+  ) {
     apiService.getThemes().subscribe({
       next: value => this.themes = value,
       error: err => {

@@ -5,28 +5,22 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
-import { ThemeListComponent } from './theme-list/theme-list.component';
-import { RecentPostsComponent } from './recent-posts/recent-posts.component';
-import { ThemesComponent } from './themes/themes.component';
 import { SharedModule } from './shared/shared.module';
-import { NotFoundComponent } from './not-found/not-found.component';
 import { UserModule } from './user/user.module';
+import { ThemesModule } from './themes/themes.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    ThemeListComponent,
-    RecentPostsComponent,
-    ThemesComponent,
-    NotFoundComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
     CoreModule,
     SharedModule,
-    UserModule
+    UserModule,
+    ThemesModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
