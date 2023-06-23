@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ThemesComponent } from './themes.component';
 import { CreateThemeComponent } from './create-theme/create-theme.component';
 import { ThemeDetailComponent } from './theme-detail/theme-detail.component';
+import { themeResolver } from '../shared/resolvers/theme.resolver';
 
 const routes: Routes = [
   {
@@ -21,6 +22,9 @@ const routes: Routes = [
   },
   {
     path: 'themes/:id/details',
+    resolve: {
+      theme: themeResolver
+    },
     component: ThemeDetailComponent,
     data: {
       title: 'Theme Details'

@@ -4,12 +4,12 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { LogoutComponent } from './logout/logout.component';
 import { ProfileComponent } from './profile/profile.component';
-import { AuthActivate } from '../shared/guards/auth.activate';
+import { authActivate } from '../shared/guards/auth.activate';
 
 const routes: Routes = [
   {
     path: 'user/login',
-    canActivate: [AuthActivate],
+    canActivate: [authActivate],
     component: LoginComponent,
     data: {
       title: 'Login',
@@ -18,7 +18,7 @@ const routes: Routes = [
   },
   {
     path: 'user/register',
-    canActivate: [AuthActivate],
+    canActivate: [authActivate],
     component: RegisterComponent,
     data: {
       title: 'Register',
@@ -28,7 +28,7 @@ const routes: Routes = [
   {
     path: 'user/logout',
     component: LogoutComponent,
-    canActivate: [AuthActivate],
+    canActivate: [authActivate],
     data: {
       loginRequired: true
     }
@@ -36,7 +36,7 @@ const routes: Routes = [
   {
     path: 'user/:id/profile',
     component: ProfileComponent,
-    canActivate: [AuthActivate],
+    canActivate: [authActivate],
     data: {
       title: 'Profile',
       loginRequired: true

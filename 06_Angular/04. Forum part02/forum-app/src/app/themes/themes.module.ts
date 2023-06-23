@@ -8,6 +8,8 @@ import { CreateThemeComponent } from './create-theme/create-theme.component';
 import { ThemesRoutingModule } from './themes-routing.module';
 import { ThemeDetailComponent } from './theme-detail/theme-detail.component';
 import { HomeComponent } from '../home/home.component';
+import { ThemePostComponent } from './theme-post/theme-post.component';
+import { AddPostComponent } from './add-post/add-post.component';
 
 
 
@@ -18,7 +20,9 @@ import { HomeComponent } from '../home/home.component';
     ThemesComponent,
     CreateThemeComponent,
     ThemeDetailComponent,
-    HomeComponent
+    HomeComponent,
+    ThemePostComponent,
+    AddPostComponent
   ],
   imports: [
     CommonModule,

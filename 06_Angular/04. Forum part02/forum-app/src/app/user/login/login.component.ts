@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 
 @Component({
@@ -9,9 +9,13 @@ import { UserService } from '../user.service';
 })
 export class LoginComponent {
 
-  constructor(private router: Router, private userService: UserService) { }
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
-  onLoginClickHandler() {
+  loginHandler(): void {
     this.userService.user = {
       themes: [],
       posts: [],
@@ -24,7 +28,10 @@ export class LoginComponent {
       updatedAt: '1',
       __v: 0,
     };
-    this.router.navigate(['/']);
+
+    const returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/';
+
+    this.router.navigate([returnUrl]);
   }
 
 }
