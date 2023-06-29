@@ -9,7 +9,7 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 const routes: Routes = [
   {
-    path: 'user/login',
+    path: 'login',
     canActivate: [authActivate],
     component: LoginComponent,
     data: {
@@ -18,7 +18,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'user/register',
+    path: 'register',
     canActivate: [authActivate],
     component: RegisterComponent,
     data: {
@@ -27,7 +27,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'user/logout',
+    path: 'logout',
     component: LogoutComponent,
     canActivate: [authActivate],
     data: {
@@ -35,7 +35,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'user/profile',
+    path: 'profile',
     component: ProfileComponent,
     canActivate: [authActivate],
     data: {
@@ -44,7 +44,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'user/profile/edit',
+    path: 'profile/edit',
     component: EditProfileComponent,
     canActivate: [authActivate],
     data: {

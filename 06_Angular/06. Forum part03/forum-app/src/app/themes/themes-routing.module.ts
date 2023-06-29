@@ -7,21 +7,22 @@ import { themeResolver } from '../shared/resolvers/theme.resolver';
 
 const routes: Routes = [
   {
-    path: 'themes',
+    path: '',
+    pathMatch: 'full',
     component: ThemesComponent,
     data: {
       title: 'Themes'
     }
   },
   {
-    path: 'themes/create',
+    path: 'create',
     component: CreateThemeComponent,
     data: {
       title: 'New Theme'
     }
   },
   {
-    path: 'themes/:id/details',
+    path: ':id/details',
     resolve: {
       theme: themeResolver
     },
