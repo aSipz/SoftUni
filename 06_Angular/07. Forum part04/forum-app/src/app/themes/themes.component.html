@@ -1,0 +1,20 @@
+<div class="container">
+
+    
+    <main>
+        <app-welcome-msg *ngIf="!isLoggedIn"></app-welcome-msg>
+        
+        <div class="theme-title">
+
+            <app-theme-list></app-theme-list>
+
+        </div>
+    </main>
+    
+    <aside>
+
+        <app-recent-posts></app-recent-posts>
+        
+    </aside>
+
+</div>

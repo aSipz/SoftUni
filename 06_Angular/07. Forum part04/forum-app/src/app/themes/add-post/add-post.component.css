@@ -1,0 +1,44 @@
+.answer-comment {
+    width: 100%;
+    /* display: flex; */
+    margin-top: 1em;
+}
+
+.answer-comment p {
+    flex-basis: 15%;
+    padding-bottom: 0.3em;
+}
+
+.answer-comment p span {
+    color: rgb(0, 128, 182);
+    font-size: 1.2em;
+}
+
+.answer {
+    border: 1px solid;
+    border-radius: 0.3em;
+    flex-basis: 85%;
+    text-align: center;
+}
+
+.answer textarea {
+    width: 90%;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+}
+
+.answer button {
+    color: white;
+    margin: 0.5em 1em;
+    padding: 0.2em 1em;
+    border: 1px solid;
+    border-radius: 0.3em;
+}
+
+.answer button:hover {
+    cursor: pointer;
+}
+
+.comment-area {
+    min-width: 100%
+}

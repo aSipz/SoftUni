@@ -1,0 +1,29 @@
+<app-loader *ngIf="!themes && !errorFetchingData"></app-loader>
+
+<div *ngIf="errorFetchingData">Error in loading themes!</div>
+
+<div *ngFor="let theme of themes" class="theme-container">
+    <div class="theme-name-wrapper">
+        <div class="theme-name">
+            <a routerLink="/themes/{{theme._id}}/details" class="normal">
+                <h2>{{theme.themeName | shorten}}</h2>
+            </a>
+            <div class="columns">
+                <div>
+                    <p>Date: <time>{{theme.created_at | date: 'YYYY-MM-dd hh:mm:ss'}}</time></p>
+                    <div class="nick-name">
+                        <p>Username: <span>{{theme.userId.username}}</span></p>
+                    </div>
+                </div>
+                <div class="subscribers">
+                    <ng-container *ngIf="isLoggedIn && userId !== theme.userId._id">
+                        <button class="subscribe" *ngIf="!theme.subscribers.includes(userId!)" (click)="handleSubscribe(theme._id)" >Subscribe</button>
+                        <button class="unsubscribe" *ngIf="theme.subscribers.includes(userId!)">Unsubscribe</button>
+                    </ng-container>
+
+                    <p>Subscribers: <span>{{theme.subscribers.length}}</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

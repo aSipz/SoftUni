@@ -1,0 +1,10 @@
+<div class="answer-comment">
+    <p><span>{{username}}</span> comment:</p>
+    <div class="answer">
+        <form #form="ngForm" (ngSubmit)="handleSubmit()">
+            <textarea name="postText" id="comment" cols="30" rows="10" ngModel #postTextInput="ngModel" required
+                minlength="10"></textarea>
+            <button [disabled]="form.invalid">Post</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="container">
+    <!-- theme content  -->
+    <div class="theme-content">
+        <!-- theme-title  -->
+        <div class="theme-title">
+            <div class="theme-name-wrapper">
+                <div class="theme-name">
+                    <h2>{{theme.themeName}}</h2>
+                    <p>Date: <time>{{theme.created_at | date : 'YYYY:MM:dd hh:mm:ss'}}</time></p>
+                </div>
+                <div class="subscribers">
+                    <p>Subscribers: <span>{{theme.subscribers.length}}</span></p>
+                    <!-- <button class="subscribe">Subscribe</button>
+                    <button class="unsubscribe">Unsubscribe</button> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- comment  -->
+        <app-theme-post *ngFor="let post of theme.posts" [post]="post"></app-theme-post>
+
+        <app-add-post *ngIf="isLoggedIn" [username]="user?.username" [themeId]="theme._id" (newPostEvent)="newPost($event)"></app-add-post>
+
+    </div>
+</div>
