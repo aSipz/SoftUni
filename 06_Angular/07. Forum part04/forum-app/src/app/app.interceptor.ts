@@ -1,7 +1,7 @@
 import { HTTP_INTERCEPTORS, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Inject, Injectable, Provider } from "@angular/core";
 import { Router } from "@angular/router";
-import { BehaviorSubject, Observable, catchError, of, switchMap, throwError, withLatestFrom } from "rxjs";
+import { BehaviorSubject, Observable, catchError, of, switchMap, take, throwError, withLatestFrom, zip } from "rxjs";
 
 import { environment } from 'src/environments/environment';
 import { API_ERROR } from "./shared/constants";
@@ -26,7 +26,12 @@ export class AppInterceptor implements HttpInterceptor {
             .pipe(
                 catchError(err => of(err)
                     .pipe(
-                        withLatestFrom(this.userService.user$),
+                        switchMap(err => {
+                            if (err.status === 401) {
+                                return [[err, null]]
+                            }
+                            return zip([err], this.userService.user$).pipe(take(1));
+                        }),
                         switchMap(([err, user]) => {
                             if (err.status === 401) {
                                 if (!user) {
